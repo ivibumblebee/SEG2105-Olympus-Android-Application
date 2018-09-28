@@ -17,4 +17,12 @@
     <string name="CompanyName">Olympus Services</string>
     <string name="signup">Sign Up</string>
     <string name="login">Log In</string>
+    <string name="newusername">Enter Username</string>
+    <string name="newpassword">Enter Password</string>
+    <string-array name="roles">
+        <item>Admin</item>
+        <item>User</item>
+        <item>Service Provider</item>
+
+    </string-array>
 </resources>
