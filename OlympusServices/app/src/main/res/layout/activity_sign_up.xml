@@ -29,8 +29,9 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Role" />
+        android:text="Role"
+        android:textColor="#6d81a5"
+        android:textSize="20sp" />
 
     <com.jaredrummler.materialspinner.MaterialSpinner
         android:id="@+id/RoleInput"
@@ -42,13 +43,13 @@
         android:id="@+id/UsernameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
         android:hint="Username"
         android:textSize="20sp"
         app:met_baseColor="@android:color/white"
-        android:background="@color/colorWhite"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="?colorAccent"
-        app:met_singleLineEllipsis="true"/>
+        app:met_singleLineEllipsis="true" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/PasswordInput"
