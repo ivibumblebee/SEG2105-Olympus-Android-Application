@@ -17,7 +17,7 @@
         android:id="@+id/Title"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
         android:text="@string/signup"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -25,52 +25,69 @@
         android:textSize="36sp"
         app:fontFamily="@font/julius_sans_one" />
 
-    <Spinner
-        android:id="@+id/RolesInput"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/customborder"
-        android:entries="@array/roles"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"
-        android:theme="@android:style/TextAppearance.DeviceDefault.Widget.DropDownItem"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="108dp" />
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Role" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/RoleInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/UsernameInput"
         android:layout_width="match_parent"
-        android:layout_height="81dp"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/customborder"
-        android:theme="@android:style/TextAppearance.DeviceDefault.Widget.EditText">
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:textSize="20sp"
+        app:met_baseColor="@android:color/white"
+        android:background="@color/colorWhite"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="?colorAccent"
+        app:met_singleLineEllipsis="true"/>
 
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/newusername"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/PasswordInput"
         android:layout_width="match_parent"
-        android:layout_height="95dp"
-        android:background="@drawable/customborder"
-        android:theme="@android:style/TextAppearance.Holo.Widget.EditText">
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:textSize="20sp"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="?colorAccent"
+        app:met_singleLineEllipsis="true"
+        android:background="@drawable/customborder"/>
 
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint=""
-            android:text="@string/newpassword"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-    </android.support.design.widget.TextInputLayout>
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/FirstNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="First Name"
+        android:textSize="20sp"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="?colorAccent"
+        app:met_singleLineEllipsis="true"
+        android:background="@drawable/customborder"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/LastNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Last Name"
+        android:textSize="20sp"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="?colorAccent"
+        app:met_singleLineEllipsis="true"
+        android:background="@drawable/customborder"/>
+
+
+
+
 
 </LinearLayout>
