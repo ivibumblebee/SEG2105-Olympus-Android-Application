@@ -16,16 +16,17 @@
     <TextView
         android:id="@+id/Title"
         android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
+        android:gravity="center"
         android:text="@string/CompanyName"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
         android:textSize="36sp"
-        android:gravity="center"
         app:fontFamily="@font/julius_sans_one" />
 
     <Button
+        android:theme="@style/AppTheme.Button"
         android:id="@+id/SignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,6 +34,7 @@
         android:text="@string/signup" />
 
     <Button
+        android:theme="@style/AppTheme.Button"
         android:id="@+id/LogIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

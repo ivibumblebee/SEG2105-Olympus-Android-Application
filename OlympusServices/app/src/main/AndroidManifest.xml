@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".Main"
             android:label="@string/app_name">
@@ -28,7 +29,13 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".SignUp"></activity>
+        <activity android:name=".SignUp" android:parentActivityName=".Main">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".Main" />
+        </activity>
+        <activity android:name=".LogIn" />
+        <activity android:name=".Welcome"/>
     </application>
 
 </manifest>
