@@ -13,4 +13,53 @@
     android:background="@drawable/background"
     tools:context=".Welcome">
 
+    <TextView
+        android:id="@+id/Welcome"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="Welcome"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:layout_marginTop="50dp"
+        app:fontFamily="@font/julius_sans_one" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="FirstNameHere"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        app:fontFamily="@font/julius_sans_one" />
+
+    <TextView
+        android:id="@+id/Roleis"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="You are logged in as"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        app:fontFamily="@font/julius_sans_one" />
+
+    <TextView
+        android:id="@+id/Role"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="RoleHere"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        app:fontFamily="@font/julius_sans_one" />
+
 </LinearLayout>

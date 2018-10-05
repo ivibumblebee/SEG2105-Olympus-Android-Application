@@ -13,4 +13,58 @@
     android:background="@drawable/background"
     tools:context=".LogIn">
 
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="@string/signup"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        app:fontFamily="@font/julius_sans_one" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/UsernameInput"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/colorWhite"
+        android:hint="Username"
+        android:textSize="20sp"
+        android:layout_marginTop="40dp"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="?colorAccent"
+        app:met_singleLineEllipsis="true" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/PasswordInput"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/customborder"
+        android:hint="Password"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="?colorAccent"
+        app:met_singleLineEllipsis="true" />
+
+
+
+    <Button
+        android:theme="@style/AppTheme.Button"
+        android:id="@+id/SignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:layout_marginTop="40dp"
+        />
+
+
+
+
+
+
 </LinearLayout>

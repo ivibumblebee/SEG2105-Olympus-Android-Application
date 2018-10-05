@@ -17,7 +17,7 @@
         android:id="@+id/Title"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:text="@string/signup"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -36,13 +36,13 @@
     <com.jaredrummler.materialspinner.MaterialSpinner
         android:id="@+id/RoleInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp" />
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/UsernameInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:background="@color/colorWhite"
         android:hint="Username"
         android:textSize="20sp"
@@ -54,38 +54,47 @@
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/PasswordInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
+        android:background="@drawable/customborder"
         android:hint="Password"
         android:textSize="20sp"
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="?colorAccent"
-        app:met_singleLineEllipsis="true"
-        android:background="@drawable/customborder"/>
+        app:met_singleLineEllipsis="true" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/FirstNameInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
+        android:background="@drawable/customborder"
         android:hint="First Name"
         android:textSize="20sp"
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="?colorAccent"
-        app:met_singleLineEllipsis="true"
-        android:background="@drawable/customborder"/>
+        app:met_singleLineEllipsis="true" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/LastNameInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
+        android:background="@drawable/customborder"
         android:hint="Last Name"
         android:textSize="20sp"
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="?colorAccent"
-        app:met_singleLineEllipsis="true"
-        android:background="@drawable/customborder"/>
+        app:met_singleLineEllipsis="true" />
+
+    <Button
+        android:theme="@style/AppTheme.Button"
+        android:id="@+id/SignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signup"
+        android:layout_marginTop="20dp"/>
+
 
 
 
