@@ -19,7 +19,7 @@
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:text="@string/signup"
+        android:text="@string/login"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
         android:textSize="36sp"
