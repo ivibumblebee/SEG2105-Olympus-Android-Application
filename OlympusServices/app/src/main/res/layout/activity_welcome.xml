@@ -36,6 +36,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
         android:textSize="36sp"
+        android:background="@drawable/customborder"
         app:fontFamily="@font/julius_sans_one" />
 
     <TextView
@@ -59,6 +60,7 @@
         android:text="RoleHere"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
+        android:background="@drawable/customborder"
         android:textSize="36sp"
         app:fontFamily="@font/julius_sans_one" />
 
