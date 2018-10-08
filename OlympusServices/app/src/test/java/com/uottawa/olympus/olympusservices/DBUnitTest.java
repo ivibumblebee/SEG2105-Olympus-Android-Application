@@ -23,16 +23,6 @@ public class DBUnitTest {
         UserType originalUser, dbUser;
         boolean deleted;
 
-        originalUser = new Admin();
-        dbHelper.addUser(originalUser);
-        dbUser = dbHelper.findUserByUsername("admin");
-
-        assertEquals("Admin", dbUser.getClass().getSimpleName());
-        assertEquals("admin", dbUser.getUsername());
-        assertEquals("admin", dbUser.getPassword());
-        assertEquals("admin", dbUser.getFirstname());
-        assertEquals("admin", dbUser.getLastname());
-
 
         originalUser = new User("mgarzon", "soccer", "Miguel", "Garzon");
         dbHelper.addUser(originalUser);
@@ -56,9 +46,6 @@ public class DBUnitTest {
         assertEquals("Guzman", dbUser.getLastname());
 
 
-        deleted = dbHelper.deleteUser("admin");
-        assertTrue(deleted);
-
         deleted = dbHelper.deleteUser("mgarzon");
         assertTrue(deleted);
 
@@ -74,8 +61,32 @@ public class DBUnitTest {
 
         added = dbHelper.addUser(new User("mgarzon", "soccer", "Miguel", "Garzon"));
         assertTrue(added);
+        added = dbHelper.addUser(new User("mgarzon", "seg2105", "Miguel", "Garzon"));
+        assertTrue(!added);
         added = dbHelper.addUser(new ServiceProvider("mgarzon", "seg2105", "Juan", "Guzman"));
         assertTrue(!added);
+
+        dbHelper.deleteUser("mgarzon");
+    }
+
+    @Test
+    public void testUpdateUserLogin(){
+        boolean updated;
+        UserType dbUser;
+
+        dbHelper.addUser(new User("mgarzon", "soccer", "Miguel", "Garzon"));
+        updated = dbHelper.updateUserInfo("mgarzon", "soccer", "Juan", "Guzman");
+        assertTrue(updated);
+
+        dbUser = dbHelper.findUserByUsername("mgarzon");
+
+        assertEquals("mgarzon", dbUser.getUsername());
+        assertEquals("soccer", dbUser.getPassword());
+        assertEquals("Juan", dbUser.getFirstname());
+        assertEquals("Guzman", dbUser.getLastname());
+
+        updated = dbHelper.updateUserInfo("jguzman", "seg2105", "Juan", "Guzman");
+        assertTrue(!updated);
 
         dbHelper.deleteUser("mgarzon");
     }
