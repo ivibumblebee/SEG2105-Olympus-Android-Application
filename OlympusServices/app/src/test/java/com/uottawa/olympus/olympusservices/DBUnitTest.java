@@ -1,8 +1,8 @@
 package com.uottawa.olympus.olympusservices;
 
-import android.content.Context;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteDatabase;
+//import android.content.Context;
+//import android.database.DatabaseUtils;
+//import android.database.sqlite.SQLiteDatabase;
 
 
 import org.junit.Test;
@@ -21,11 +21,11 @@ public class DBUnitTest {
     @Test
     public void testAddAndDeleteUser(){
         UserType originalUser, dbUser;
-        boolean deleted;
+        boolean deleted, addedOne, addedTwo;
 
 
         originalUser = new User("mgarzon", "soccer", "Miguel", "Garzon");
-        dbHelper.addUser(originalUser);
+        addedOne = dbHelper.addUser(originalUser);
         dbUser = dbHelper.findUserByUsername("mgarzon");
 
         assertEquals("User", dbUser.getClass().getSimpleName());
@@ -35,22 +35,25 @@ public class DBUnitTest {
         assertEquals("Garzon", dbUser.getLastname());
 
 
-        originalUser = new ServiceProvider("jguzman", "seg2105", "Juan", "Guzman");
-        dbHelper.addUser(originalUser);
-        dbUser = dbHelper.findUserByUsername("jguzman");
+        originalUser = new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman");
+        addedTwo = dbHelper.addUser(originalUser);
+        dbUser = dbHelper.findUserByUsername("jbO4aBF4dC");
 
         assertEquals("ServiceProvider", dbUser.getClass().getSimpleName());
-        assertEquals("jguzman", dbUser.getUsername());
+        assertEquals("jbO4aBF4dC", dbUser.getUsername());
         assertEquals("seg2105", dbUser.getPassword());
         assertEquals("Juan", dbUser.getFirstname());
         assertEquals("Guzman", dbUser.getLastname());
 
+        if (addedOne) {
+            deleted = dbHelper.deleteUser("mgarzon");
+            assertTrue(deleted);
+        }
 
-        deleted = dbHelper.deleteUser("mgarzon");
-        assertTrue(deleted);
-
-        deleted = dbHelper.deleteUser("jguzman");
-        assertTrue(deleted);
+        if (addedTwo) {
+            deleted = dbHelper.deleteUser("jbO4aBF4dC");
+            assertTrue(deleted);
+        }
 
     }
 
@@ -59,14 +62,14 @@ public class DBUnitTest {
     public void testAddDuplicateUsers(){
         boolean added;
 
-        added = dbHelper.addUser(new User("mgarzon", "soccer", "Miguel", "Garzon"));
+        added = dbHelper.addUser(new User("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
         assertTrue(added);
-        added = dbHelper.addUser(new User("mgarzon", "seg2105", "Miguel", "Garzon"));
+        added = dbHelper.addUser(new User("jbO4aBF4dC", "seg2105", "Miguel", "Garzon"));
         assertTrue(!added);
-        added = dbHelper.addUser(new ServiceProvider("mgarzon", "seg2105", "Juan", "Guzman"));
+        added = dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman"));
         assertTrue(!added);
 
-        dbHelper.deleteUser("mgarzon");
+        dbHelper.deleteUser("jbO4aBF4dC");
     }
 
     @Test
@@ -74,21 +77,22 @@ public class DBUnitTest {
         boolean updated;
         UserType dbUser;
 
-        dbHelper.addUser(new User("mgarzon", "soccer", "Miguel", "Garzon"));
-        updated = dbHelper.updateUserInfo("mgarzon", "soccer", "Juan", "Guzman");
+        dbHelper.addUser(new User("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
+        updated = dbHelper.updateUserInfo("jbO4aBF4dC", "soccer", "Juan", "Guzman");
         assertTrue(updated);
 
-        dbUser = dbHelper.findUserByUsername("mgarzon");
+        dbUser = dbHelper.findUserByUsername("jbO4aBF4dC");
 
-        assertEquals("mgarzon", dbUser.getUsername());
+        assertEquals("jbO4aBF4dC", dbUser.getUsername());
         assertEquals("soccer", dbUser.getPassword());
         assertEquals("Juan", dbUser.getFirstname());
         assertEquals("Guzman", dbUser.getLastname());
 
-        updated = dbHelper.updateUserInfo("jguzman", "seg2105", "Juan", "Guzman");
+        //changed on character of username. Everything is case sensitive!
+        updated = dbHelper.updateUserInfo("JbO4aBF4dC", "seg2105", "Juan", "Guzman");
         assertTrue(!updated);
 
-        dbHelper.deleteUser("mgarzon");
+        dbHelper.deleteUser("jbO4aBF4dC");
     }
 
 }
