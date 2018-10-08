@@ -3,17 +3,20 @@ package com.uottawa.olympus.olympusservices;
 import android.content.Context;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
 
-@RunWith(AndroidJUnit4.class)
-public class DBTest {
-    private DBHelper dbHelper = new DBHelper(InstrumentationRegistry.getTargetContext());
+@RunWith(RobolectricTestRunner.class)
+@Config(packageName = "com.uottawa.olympus.olympusservices")
+public class DBUnitTest {
+    private DBHelper dbHelper = new DBHelper(RuntimeEnvironment.application);
 
     @Test
     public void testAddAndDeleteUser(){
@@ -54,13 +57,13 @@ public class DBTest {
 
 
         deleted = dbHelper.deleteUser("admin");
-        assertEquals(true, deleted);
+        assertTrue(deleted);
 
         deleted = dbHelper.deleteUser("mgarzon");
-        assertEquals(true, deleted);
+        assertTrue(deleted);
 
         deleted = dbHelper.deleteUser("jguzman");
-        assertEquals(true, deleted);
+        assertTrue(deleted);
 
     }
 
@@ -71,7 +74,7 @@ public class DBTest {
 
         added = dbHelper.addUser(new User("mgarzon", "soccer", "Miguel", "Garzon"));
         assertTrue(added);
-        added = dbHelper.addUser(new ServiceProvider("mgarzon", "soccer", "Miguel", "Garzon"));
+        added = dbHelper.addUser(new ServiceProvider("mgarzon", "seg2105", "Juan", "Guzman"));
         assertTrue(!added);
 
         dbHelper.deleteUser("mgarzon");

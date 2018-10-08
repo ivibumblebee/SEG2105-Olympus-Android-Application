@@ -6,6 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.Cursor;
 import android.content.ContentValues;
 
+/**
+ * The class DBHelper allows the Android application to access and perform
+ * CRUD operations on the tables of the SQLite database.
+ * There is currently a table of all users' login information.
+ *
+ * To use, create an object of this class with the current activity as context.
+ */
 
 public class DBHelper extends SQLiteOpenHelper {
 
