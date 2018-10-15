@@ -25,6 +25,7 @@
         android:textSize="36sp"
         app:fontFamily="@font/julius_sans_one" />
 
+    //component used from https://github.com/rengwuxian/MaterialEditText
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/UsernameInput"
         android:layout_width="match_parent"
@@ -38,6 +39,7 @@
         app:met_primaryColor="?colorAccent"
         app:met_singleLineEllipsis="true" />
 
+    //component used from https://github.com/rengwuxian/MaterialEditText
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/PasswordInput"
         android:layout_width="match_parent"
