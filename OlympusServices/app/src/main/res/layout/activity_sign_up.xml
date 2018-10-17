@@ -33,12 +33,14 @@
         android:textColor="#6d81a5"
         android:textSize="20sp" />
 
+    // component used from https://github.com/jaredrummler/MaterialSpinner
     <com.jaredrummler.materialspinner.MaterialSpinner
         android:id="@+id/RoleInput"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="10dp" />
 
+    //component used from https://github.com/rengwuxian/MaterialEditText
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/UsernameInput"
         android:layout_width="match_parent"
@@ -51,6 +53,7 @@
         app:met_primaryColor="?colorAccent"
         app:met_singleLineEllipsis="true" />
 
+    //component used from https://github.com/rengwuxian/MaterialEditText
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/PasswordInput"
         android:layout_width="match_parent"
@@ -63,6 +66,7 @@
         app:met_primaryColor="?colorAccent"
         app:met_singleLineEllipsis="true" />
 
+    //component used from https://github.com/rengwuxian/MaterialEditText
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/FirstNameInput"
         android:layout_width="match_parent"
@@ -75,6 +79,7 @@
         app:met_primaryColor="?colorAccent"
         app:met_singleLineEllipsis="true" />
 
+    //component used from https://github.com/rengwuxian/MaterialEditText
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/LastNameInput"
         android:layout_width="match_parent"

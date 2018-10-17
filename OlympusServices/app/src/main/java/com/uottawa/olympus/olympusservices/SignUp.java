@@ -11,7 +11,7 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         MaterialSpinner spinner = findViewById(R.id.RoleInput);
-        spinner.setItems("Admin", "User", "Service Provider");
+        spinner.setItems("User", "Service Provider");
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
