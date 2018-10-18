@@ -50,7 +50,7 @@
         android:textSize="15sp"
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
-        app:met_primaryColor="?colorAccent"
+        app:met_primaryColor="@color/colorWhite"
         app:met_singleLineEllipsis="true" />
 
     //component used from https://github.com/rengwuxian/MaterialEditText
@@ -63,8 +63,9 @@
         android:textSize="15sp"
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
-        app:met_primaryColor="?colorAccent"
-        app:met_singleLineEllipsis="true" />
+        app:met_primaryColor="@color/colorWhite"
+        app:met_singleLineEllipsis="true"
+        android:inputType="textPassword"/>
 
     //component used from https://github.com/rengwuxian/MaterialEditText
     <com.rengwuxian.materialedittext.MaterialEditText
@@ -76,7 +77,7 @@
         android:textSize="15sp"
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
-        app:met_primaryColor="?colorAccent"
+        app:met_primaryColor="@color/colorWhite"
         app:met_singleLineEllipsis="true" />
 
     //component used from https://github.com/rengwuxian/MaterialEditText
@@ -89,7 +90,7 @@
         android:textSize="15sp"
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
-        app:met_primaryColor="?colorAccent"
+        app:met_primaryColor="@color/colorWhite"
         app:met_singleLineEllipsis="true" />
 
     <Button

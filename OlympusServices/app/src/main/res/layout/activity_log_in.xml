@@ -36,7 +36,7 @@
         android:layout_marginTop="40dp"
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
-        app:met_primaryColor="?colorAccent"
+        app:met_primaryColor="@color/colorWhite"
         app:met_singleLineEllipsis="true" />
 
     //component used from https://github.com/rengwuxian/MaterialEditText
@@ -50,8 +50,9 @@
         android:layout_marginTop="20dp"
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
-        app:met_primaryColor="?colorAccent"
-        app:met_singleLineEllipsis="true" />
+        app:met_primaryColor="@color/colorWhite"
+        app:met_singleLineEllipsis="true"
+        android:inputType="textPassword"/>
 
 
 
