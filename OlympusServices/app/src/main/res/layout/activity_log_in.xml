@@ -37,7 +37,8 @@
         app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="@color/colorWhite"
-        app:met_singleLineEllipsis="true" />
+        app:met_singleLineEllipsis="true"
+        android:textCursorDrawable="@color/colorWhite"/>
 
     //component used from https://github.com/rengwuxian/MaterialEditText
     <com.rengwuxian.materialedittext.MaterialEditText
@@ -52,7 +53,8 @@
         app:met_floatingLabel="highlight"
         app:met_primaryColor="@color/colorWhite"
         app:met_singleLineEllipsis="true"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:textCursorDrawable="@color/colorWhite"/>
 
 
 
