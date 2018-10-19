@@ -88,12 +88,13 @@
         app:met_singleLineEllipsis="true" />
 
     <Button
-        android:theme="@style/AppTheme.Button"
         android:id="@+id/SignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="onClickSignUp"
         android:text="@string/signup"
-        android:layout_marginTop="20dp"/>
+        android:theme="@style/AppTheme.Button" />
 
 
 

@@ -2,6 +2,9 @@ package com.uottawa.olympus.olympusservices;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+import android.content.Intent;
 
 public class Welcome extends AppCompatActivity {
 
@@ -9,5 +12,18 @@ public class Welcome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        Bundle bundle = getIntent().getExtras();
+        String username = bundle.getString("username");
+        DBHelper dbHelper = new DBHelper(this);
+        UserType user;
+        user = dbHelper.findUserByUsername(username);
+        TextView role = (TextView) findViewById(R.id.Role);
+        TextView name = (TextView) findViewById(R.id.name);
+        role.setText(user.getRole());
+        name.setText(user.getFirstname());
+
+
     }
+
+
 }

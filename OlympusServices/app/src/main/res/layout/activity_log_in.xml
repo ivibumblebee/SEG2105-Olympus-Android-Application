@@ -52,15 +52,14 @@
         app:met_singleLineEllipsis="true" />
 
 
-
     <Button
-        android:theme="@style/AppTheme.Button"
         android:id="@+id/LogIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login"
         android:layout_marginTop="40dp"
-        />
+        android:onClick="onClickLogIn"
+        android:text="@string/login"
+        android:theme="@style/AppTheme.Button" />
 
 
 

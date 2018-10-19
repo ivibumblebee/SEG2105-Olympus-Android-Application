@@ -11,7 +11,22 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        UserType admin = new Admin();
+        DBHelper dbHelper = new DBHelper(this);
+        dbHelper.addUser(admin);
 
+
+    }
+
+    public void onClickSignUp(View view){
+        Intent intent = new Intent(getApplicationContext(),SignUp.class);
+        startActivityForResult(intent,0);
+
+    }
+
+    public void onClickLogIn(View view){
+        Intent intent = new Intent(getApplicationContext(),LogIn.class);
+        startActivityForResult(intent,0);
     }
 
 }
