@@ -35,7 +35,7 @@
         android:text="FirstNameHere"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:background="@drawable/customborder"
         app:fontFamily="@font/julius_sans_one" />
 
@@ -57,11 +57,11 @@
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:text="RoleHere"
+        android:text="Role Here"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
         android:background="@drawable/customborder"
-        android:textSize="30sp"
+        android:textSize="20sp"
         app:fontFamily="@font/julius_sans_one" />
 
 </LinearLayout>
