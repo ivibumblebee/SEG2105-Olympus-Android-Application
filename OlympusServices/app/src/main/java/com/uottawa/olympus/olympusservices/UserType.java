@@ -1,16 +1,17 @@
 package com.uottawa.olympus.olympusservices;
 
 
+import java.io.Serializable;
+
 public abstract class UserType {
+
     String username;
     String password;
     String firstname;
     String lastname;
 
 
-    UserType(){
 
-    }
 
     UserType(String username, String password, String firstname, String lastname){
         this.username = username;
@@ -18,6 +19,8 @@ public abstract class UserType {
         this.firstname = firstname;
         this.lastname = lastname;
     }
+
+    public abstract String getRole();
 
     public String getUsername() {
         return username;
@@ -63,5 +66,16 @@ public abstract class UserType {
         //in activity whenever a setter is called. DBHelper requires a Context (Activity) to be initialized
         //so cannot be initialized in this class
         this.lastname = lastname;
+    }
+
+
+
+
+    public boolean equals(UserType other){
+        if(this.username.equals(other.username)&&this.password.equals(other.password)&&
+                this.firstname.equals(other.firstname)&&this.lastname.equals(other.lastname)){
+            return true;
+        }
+        return false;
     }
 }

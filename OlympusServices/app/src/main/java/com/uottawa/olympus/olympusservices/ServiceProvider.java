@@ -6,4 +6,7 @@ public class ServiceProvider extends UserType {
         super(username, password, firstname, lastname);
     }
 
+    public String getRole(){ return "ServiceProvider"; }
+
+
 }

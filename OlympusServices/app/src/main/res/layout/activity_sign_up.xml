@@ -98,15 +98,11 @@
         android:textCursorDrawable="@color/colorWhite"/>
 
     <Button
-        android:theme="@style/AppTheme.Button"
         android:id="@+id/SignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/signup"/>
-
-
-
-
-
+        android:onClick="onClickSignUp"
+        android:text="@string/signup"
+        android:theme="@style/AppTheme.Button" />
 
 </LinearLayout>

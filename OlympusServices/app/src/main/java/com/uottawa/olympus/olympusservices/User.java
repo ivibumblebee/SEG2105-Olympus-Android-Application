@@ -7,4 +7,6 @@ public class User extends UserType {
         super(username, password, firstname, lastname);
     }
 
+    public String getRole(){ return "User"; }
+
 }
