@@ -20,21 +20,28 @@ public class LogIn extends AppCompatActivity {
         String password = ((EditText) findViewById(R.id.PasswordInput)).getText().toString();
         DBHelper dbHelper = new DBHelper(this);
         Intent intent = new Intent(getApplicationContext(),Welcome.class);
-        if(dbHelper.findUserByUsername(username)!=null) {
-            if (dbHelper.findUserByUsername(username).getUsername().equals(username) &&
-                    dbHelper.findUserByUsername(username).getPassword().equals(password)) {
-                intent.putExtra("username", username);
-                startActivity(intent);
+        if(username.matches("[a-zA-Z0-9]*")&&password.matches("[a-zA-Z0-9]*")
+                && password.length()>0 && username.length()>0) {
+            if (dbHelper.findUserByUsername(username) != null) {
+                if (dbHelper.findUserByUsername(username).getUsername().equals(username) &&
+                        dbHelper.findUserByUsername(username).getPassword().equals(password)) {
+                    intent.putExtra("username", username);
+                    startActivity(intent);
 
 
+                } else {
+                    Toast.makeText(this, "Wrong Password", Toast.LENGTH_LONG).show();
+                }
             } else {
-                Toast.makeText(this, "Wrong Password", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Account does not exist", Toast.LENGTH_LONG).show();
             }
         }
-        else{
-            Toast.makeText(this, "Account does not exist", Toast.LENGTH_LONG).show();
+        else if(username.length()==0 || password.length()==0){
+            Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_LONG).show();
         }
-
+        else{
+            Toast.makeText(this, "Fields may only contain alphanumeric values", Toast.LENGTH_LONG).show();
+        }
 
 
     }
