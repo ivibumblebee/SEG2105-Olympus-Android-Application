@@ -115,6 +115,10 @@ public class DBIntegrationTest {
         List<String[]> allUsers = dbHelper.getAllUsers();
 
         for (String[] user : allUsers){
+//            for (String s : user){
+//                System.out.print(s + " ");
+//            }
+//            System.out.println();
             UserType usertype = dbHelper.findUserByUsername(user[0]);
             assertEquals(usertype.getFirstname(), user[1]);
             assertEquals(usertype.getLastname(), user[2]);
@@ -123,5 +127,6 @@ public class DBIntegrationTest {
 
         dbHelper.deleteUser("jbO4aBF4dC");
     }
+
 }
 

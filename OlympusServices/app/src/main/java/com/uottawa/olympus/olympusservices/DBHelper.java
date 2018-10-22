@@ -230,10 +230,10 @@ public class DBHelper extends SQLiteOpenHelper {
                     user[j] = cursor.getString(j);
                 }
                 listOfUsers.add(user);
+                cursor.moveToNext();
             }
         }
         cursor.close();
         return listOfUsers;
     }
-
 }
