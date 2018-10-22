@@ -11,12 +11,25 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(packageName = "com.uottawa.olympus.olympusservices")
-public class DBUnitTest {
+public class DBIntegrationTest {
     private DBHelper dbHelper = new DBHelper(RuntimeEnvironment.application);
+
+
+    @Test
+    public void testAdminExists(){
+        UserType dbUser = dbHelper.findUserByUsername("admin");
+        assertEquals("Admin", dbUser.getClass().getSimpleName());
+        assertEquals("admin", dbUser.getUsername());
+        assertEquals("admin", dbUser.getPassword());
+        assertEquals("Admin", dbUser.getFirstname());
+        assertEquals("Admin", dbUser.getLastname());
+    }
 
     @Test
     public void testAddAndDeleteUser(){
@@ -95,4 +108,20 @@ public class DBUnitTest {
         dbHelper.deleteUser("jbO4aBF4dC");
     }
 
+    @Test
+    public void testGetAllUsers(){
+        dbHelper.addUser(new User("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
+
+        List<String[]> allUsers = dbHelper.getAllUsers();
+
+        for (String[] user : allUsers){
+            UserType usertype = dbHelper.findUserByUsername(user[0]);
+            assertEquals(usertype.getFirstname(), user[1]);
+            assertEquals(usertype.getLastname(), user[2]);
+            assertEquals(usertype.getClass().getSimpleName(), user[3]);
+        }
+
+        dbHelper.deleteUser("jbO4aBF4dC");
+    }
 }
+

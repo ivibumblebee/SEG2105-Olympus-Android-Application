@@ -57,6 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
         readDB = this.getReadableDatabase();
         writeDB = this.getWritableDatabase();
+        addUser(new Admin());
     }
 
     @Override
@@ -70,7 +71,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + COLUMN_USERTYPE + " STRING NOT NULL" + ")";
 
         db.execSQL(CREATE_LOGIN_TABLE);
-
     }
 
     @Override
@@ -96,14 +96,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean addUser(UserType userType){
         //Check for duplicate username by querying login table
         Cursor cursor = writeDB.query(TABLE_LOGIN,
-                                new String[] {COLUMN_USERNAME},
-                                COLUMN_USERNAME + " = ?",
-                                new String[]{userType.getUsername()},
-                                null, null, null,
-                                "1");
+                new String[] {COLUMN_USERNAME},
+                COLUMN_USERNAME + " = ?",
+                new String[]{userType.getUsername()},
+                null, null, null,
+                "1");
         //If cursor has 1+ elements in it, username already exists in table
-        if (cursor != null && cursor.getCount() > 0)
+        if (cursor != null && cursor.getCount() > 0){
+            cursor.close();
             return false;
+        }
         cursor.close();
 
         ContentValues values = new ContentValues();
@@ -127,8 +129,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public UserType findUserByUsername(String username){
         UserType usertype;
         Cursor cursor = readDB.rawQuery("SELECT * FROM " + TABLE_LOGIN
-                                    + " WHERE " + COLUMN_USERNAME + " = ?",
-                                    new String[]{username});
+                        + " WHERE " + COLUMN_USERNAME + " = ?",
+                new String[]{username});
 
         if (cursor.moveToFirst()){
             String password = cursor.getString(1);
@@ -215,12 +217,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<String[]> getAllUsers(){
         List<String[]> listOfUsers = new LinkedList<>();
         String[] user;
-        Cursor cursor = readDB.rawQuery("SELECT ? , ?, ?, ? FROM "+TABLE_LOGIN,
-                                new String[]{COLUMN_USERNAME, COLUMN_FIRSTNAME,
-                                COLUMN_LASTNAME, COLUMN_USERTYPE});
+        Cursor cursor = readDB.rawQuery("SELECT " + COLUMN_USERNAME + ", "
+                + COLUMN_FIRSTNAME + ", "
+                + COLUMN_LASTNAME + ", "
+                + COLUMN_USERTYPE
+                + " FROM "+TABLE_LOGIN, null);
+
         if (cursor.moveToFirst()) {
             for (int i = 0; i < cursor.getCount(); i++) {
-                user = new String[4];
+                user = new String[cursor.getColumnNames().length];
                 for (int j = 0; j < cursor.getColumnNames().length; j++) {
                     user[j] = cursor.getString(j);
                 }
