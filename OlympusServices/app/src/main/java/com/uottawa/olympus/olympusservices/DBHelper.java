@@ -235,5 +235,4 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return listOfUsers;
     }
-
 }

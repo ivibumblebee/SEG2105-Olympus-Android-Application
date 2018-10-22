@@ -123,5 +123,6 @@ public class DBIntegrationTest {
 
         dbHelper.deleteUser("jbO4aBF4dC");
     }
+    
 }
 
