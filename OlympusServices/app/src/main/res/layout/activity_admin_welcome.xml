@@ -30,20 +30,15 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <ListView
+        <GridView
             android:id="@+id/Users"
             android:layout_width="fill_parent"
             android:layout_weight="1"
             android:layout_height="match_parent"
+            android:numColumns="2"
             android:textColor="@android:color/white"
             android:textSize="15sp" />
-        <ListView
-            android:id="@+id/Types"
-            android:layout_width="fill_parent"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:textColor="@android:color/white"
-            android:textSize="15sp" />
+
     </LinearLayout>
 
 </LinearLayout>

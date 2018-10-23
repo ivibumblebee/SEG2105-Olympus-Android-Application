@@ -2,7 +2,9 @@ package com.uottawa.olympus.olympusservices;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,22 +20,18 @@ public class AdminWelcome extends AppCompatActivity {
 
         DBHelper dbHelper = new DBHelper(this);
         List<String[]> users = dbHelper.getAllUsers();
-        String[] usernames = new String[users.size()+1];
-        String[] usertypes = new String[users.size()+1];
+        String[] usernames = new String[(users.size()+1)*2];
         usernames[0] = "Username";
-        usertypes[0] = "User Type";
+        usernames[1] = "User Type";
         Iterator iter = users.iterator();
         for (int i=0; i<users.size();i++){
             String[] current = (String[])iter.next();
-            usernames[i+1] = current[0];
-            usertypes[i+1] = current[3];
+            usernames[(i+1)*2] = current[0];
+            usernames[(i+1)*2+1] = current[3];
         }
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, usernames);
-        ListView listView = (ListView) findViewById(R.id.Users);
-        listView.setAdapter(adapter);
-        ArrayAdapter adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, usertypes);
-        ListView listView2 = (ListView) findViewById(R.id.Types);
-        listView2.setAdapter(adapter2);
+        GridView gridView = (GridView) findViewById(R.id.Users);
+        gridView.setAdapter(adapter);
 
     }
 }
