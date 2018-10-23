@@ -20,13 +20,15 @@ public class Main extends AppCompatActivity {
 
     public void onClickSignUp(View view){
         Intent intent = new Intent(getApplicationContext(),SignUp.class);
-        startActivityForResult(intent,0);
+        startActivity(intent);
+        finish();
 
     }
 
     public void onClickLogIn(View view){
         Intent intent = new Intent(getApplicationContext(),LogIn.class);
-        startActivityForResult(intent,0);
+        startActivity(intent);
+        finish();
     }
 
 }

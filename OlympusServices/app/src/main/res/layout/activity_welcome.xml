@@ -63,5 +63,13 @@
         android:background="@drawable/customborder"
         android:textSize="20sp"
         app:fontFamily="@font/julius_sans_one" />
+    <Button
+        android:id="@+id/LogOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="LogOut"
+        android:text="Logout"
+        android:theme="@style/AppTheme.Button" />
 
 </LinearLayout>

@@ -28,11 +28,13 @@ public class LogIn extends AppCompatActivity {
                     if(user.getRole()=="Admin"){
                         Intent intent = new Intent(getApplicationContext(),AdminWelcome.class);
                         startActivity(intent);
+                        finish();
                     }
                     else {
                         Intent intent = new Intent(getApplicationContext(),Welcome.class);
                         intent.putExtra("username", username);
                         startActivity(intent);
+                        finish();
                     }
 
 
@@ -51,6 +53,12 @@ public class LogIn extends AppCompatActivity {
         }
 
 
+    }
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(getApplicationContext(), Main.class);
+        startActivity(intent);
+        finish();
     }
 
 

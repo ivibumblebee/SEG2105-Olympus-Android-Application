@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Main"
-            android:label="@string/app_name">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,14 +30,13 @@
 
         <activity
             android:name=".SignUp"
-            android:parentActivityName=".Main">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Main" />
-        </activity>
-        <activity android:name=".LogIn" />
-        <activity android:name=".Welcome" />
-        <activity android:name=".AdminWelcome"></activity>
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LogIn"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Welcome"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AdminWelcome"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
