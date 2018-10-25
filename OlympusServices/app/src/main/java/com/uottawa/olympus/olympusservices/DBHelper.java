@@ -309,6 +309,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[]{name}) > 0;
     }
 
+    /**
+     * Looks in database for a service, and deletes the corresponding
+     * entry. Returns true if a user was deleted, false otherwise.
+     *
+     * @param service service of entry to delete
+     * @return whether the service was deleted
+     */
+    public boolean deleteService(String service) {
+        return writeDB.delete(TABLE_SERVICES,  COLUMN_SERVICE+" = ?",
+                new String[]{service}) > 0;
+    }
 
     /**
      * Returns a list of String arrays containing the service categories,

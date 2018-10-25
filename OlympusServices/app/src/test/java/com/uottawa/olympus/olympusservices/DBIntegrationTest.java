@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 public class DBIntegrationTest {
     private DBHelper dbHelper = new DBHelper(RuntimeEnvironment.application);
 
-
+    //testing user login table
     @Test
     public void testAdminExists(){
         UserType dbUser = dbHelper.findUserByUsername("admin");
@@ -123,6 +123,88 @@ public class DBIntegrationTest {
             assertEquals(usertype.getFirstname(), user[1]);
             assertEquals(usertype.getLastname(), user[2]);
             assertEquals(usertype.getClass().getSimpleName(), user[3]);
+        }
+
+        dbHelper.deleteUser("jbO4aBF4dC");
+    }
+
+
+    //Testing services table
+    @Test
+    public void testAddAndDeleteServices(){
+        Service originalService, dbService;
+        boolean deleted, addedOne, addedTwo;
+
+
+        originalService = new Service("Exterminating flatworms", 20.00);
+        addedOne = dbHelper.addService(originalService);
+        dbService = dbHelper.findService("Exterminating flatworms");
+
+        assertEquals("Exterminating flatworms", dbService.getName());
+        assertEquals(20.00, dbService.getRate(), 0.001);
+
+
+        originalService = new Service("Cleaning shoes", 15.00);
+        addedTwo = dbHelper.addService(originalService);
+        dbService = dbHelper.findService("Cleaning shoes");
+
+        assertEquals("Cleaning shoes", dbService.getName());
+        assertEquals(15.00, dbService.getRate(), 0.001);
+
+        if (addedOne) {
+            deleted = dbHelper.deleteService("Exterminating flatworms");
+            assertTrue(deleted);
+        }
+
+        if (addedTwo) {
+            deleted = dbHelper.deleteService("Cleaning shoes");
+            assertTrue(deleted);
+        }
+    }
+
+
+    @Test
+    public void testAddDuplicateService(){
+        boolean added;
+
+        added = dbHelper.addService(new Service("Exterminating flatworms", 20.00));
+        assertTrue(added);
+        added = dbHelper.addService(new Service("Exterminating flatworms", 25.00));
+        assertTrue(!added);
+
+        dbHelper.deleteService("Exterminating flatworms");
+    }
+
+    @Test
+    public void testUpdateService(){
+        boolean updated;
+        Service service;
+
+        dbHelper.addService(new Service("Exterminating flatworms", 20.00));
+        updated = dbHelper.updateService("Exterminating flatworms", 25.00);
+        assertTrue(updated);
+
+        service = dbHelper.findService("Exterminating flatworms");
+
+        assertEquals("Exterminating flatworms", service.getName());
+        assertEquals(25.00, service.getRate(), 0.001);
+
+        dbHelper.deleteService("Exterminating flatworms");
+    }
+
+    @Test
+    public void testGetAllServices(){
+        dbHelper.addService(new Service("Exterminating flatworms", 20.00));
+
+        List<String[]> allServices = dbHelper.getAllServices();
+
+        for (String[] service : allServices){
+/*            for (String s : user){
+                System.out.print(s + " ");
+            }
+            System.out.println();*/
+            Service dbService = dbHelper.findService(service[0]);
+            assertEquals(dbService.getRate(), Double.parseDouble(service[1]), 0.001);
         }
 
         dbHelper.deleteUser("jbO4aBF4dC");
