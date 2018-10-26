@@ -144,11 +144,11 @@ public class DBIntegrationTest {
         assertEquals(20.00, dbService.getRate(), 0.001);
 
 
-        originalService = new Service("Cleaning shoes", 15.00);
+        originalService = new Service("Cleaning fishtanks", 15.00);
         addedTwo = dbHelper.addService(originalService);
-        dbService = dbHelper.findService("Cleaning shoes");
+        dbService = dbHelper.findService("Cleaning fishtanks");
 
-        assertEquals("Cleaning shoes", dbService.getName());
+        assertEquals("Cleaning fishtanks", dbService.getName());
         assertEquals(15.00, dbService.getRate(), 0.001);
 
         if (addedOne) {
@@ -157,7 +157,7 @@ public class DBIntegrationTest {
         }
 
         if (addedTwo) {
-            deleted = dbHelper.deleteService("Cleaning shoes");
+            deleted = dbHelper.deleteService("Cleaning fishtanks");
             assertTrue(deleted);
         }
     }
@@ -207,7 +207,7 @@ public class DBIntegrationTest {
             assertEquals(dbService.getRate(), Double.parseDouble(service[1]), 0.001);
         }
 
-        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteService("Exterminating flatworms");
     }
 
 }
