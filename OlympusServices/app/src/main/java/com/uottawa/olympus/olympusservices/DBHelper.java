@@ -43,8 +43,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
 //    private static final String TABLE_SERVICEPROVIDERS = "serviceProviders";
 
-
-//    private static final String TABLE_SERVICES = "services";
+    //name of table containing services and rates
+    private static final String TABLE_SERVICES = "services";
+    //columns of TABLE_LOGIN
+    private static final String COLUMN_SERVICE = "service";
+    private static final String COLUMN_RATE = "rate";
 
 
     /**
@@ -64,18 +67,25 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db){
 
         String CREATE_LOGIN_TABLE = "CREATE TABLE "+ TABLE_LOGIN + "("
-                + COLUMN_USERNAME + " STRING UNIQUE NOT NULL PRIMARY KEY ON CONFLICT ROLLBACK,"
-                + COLUMN_PASSWORD + " STRING NOT NULL,"
-                + COLUMN_FIRSTNAME + " STRING DEFAULT 'FirstName',"
-                + COLUMN_LASTNAME + " STRING DEFAULT 'LastName',"
-                + COLUMN_USERTYPE + " STRING NOT NULL" + ")";
+                + COLUMN_USERNAME + " TEXT UNIQUE NOT NULL PRIMARY KEY ON CONFLICT ROLLBACK,"
+                + COLUMN_PASSWORD + " TEXT NOT NULL,"
+                + COLUMN_FIRSTNAME + " TEXT DEFAULT 'FirstName',"
+                + COLUMN_LASTNAME + " TEXT DEFAULT 'LastName',"
+                + COLUMN_USERTYPE + " TEXT NOT NULL" + ")";
 
         db.execSQL(CREATE_LOGIN_TABLE);
+
+        String CREATE_SERVICES_TABLE = "CREATE TABLE "+ TABLE_SERVICES + "("
+                + COLUMN_SERVICE + " TEXT UNIQUE NOT NULL PRIMARY KEY ON CONFLICT ROLLBACK,"
+                + COLUMN_RATE + " REAL DEFAULT 0.0" + ")";
+
+        db.execSQL(CREATE_SERVICES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SERVICES);
         onCreate(db);
     }
 
@@ -84,6 +94,8 @@ public class DBHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
+
+    //methods for table of users
 
     /**
      * Adds a user to the database. Returns false if there is a user already
@@ -189,12 +201,143 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Returns a list of String arrays containing the username, first name,
+     * last name, and user type of every user in TABLE_LOGIN.
+     *
+     * @return list of arrays of [username, first name, last name, user type]
+     */
+    public List<String[]> getAllUsers(){
+        return getAll("SELECT " + COLUMN_USERNAME + ", "
+                + COLUMN_FIRSTNAME + ", "
+                + COLUMN_LASTNAME + ", "
+                + COLUMN_USERTYPE
+                + " FROM "+TABLE_LOGIN);
+    }
+
+    //methods for table of services
+
+    /**
+     * Adds a service to the database. Returns false if service already
+     * exists in the database.
+     * Returns true if successful in adding service to database.
+     *
+     * @param service service to be added
+     * @return whether adding service was successful
+     */
+    public boolean addService(Service service){
+        //Check for duplicate username by querying login table
+        Cursor cursor = writeDB.query(TABLE_SERVICES,
+                new String[] {COLUMN_SERVICE},
+                COLUMN_SERVICE + " = ?",
+                new String[]{service.getName()},
+                null, null, null,
+                "1");
+        //If cursor has 1+ elements in it, username already exists in table
+        if (cursor != null && cursor.getCount() > 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SERVICE, service.getName());
+        values.put(COLUMN_RATE, service.getRate());
+        writeDB.insert(TABLE_SERVICES, null, values);
+        return true;
+    }
+
+    /**
+     * Looks in database for service with specified, and returns an
+     * object of Service if found.
+     * Returns null if no such service found.
+     *
+     * @param serviceName service to look up
+     * @return object representing service found
+     */
+    public Service findService(String serviceName){
+        Service service;
+        Cursor cursor = readDB.rawQuery("SELECT * FROM " + TABLE_SERVICES
+                        + " WHERE " + COLUMN_SERVICE + " = ?",
+                new String[]{serviceName});
+
+        if (cursor.moveToFirst()){
+            String servName = cursor.getString(0);
+            double rate = cursor.getDouble(1);
+            service = new Service(servName, rate);
+        } else {
+            service = null;
+        }
+        cursor.close();
+        return service;
+    }
+
+    /**
+     * Updates service rate using a Service object.
+     * Returns true if a service was found and entry updated.
+     * Returns false if no service was found.
+     *
+     *
+     * @param service service object containing updated values
+     *
+     * @return whether updating service information was successful
+     */
+    public boolean updateService(Service service){
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_RATE, service.getRate());
+
+        return writeDB.update(TABLE_SERVICES, values, COLUMN_SERVICE+" = ?",
+                new String[]{service.getName()}) > 0;
+    }
+
+    /**
+     * Updates service rate using input of service name and rate.
+     * Returns true if a service was found and entry updated.
+     * Returns false if no service was found.
+     *
+     *
+     * @param name name of service
+     * @param rate rate of service
+     *
+     * @return whether updating service information was successful
+     */
+    public boolean updateService(String name, double rate){
+        ContentValues values = new ContentValues();
+        if (rate > 0)
+            values.put(COLUMN_RATE, rate);
+
+        return writeDB.update(TABLE_SERVICES, values, COLUMN_SERVICE+" = ?",
+                new String[]{name}) > 0;
+    }
+
+    /**
+     * Looks in database for a service, and deletes the corresponding
+     * entry. Returns true if a user was deleted, false otherwise.
+     *
+     * @param service service of entry to delete
+     * @return whether the service was deleted
+     */
+    public boolean deleteService(String service) {
+        return writeDB.delete(TABLE_SERVICES,  COLUMN_SERVICE+" = ?",
+                new String[]{service}) > 0;
+    }
+
+    /**
+     * Returns a list of String arrays containing the service categories,
+     * names and hourly rates.
+     *
+     * @return list of arrays of [service, rate]
+     */
+    public List<String[]> getAllServices(){
+        return getAll("SELECT * FROM " + TABLE_SERVICES);
+    }
+
+    /**
      * Prints all entries of table. One row is printed per line. Columns are
      * separated by spaces.
      *
      * @param tableName name of table to print
      */
-    public void printTable(String tableName){
+    void printTable(String tableName){
         Cursor cursor = readDB.rawQuery("SELECT * FROM "+tableName, null);
         cursor.moveToFirst();
         for (int i = 0; i<cursor.getCount(); i++){
@@ -208,32 +351,24 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
-    /**
-     * Returns a list of String arrays containing the username, first name,
-     * last name, and user type of every user in TABLE_LOGIN.
-     *
-     * @return list of arrays of [username, first name, last name, user type]
-     */
-    public List<String[]> getAllUsers(){
-        List<String[]> listOfUsers = new LinkedList<>();
-        String[] user;
-        Cursor cursor = readDB.rawQuery("SELECT " + COLUMN_USERNAME + ", "
-                + COLUMN_FIRSTNAME + ", "
-                + COLUMN_LASTNAME + ", "
-                + COLUMN_USERTYPE
-                + " FROM "+TABLE_LOGIN, null);
+
+    private List<String[]> getAll(String rawQuery){
+        List<String[]> list = new LinkedList<>();
+        String[] infoArray;
+        Cursor cursor = readDB.rawQuery(rawQuery,null);
 
         if (cursor.moveToFirst()) {
             for (int i = 0; i < cursor.getCount(); i++) {
-                user = new String[cursor.getColumnNames().length];
+                infoArray = new String[cursor.getColumnNames().length];
                 for (int j = 0; j < cursor.getColumnNames().length; j++) {
-                    user[j] = cursor.getString(j);
+                    infoArray[j] = cursor.getString(j);
                 }
-                listOfUsers.add(user);
+                list.add(infoArray);
                 cursor.moveToNext();
             }
         }
         cursor.close();
-        return listOfUsers;
+        return list;
     }
+
 }
