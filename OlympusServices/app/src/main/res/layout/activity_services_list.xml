@@ -11,44 +11,41 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/background"
-    tools:context=".Welcome">
+    tools:context=".ServicesList">
     <TextView
         android:id="@+id/Welcome"
         android:layout_width="300dp"
         android:layout_height="80dp"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:text="Welcome Admin"
+        android:text="List of Services"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         android:layout_marginTop="10dp"
         app:fontFamily="@font/julius_sans_one" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <GridView
+            android:id="@+id/Services"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="250dp"
+            android:numColumns="2"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
 
-
+    </LinearLayout>
     <Button
-        android:id="@+id/Users"
+        android:id="@+id/newService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:onClick="goToUsers"
-        android:text="List of Users"
+        android:text="Add New Service"
+        android:onClick="addService"
         android:theme="@style/AppTheme.Button" />
-    <Button
-        android:id="@+id/Services"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:onClick="goToServices"
-        android:text="List of Services"
-        android:theme="@style/AppTheme.Button" />
-    <Button
-        android:id="@+id/LogOut"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:onClick="LogOut"
-        android:text="Logout"
-        android:theme="@style/AppTheme.Button" />
+
 </LinearLayout>

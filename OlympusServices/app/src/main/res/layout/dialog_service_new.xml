@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    //component used from https://github.com/rengwuxian/MaterialEditText
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/NameInput"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/servicename"
+        android:textCursorDrawable="@color/colorWhite"
+        android:textSize="15sp"
+        app:met_baseColor="@android:color/black"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorBlack"
+        app:met_singleLineEllipsis="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
+    //component used from https://github.com/rengwuxian/MaterialEditText
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/RateInput"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/servicerate"
+        android:inputType="numberDecimal"
+        android:textCursorDrawable="@color/colorWhite"
+        android:textSize="15sp"
+        app:met_baseColor="@android:color/black"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/colorBlack"
+        app:met_singleLineEllipsis="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
+
+</LinearLayout>

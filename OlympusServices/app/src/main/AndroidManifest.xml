@@ -30,13 +30,18 @@
 
         <activity
             android:name=".SignUp"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".LogIn"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Welcome"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".AdminWelcome"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LogIn"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Welcome"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AdminWelcome"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UsersList" />
+        <activity android:name=".ServicesList"></activity>
     </application>
 
 </manifest>
