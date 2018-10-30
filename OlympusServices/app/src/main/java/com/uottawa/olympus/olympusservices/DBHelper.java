@@ -22,7 +22,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
 
     //version of db used for update method
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     //name of db in app data
     private static final String DB_NAME = "UsersDB.db";
 
@@ -58,35 +58,46 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     public DBHelper(Context context){
         super(context, DB_NAME, null, DB_VERSION);
+        //since these methods take a while we will call them once and store the returned dbs
         readDB = this.getReadableDatabase();
         writeDB = this.getWritableDatabase();
+        //pre-add the admin user
         addUser(new Admin());
     }
 
     @Override
     public void onCreate(SQLiteDatabase db){
 
+        //making the table containing user login information
         String CREATE_LOGIN_TABLE = "CREATE TABLE "+ TABLE_LOGIN + "("
                 + COLUMN_USERNAME + " TEXT UNIQUE NOT NULL PRIMARY KEY ON CONFLICT ROLLBACK,"
                 + COLUMN_PASSWORD + " TEXT NOT NULL,"
                 + COLUMN_FIRSTNAME + " TEXT DEFAULT 'FirstName',"
                 + COLUMN_LASTNAME + " TEXT DEFAULT 'LastName',"
                 + COLUMN_USERTYPE + " TEXT NOT NULL" + ")";
-
         db.execSQL(CREATE_LOGIN_TABLE);
 
+        //making the table containing services and their rates
         String CREATE_SERVICES_TABLE = "CREATE TABLE "+ TABLE_SERVICES + "("
                 + COLUMN_SERVICE + " TEXT UNIQUE NOT NULL PRIMARY KEY ON CONFLICT ROLLBACK,"
                 + COLUMN_RATE + " REAL DEFAULT 0.0" + ")";
-
         db.execSQL(CREATE_SERVICES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SERVICES);
-        onCreate(db);
+        switch(oldVersion){
+            case 1: //going from db version 1 to 2
+                //change usertype of Users to Homeowner
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_USERTYPE, "HomeOwner");
+                db.update(TABLE_LOGIN, values, COLUMN_USERTYPE + " = ?", new String[]{"User"});
+
+                //if services table is not created, create it
+                db.execSQL("CREATE TABLE IF NOT EXISTS "+ TABLE_SERVICES + "("
+                        + COLUMN_SERVICE + " TEXT UNIQUE NOT NULL PRIMARY KEY ON CONFLICT ROLLBACK,"
+                        + COLUMN_RATE + " REAL DEFAULT 0.0" + ")");
+        }
     }
 
     @Override
