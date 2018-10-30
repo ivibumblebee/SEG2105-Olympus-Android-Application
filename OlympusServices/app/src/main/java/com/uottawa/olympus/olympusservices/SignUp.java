@@ -15,7 +15,7 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         MaterialSpinner spinner = findViewById(R.id.RoleInput);
-        spinner.setItems("User", "Service Provider");
+        spinner.setItems("HomeOwner", "Service Provider");
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
             @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
@@ -36,14 +36,14 @@ public class SignUp extends AppCompatActivity {
         if(username.length()>=5 && password.length()>5 && firstname.length()>0 && lastname.length()>0 && username.matches("[a-zA-Z0-9]*") && password.matches("[a-zA-Z0-9]*")
                 && firstname.matches("[a-zA-Z]*") && lastname.matches("[a-zA-Z]*")){
             switch(spinner.getText().toString()){
-                case "User":
-                    newUser = new User(username,password,firstname,lastname);
+                case "HomeOwner":
+                    newUser = new HomeOwner(username,password,firstname,lastname);
                     break;
                 case "Service Provider":
                     newUser = new ServiceProvider(username,password,firstname,lastname);
                     break;
                 default:
-                    newUser = new User(username,password,firstname,lastname); //if nothing is enter then defaults to user role.
+                    newUser = new HomeOwner(username,password,firstname,lastname); //if nothing is enter then defaults to user role.
                     break;
 
             }

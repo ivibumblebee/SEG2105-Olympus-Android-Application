@@ -19,7 +19,7 @@ public class UsersList extends AppCompatActivity {
         List<String[]> users = dbHelper.getAllUsers();
         String[] usernames = new String[(users.size()+1)*2];
         usernames[0] = "Username";
-        usernames[1] = "User Type";
+        usernames[1] = "HomeOwner Type";
         Iterator iter = users.iterator();
         for (int i=0; i<users.size();i++){
             String[] current = (String[])iter.next();

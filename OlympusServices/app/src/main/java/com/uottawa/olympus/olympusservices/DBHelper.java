@@ -155,7 +155,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     .equals("ServiceProvider")){
                 usertype = new ServiceProvider(username, password, firstname, lastname);
             } else {
-                usertype = new User(username, password, firstname, lastname);
+                usertype = new HomeOwner(username, password, firstname, lastname);
             }
         } else {
             usertype = null;

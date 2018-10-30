@@ -37,11 +37,11 @@ public class DBIntegrationTest {
         boolean deleted, addedOne, addedTwo;
 
 
-        originalUser = new User("mgarzon", "soccer", "Miguel", "Garzon");
+        originalUser = new HomeOwner("mgarzon", "soccer", "Miguel", "Garzon");
         addedOne = dbHelper.addUser(originalUser);
         dbUser = dbHelper.findUserByUsername("mgarzon");
 
-        assertEquals("User", dbUser.getClass().getSimpleName());
+        assertEquals("HomeOwner", dbUser.getClass().getSimpleName());
         assertEquals("mgarzon", dbUser.getUsername());
         assertEquals("soccer", dbUser.getPassword());
         assertEquals("Miguel", dbUser.getFirstname());
@@ -75,9 +75,9 @@ public class DBIntegrationTest {
     public void testAddDuplicateUsers(){
         boolean added;
 
-        added = dbHelper.addUser(new User("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
+        added = dbHelper.addUser(new HomeOwner("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
         assertTrue(added);
-        added = dbHelper.addUser(new User("jbO4aBF4dC", "seg2105", "Miguel", "Garzon"));
+        added = dbHelper.addUser(new HomeOwner("jbO4aBF4dC", "seg2105", "Miguel", "Garzon"));
         assertTrue(!added);
         added = dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman"));
         assertTrue(!added);
@@ -90,7 +90,7 @@ public class DBIntegrationTest {
         boolean updated;
         UserType dbUser;
 
-        dbHelper.addUser(new User("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
+        dbHelper.addUser(new HomeOwner("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
         updated = dbHelper.updateUserInfo("jbO4aBF4dC", "soccer", "Juan", "Guzman");
         assertTrue(updated);
 
@@ -110,7 +110,7 @@ public class DBIntegrationTest {
 
     @Test
     public void testGetAllUsers(){
-        dbHelper.addUser(new User("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
+        dbHelper.addUser(new HomeOwner("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
 
         List<String[]> allUsers = dbHelper.getAllUsers();
 
