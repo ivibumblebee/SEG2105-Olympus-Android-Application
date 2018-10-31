@@ -26,7 +26,7 @@ public class UsersList extends AppCompatActivity {
             usernames[(i+1)*2] = current[0];
             usernames[(i+1)*2+1] = current[3];
         }
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, usernames);
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_1_customized, usernames);
         GridView gridView = findViewById(R.id.Users);
         gridView.setAdapter(adapter);
     }

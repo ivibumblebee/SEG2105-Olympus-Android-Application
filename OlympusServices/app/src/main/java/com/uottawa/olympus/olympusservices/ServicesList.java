@@ -29,7 +29,7 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
             services[(i+1)*2] = current[0];
             services[(i+1)*2+1] = current[1];
         }
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, services);
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_1_customized, services);
         GridView gridView = findViewById(R.id.Services);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
