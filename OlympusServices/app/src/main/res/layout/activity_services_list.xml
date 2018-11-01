@@ -26,17 +26,13 @@
         app:fontFamily="@font/julius_sans_one" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <GridView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/Services"
-            android:layout_width="fill_parent"
-            android:layout_weight="1"
-            android:layout_height="250dp"
-            android:numColumns="2"
-            android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
     <Button

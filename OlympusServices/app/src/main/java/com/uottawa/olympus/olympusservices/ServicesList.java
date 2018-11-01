@@ -3,6 +3,8 @@ package com.uottawa.olympus.olympusservices;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,31 +16,34 @@ import java.util.List;
 
 public class ServicesList extends AppCompatActivity implements NewServiceDialogFragment.NoticeDialogListener, EditServiceDialogFragment.NoticeDialogListener{
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_services_list);
         DBHelper dbHelper = new DBHelper(this);
-        List<String[]> users = dbHelper.getAllServices();
-        String[] services = new String[(users.size()+1)*2];
-        services[0] = "Name";
-        services[1] = "Rate";
-        Iterator iter = users.iterator();
-        for (int i=0; i<users.size();i++){
+        List<String[]> serviceslist = dbHelper.getAllServices();
+        Service[] services = new Service[(serviceslist.size())];
+        Iterator iter = serviceslist.iterator();
+        for (int i=0; i<serviceslist.size();i++){
             String[] current = (String[])iter.next();
-            services[(i+1)*2] = current[0];
-            services[(i+1)*2+1] = current[1];
+            services[i] = new Service(current[0], Double.parseDouble(current[1]));
         }
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.simple_list_item_1_customized, services);
-        GridView gridView = findViewById(R.id.Services);
-        gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                editService(view);
-                }
-            });
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.Services);
+
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new MyAdapter(services);
+        mRecyclerView.setAdapter(mAdapter);
+
+
+
     }
     public void addService(View view) {
         DialogFragment newFragment = new NewServiceDialogFragment();
