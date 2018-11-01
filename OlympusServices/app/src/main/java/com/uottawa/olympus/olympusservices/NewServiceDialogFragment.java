@@ -45,7 +45,7 @@ public class NewServiceDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         Bundle args = new Bundle();
                         //@anshu: get the name and rate to come from the dialog_service_new dialog
-                        args.putString("name", "hey");
+                        args.putString("name", "test2");
                         args.putDouble("rate", 2.5);
                         ///
                         NewServiceDialogFragment.this.setArguments(args);
