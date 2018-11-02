@@ -57,6 +57,32 @@ public class SignUpTest {
         onView(withId(R.id.SignUp)).perform(click());
     }
 
+    @Test
+    public void checkSignUp3() throws Exception{
+        onView(withId(R.id.UsernameInput)).perform(typeText(""), closeSoftKeyboard());
+        onView(withId(R.id.PasswordInput)).perform(typeText(""), closeSoftKeyboard());
+        onView(withId(R.id.FirstNameInput)).perform(typeText(""), closeSoftKeyboard());
+        onView(withId(R.id.LastNameInput)).perform(typeText(""), closeSoftKeyboard());
+        onView(withId(R.id.SignUp)).perform(click());
+    }
+
+    @Test
+    public void checkSignUp4() throws Exception{
+        onView(withId(R.id.UsernameInput)).perform(typeText("$$$$$$"), closeSoftKeyboard());
+        onView(withId(R.id.PasswordInput)).perform(typeText("$$$$$$"), closeSoftKeyboard());
+        onView(withId(R.id.FirstNameInput)).perform(typeText("$$$$$$"), closeSoftKeyboard());
+        onView(withId(R.id.LastNameInput)).perform(typeText("$$$$$$"), closeSoftKeyboard());
+        onView(withId(R.id.SignUp)).perform(click());
+    }
+
+    public void checkSignUp5() throws Exception{
+        onView(withId(R.id.UsernameInput)).perform(typeText("user"), closeSoftKeyboard());
+        onView(withId(R.id.PasswordInput)).perform(typeText("pass"), closeSoftKeyboard());
+        onView(withId(R.id.FirstNameInput)).perform(typeText("Honda"), closeSoftKeyboard());
+        onView(withId(R.id.LastNameInput)).perform(typeText("Gokuchi"), closeSoftKeyboard());
+        onView(withId(R.id.SignUp)).perform(click());
+    }
+
     @After
     public void tearDown() throws Exception {
         mActivity=null;
