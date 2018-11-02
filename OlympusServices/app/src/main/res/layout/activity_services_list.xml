@@ -50,7 +50,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:text="Rate"
+            android:text="Hourly Rate"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/white"
             android:textSize="15sp" />

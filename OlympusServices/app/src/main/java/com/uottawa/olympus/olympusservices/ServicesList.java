@@ -53,9 +53,12 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
         DialogFragment newFragment = new NewServiceDialogFragment();
         newFragment.show(getSupportFragmentManager(), "addService");
     }
-    public void editService(View view) {
+    public void editService(View view, String name) {
         DialogFragment newFragment = new EditServiceDialogFragment();
         newFragment.show(getSupportFragmentManager(), "editService");
+        Bundle args = new Bundle();
+        args.putString("name", name);
+        newFragment.setArguments(args);
     }
     //add new service
     @Override
@@ -146,7 +149,9 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
             }
             @Override
             public void onClick(View view) {
-                editService(view);
+                TextView nameview = (TextView)view.findViewById(R.id.Name);
+                String name = nameview.getText().toString();
+                editService(view, name);
 
             }
 
