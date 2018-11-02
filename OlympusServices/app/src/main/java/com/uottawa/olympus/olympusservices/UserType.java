@@ -69,8 +69,6 @@ public abstract class UserType {
     }
 
 
-
-
     public boolean equals(UserType other){
         if(this.username.equals(other.username)&&this.password.equals(other.password)&&
                 this.firstname.equals(other.firstname)&&this.lastname.equals(other.lastname)){
