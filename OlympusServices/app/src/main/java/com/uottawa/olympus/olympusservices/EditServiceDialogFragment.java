@@ -45,7 +45,7 @@ public interface NoticeDialogListener {
                     public void onClick(DialogInterface dialog, int id) {
                         Bundle args = new Bundle();
                         //@anshu: get the name and rate to come from the dialog_service_new dialog
-                        args.putString("name", "hey");
+                        args.putString("name", (String)getArguments().get("name"));
                         args.putDouble("rate", 2.5);
                         //
                         EditServiceDialogFragment.this.setArguments(args);
@@ -56,12 +56,13 @@ public interface NoticeDialogListener {
                     public void onClick(DialogInterface dialog, int id) {
                         Bundle args = new Bundle();
                         //@anshu: get the name and rate to come from the dialog_service_new dialog
-                        args.putString("name", "hey");
+                        args.putString("name", (String)getArguments().get("name"));
                         //
                         EditServiceDialogFragment.this.setArguments(args);
                         mListener.onDialogDelete(EditServiceDialogFragment.this);
                     }
-                });
+                })
+        .setTitle((String)getArguments().get("name"));
         return builder.create();
     }
 }
