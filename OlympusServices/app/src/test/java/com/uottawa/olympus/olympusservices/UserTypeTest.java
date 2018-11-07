@@ -11,6 +11,10 @@ import static org.junit.Assert.*;
 
 public class UserTypeTest {
 
+    /**
+     * Tests if the every user that is created is equal to each other or not.
+     */
+
     @Test
     public void userTypeComparaison() {
         UserType user = new HomeOwner("John123", "1234567890", "John", "Doe");
