@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
+import android.widget.EditText;
 
 public class EditServiceDialogFragment extends DialogFragment{
 
@@ -44,10 +45,11 @@ public interface NoticeDialogListener {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Bundle args = new Bundle();
-                        //@anshu: get the name and rate to come from the dialog_service_new dialog
                         args.putString("name", (String)getArguments().get("name"));
-                        args.putDouble("rate", 2.5);
-                        //
+                        EditText rateInput = (EditText) ((AlertDialog) dialog).findViewById(R.id.RateInput);
+                        double rate = Double.parseDouble(rateInput.getText().toString());
+                        args.putDouble("rate", rate);
+                        
                         EditServiceDialogFragment.this.setArguments(args);
                         mListener.onDialogEdit(EditServiceDialogFragment.this);
                     }
@@ -55,9 +57,8 @@ public interface NoticeDialogListener {
                 .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Bundle args = new Bundle();
-                        //@anshu: get the name and rate to come from the dialog_service_new dialog
                         args.putString("name", (String)getArguments().get("name"));
-                        //
+                        
                         EditServiceDialogFragment.this.setArguments(args);
                         mListener.onDialogDelete(EditServiceDialogFragment.this);
                     }

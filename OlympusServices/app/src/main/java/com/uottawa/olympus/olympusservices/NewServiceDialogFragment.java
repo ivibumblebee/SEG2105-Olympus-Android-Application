@@ -8,7 +8,18 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.view.View;
+
+import com.rengwuxian.materialedittext.MaterialEditText;
+
 public class NewServiceDialogFragment extends DialogFragment {
+
 
     public interface NoticeDialogListener {
         public void onDialogNew(DialogFragment dialog);
@@ -30,26 +41,35 @@ public class NewServiceDialogFragment extends DialogFragment {
                     + " must implement NoticeDialogListener");
         }
     }
+
+    //String name = ((EditText) view.findViewById(R.id.NameInput)).getText().toString();
+    //int rate = Integer.parseInt(((EditText) view.findViewById(R.id.RateInput)).getText().toString())
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_service_new, null);
+
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.dialog_service_new, null))
+        builder.setView(view)
                 // Add action buttons
                 .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        EditText nameInput = (EditText) ((AlertDialog) dialog).findViewById(R.id.NameInput);
+                        EditText rateInput = (EditText) ((AlertDialog) dialog).findViewById(R.id.RateInput);
+                        String name = nameInput.getText().toString();
+                        double rate = Double.parseDouble(rateInput.getText().toString());
                         Bundle args = new Bundle();
-                        //@anshu: get the name and rate to come from the dialog_service_new dialog
-                        args.putString("name", "test2");
-                        args.putDouble("rate", 2.5);
-                        ///
+                        args.putString("name", name);
+                        args.putDouble("rate", rate);
                         NewServiceDialogFragment.this.setArguments(args);
                         mListener.onDialogNew(NewServiceDialogFragment.this);
+            
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
