@@ -50,7 +50,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:text="Hourly Rate"
+            android:text="Hourly Rate($)"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/white"
             android:textSize="15sp" />
@@ -67,11 +67,22 @@
             android:layout_height="250dp"/>
 
     </LinearLayout>
+    <TextView
+        android:id="@+id/Title3"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Click on service to edit or delete"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"
+        android:textSize="15sp" />
     <Button
         android:id="@+id/newService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:text="Add New Service"
         android:onClick="addService"
         android:theme="@style/AppTheme.Button" />

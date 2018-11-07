@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Iterator;
 import java.util.List;
@@ -91,6 +92,7 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
         DBHelper dbHelper = new DBHelper(this);
         String name = (String)dialog.getArguments().get("name");
         dbHelper.deleteService(name);
+        Toast.makeText(this, "Service \""+(String)dialog.getArguments().get("name")+"\" has been deleted", Toast.LENGTH_LONG).show();
         dialog.dismiss();
         this.recreate();
     }

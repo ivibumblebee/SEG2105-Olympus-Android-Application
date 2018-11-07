@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.Toast;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -63,13 +64,18 @@ public class NewServiceDialogFragment extends DialogFragment {
                         EditText nameInput = (EditText) ((AlertDialog) dialog).findViewById(R.id.NameInput);
                         EditText rateInput = (EditText) ((AlertDialog) dialog).findViewById(R.id.RateInput);
                         String name = nameInput.getText().toString();
-                        double rate = Double.parseDouble(rateInput.getText().toString());
-                        Bundle args = new Bundle();
-                        args.putString("name", name);
-                        args.putDouble("rate", rate);
-                        NewServiceDialogFragment.this.setArguments(args);
-                        mListener.onDialogNew(NewServiceDialogFragment.this);
-            
+                        if (rateInput.getText().toString().length()>0 && name.length()>0 && name.matches("[a-zA-Z]*")){
+                            Double rate = Double.parseDouble(rateInput.getText().toString());
+                            Bundle args = new Bundle();
+                            args.putString("name", name);
+                            args.putDouble("rate", rate);
+                            NewServiceDialogFragment.this.setArguments(args);
+                            mListener.onDialogNew(NewServiceDialogFragment.this);
+                        }
+                        else{
+                            Toast.makeText(getContext(), "Service must have an alphanumeric name and a rate", Toast.LENGTH_LONG).show();
+
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
