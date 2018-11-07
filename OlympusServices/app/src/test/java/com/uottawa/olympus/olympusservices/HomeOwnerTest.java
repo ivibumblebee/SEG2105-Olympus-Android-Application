@@ -6,6 +6,10 @@ import static org.junit.Assert.*;
 
 public class HomeOwnerTest {
 
+    /**
+     * Initiates an Homeowner account and tests if the random strings match to the required inputs.
+     */
+
     @Test
     public void testHomeOwner(){
         UserType user = new HomeOwner( "John123", "1234567890", "John", "Doe" );

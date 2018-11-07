@@ -17,7 +17,6 @@ public class LogInTest {
 
     @Test
     public void checkSignIn() throws Exception{
-        //Lalala
 
     }
 }
