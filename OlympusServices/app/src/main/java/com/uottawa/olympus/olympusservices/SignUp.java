@@ -33,7 +33,7 @@ public class SignUp extends AppCompatActivity {
         String lastname = ((EditText) findViewById(R.id.LastNameInput)).getText().toString();
         MaterialSpinner spinner = findViewById(R.id.RoleInput);
         //TODO add message conditional to check if every EditText is filled up to standards
-        if(username.length()>=5 && password.length()>5 && firstname.length()>0 && lastname.length()>0 && username.matches("[a-zA-Z0-9]*") && password.matches("[a-zA-Z0-9]*")
+        if(username.length()>=5 && password.length()>=5 && firstname.length()>0 && lastname.length()>0 && username.matches("[a-zA-Z0-9]*") && password.matches("[a-zA-Z0-9]*")
                 && firstname.matches("[a-zA-Z]*") && lastname.matches("[a-zA-Z]*")){
             switch(spinner.getText().toString()){
                 case "Home Owner":
@@ -60,7 +60,7 @@ public class SignUp extends AppCompatActivity {
         else if(firstname.length()==0 || lastname.length()==0 || username.length()==0 || password.length()==0){
             Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_LONG).show();
         }
-        else if (username.length()<=5 || password.length()<=5 ){
+        else if (username.length()<5 || password.length()<5 ){
             Toast.makeText(this, "Password and username must be longer than 4 characters", Toast.LENGTH_LONG).show();
         }
         else{
