@@ -19,9 +19,18 @@ import android.widget.Toast;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+/**
+ * Creates a dialog whenever admin adds a new service into the
+ * service list which the admin fills in to provide the fields of
+ * the service.
+ */
 public class NewServiceDialogFragment extends DialogFragment {
 
-
+    /**
+     * Creates a NoticeDialogListener interface for other classes to
+     * implement to have this class be functional in the other classes.
+     *
+     */
     public interface NoticeDialogListener {
         public void onDialogNew(DialogFragment dialog);
         public void onDialogNevermind(DialogFragment dialog);
@@ -43,8 +52,13 @@ public class NewServiceDialogFragment extends DialogFragment {
         }
     }
 
-    //String name = ((EditText) view.findViewById(R.id.NameInput)).getText().toString();
-    //int rate = Integer.parseInt(((EditText) view.findViewById(R.id.RateInput)).getText().toString())
+    /**
+     * Creates the Dialog to add the name and rate of a new service that
+     * the admin has added to the list of services.
+     *
+     * @param savedInstanceState Bundle to transfer information.
+     * @return Dialog that is sent to admin for information.
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 

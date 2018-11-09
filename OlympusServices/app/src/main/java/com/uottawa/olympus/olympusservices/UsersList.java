@@ -8,8 +8,22 @@ import android.widget.GridView;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * screen for user list that the admin can access
+ * and manage all users in the program. Userlist is generated through
+ * the database using DBHelper class.
+ *
+ */
+
 public class UsersList extends AppCompatActivity {
 
+    /**
+     * on Creation of this class the app loads up the xml page for
+     * activity_user_list and generates a gridview using the database
+     * for all the users in the app.
+     *
+     * @param savedInstanceState bundle to transfer data
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

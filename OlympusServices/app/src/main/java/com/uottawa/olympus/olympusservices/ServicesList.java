@@ -19,12 +19,26 @@ import android.widget.Toast;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Creates the view and dialog listener for List of services
+ * which the admin can view and manipulate.
+ *
+ */
 public class ServicesList extends AppCompatActivity implements NewServiceDialogFragment.NoticeDialogListener, EditServiceDialogFragment.NoticeDialogListener{
 
+    //field for RecyclerView
     private RecyclerView mRecyclerView;
+    //field for adapter of Recycler view
     private RecyclerView.Adapter mAdapter;
+    //field for layout manager of Recyler view.
     private RecyclerView.LayoutManager mLayoutManager;
 
+    /**
+     * On creation loads up the xml, and generates the services list,
+     * and fillsout the recylerView fields.
+     *
+     * @param savedInstanceState Bundle to transfer information.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +64,22 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
 
 
     }
+
+    /**
+     * Adds new services to the generated list.
+     *
+     * @param view View object contains the generated list and buttons
+     */
     public void addService(View view) {
         DialogFragment newFragment = new NewServiceDialogFragment();
         newFragment.show(getSupportFragmentManager(), "addService");
     }
+
+    /**
+     * Edits services to the generated list.
+     *
+     * @param view View object contains the generated list and buttons
+     */
     public void editService(View view, String name) {
         DialogFragment newFragment = new EditServiceDialogFragment();
         newFragment.show(getSupportFragmentManager(), "editService");
@@ -62,6 +88,12 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
         newFragment.setArguments(args);
     }
     //add new service
+
+    /**
+     * Uses dialog to obtain the fields for addSerivce.
+     *
+     * @param dialog DialogFragment used to obtain the fields for the added service
+     */
     @Override
     public void onDialogNew(DialogFragment dialog) {
         DBHelper dbHelper = new DBHelper(this);
@@ -72,11 +104,23 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
         this.recreate();
     }
     //user clicked cancel
+
+    /**
+     * Uses dialog to cancel adding a service.
+     *
+     * @param dialog DialogFragment that contains the cancel button.
+     */
     @Override
     public void onDialogNevermind(DialogFragment dialog) {
 
     }
     //edits service with info from dialog
+
+    /**
+     * Uses Dialog to edit service.
+     *
+     * @param dialog DialogFragment that contains the fields and buttons to edit rate.
+     */
     @Override
     public void onDialogEdit(DialogFragment dialog) {
         DBHelper dbHelper = new DBHelper(this);
@@ -87,6 +131,12 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
         this.recreate();
     }
     //deletes service with info from dialog
+
+    /**
+     * Uses Dialog to delete a service from the serviceList.
+     *
+     * @param dialog DialogFragment that contains the delete service button.
+     */
     @Override
     public void onDialogDelete(DialogFragment dialog) {
         DBHelper dbHelper = new DBHelper(this);
