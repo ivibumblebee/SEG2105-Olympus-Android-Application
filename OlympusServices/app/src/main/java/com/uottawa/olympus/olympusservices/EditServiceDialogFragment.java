@@ -11,9 +11,14 @@ import android.widget.EditText;
 
 public class EditServiceDialogFragment extends DialogFragment{
 
-public interface NoticeDialogListener {
-    public void onDialogEdit(DialogFragment dialog);
-    public void onDialogDelete(DialogFragment dialog);
+    /**
+     * Creates a NoticeDialogListener interface for other classes to
+     * implement to have this class be functional in the other classes.
+     *
+     */
+    public interface NoticeDialogListener {
+        public void onDialogEdit(DialogFragment dialog);
+        public void onDialogDelete(DialogFragment dialog);
     }
     EditServiceDialogFragment.NoticeDialogListener mListener;
 
@@ -31,6 +36,14 @@ public interface NoticeDialogListener {
                     + " must implement NoticeDialogListener");
         }
     }
+
+    /**
+     * Edit the Dialog to change rate of a service that the
+     * admin wants to change.
+     *
+     * @param savedInstanceState Bundle to transfer information.
+     * @return Dialog that is sent to admin for information.
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
