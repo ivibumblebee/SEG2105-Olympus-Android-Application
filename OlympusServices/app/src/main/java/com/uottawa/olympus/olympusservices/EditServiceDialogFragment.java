@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class EditServiceDialogFragment extends DialogFragment{
 
@@ -60,18 +61,25 @@ public class EditServiceDialogFragment extends DialogFragment{
                         Bundle args = new Bundle();
                         args.putString("name", (String)getArguments().get("name"));
                         EditText rateInput = (EditText) ((AlertDialog) dialog).findViewById(R.id.RateInput);
-                        double rate = Double.parseDouble(rateInput.getText().toString());
-                        args.putDouble("rate", rate);
-                        
-                        EditServiceDialogFragment.this.setArguments(args);
-                        mListener.onDialogEdit(EditServiceDialogFragment.this);
+                        if(rateInput.getText().toString().length()>0){
+                            Double rate = Double.parseDouble(rateInput.getText().toString());
+                            args.putDouble("rate", rate);
+
+                            EditServiceDialogFragment.this.setArguments(args);
+                            mListener.onDialogEdit(EditServiceDialogFragment.this);
+                        }
+                        else{
+                            Toast.makeText(getContext(), "Rate cannot be empty", Toast.LENGTH_LONG).show();
+
+                        }
+
                     }
                 })
                 .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Bundle args = new Bundle();
                         args.putString("name", (String)getArguments().get("name"));
-                        
+
                         EditServiceDialogFragment.this.setArguments(args);
                         mListener.onDialogDelete(EditServiceDialogFragment.this);
                     }

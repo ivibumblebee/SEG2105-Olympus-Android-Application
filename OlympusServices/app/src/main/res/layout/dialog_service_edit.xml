@@ -16,6 +16,7 @@
         android:inputType="numberDecimal"
         android:textCursorDrawable="@color/colorWhite"
         android:textSize="15sp"
+        android:text=""
         app:met_baseColor="@android:color/black"
         app:met_floatingLabel="highlight"
         app:met_primaryColor="@color/colorBlack"
