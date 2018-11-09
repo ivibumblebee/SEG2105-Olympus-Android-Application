@@ -12,31 +12,54 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/background"
     tools:context=".Welcome">
-    <TextView
-        android:id="@+id/Welcome"
-        android:layout_width="300dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:text="List of Users"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:layout_marginTop="10dp"
-        app:fontFamily="@font/julius_sans_one" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+        <TextView
+            android:id="@+id/Title1"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:text="Username"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/Title2"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:text="User Type"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:gravity="center"/>
+        </LinearLayout>
 
         <GridView
             android:id="@+id/Users"
             android:layout_width="fill_parent"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="450dp"
             android:numColumns="2"
             android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            
+            />
 
     </LinearLayout>
 

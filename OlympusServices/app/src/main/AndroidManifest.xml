@@ -40,8 +40,12 @@
         <activity
             android:name=".AdminWelcome"
             android:screenOrientation="portrait" />
-        <activity android:name=".UsersList" />
-        <activity android:name=".ServicesList"></activity>
+        <activity
+            android:name=".UsersList"
+            android:label="List of Users"/>
+        <activity
+            android:name=".ServicesList"
+            android:label="List of Services"></activity>
     </application>
 
 </manifest>

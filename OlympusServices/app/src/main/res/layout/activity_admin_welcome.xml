@@ -30,7 +30,7 @@
     <Button
         android:id="@+id/Users"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
         android:onClick="goToUsers"
         android:text="List of Users"
@@ -38,7 +38,7 @@
     <Button
         android:id="@+id/Services"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
         android:onClick="goToServices"
         android:text="List of Services"
@@ -46,7 +46,7 @@
     <Button
         android:id="@+id/LogOut"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginTop="50dp"
         android:onClick="LogOut"
         android:text="Logout"

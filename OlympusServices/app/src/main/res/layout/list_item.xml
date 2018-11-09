@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:background="@drawable/customborder"
+    android:background="@color/colorWhite"
     android:layout_marginBottom="5dp">
 
 
@@ -14,10 +14,11 @@
         android:id="@+id/Name"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:text=""
-        android:textColor="@color/colorWhite"
-        android:textSize="15sp"/>
+        android:textColor="@color/colorBlack"
+        android:textSize="15sp"
+        />
 
     <TextView
         android:id="@+id/Rate"
@@ -28,6 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text=""
-        android:textColor="@color/colorWhite"
-        android:textSize="15sp"/>
+        android:textColor="@color/colorBlack"
+        android:textSize="15sp"
+        android:gravity="center"/>
 </LinearLayout>
