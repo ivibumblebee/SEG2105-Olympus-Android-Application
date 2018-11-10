@@ -23,6 +23,7 @@
             android:id="@+id/Title1"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
@@ -38,7 +39,9 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:text="Hourly Rate($)"
+            android:text="Hourly Rate"
+            android:gravity="end"
+            android:paddingRight="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/white"
             android:textSize="15sp" />

@@ -58,7 +58,7 @@
             android:numColumns="2"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            
+
             />
 
     </LinearLayout>

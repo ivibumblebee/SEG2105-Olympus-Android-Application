@@ -61,7 +61,7 @@ public class EditServiceDialogFragment extends DialogFragment{
                         Bundle args = new Bundle();
                         args.putString("name", (String)getArguments().get("name"));
                         EditText rateInput = (EditText) ((AlertDialog) dialog).findViewById(R.id.RateInput);
-                        if(rateInput.getText().toString().length()>0){
+                        if(rateInput.getText().toString().length()>0 && !rateInput.getText().toString().equals(".")){
                             Double rate = Double.parseDouble(rateInput.getText().toString());
                             args.putDouble("rate", rate);
 

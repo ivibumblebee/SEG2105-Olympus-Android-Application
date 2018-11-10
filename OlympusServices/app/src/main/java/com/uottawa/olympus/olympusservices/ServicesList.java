@@ -176,7 +176,7 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
         public void onBindViewHolder(ServicesHolder holder, int position) {
             Service service = services[position];
             holder.name.setText(service.getName());
-            holder.rate.setText(""+service.getRate());
+            holder.rate.setText(String.format("$%,.2f", service.getRate()));
 
 
 

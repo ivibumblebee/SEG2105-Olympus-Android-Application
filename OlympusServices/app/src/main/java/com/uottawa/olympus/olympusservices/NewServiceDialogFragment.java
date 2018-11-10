@@ -79,7 +79,7 @@ public class NewServiceDialogFragment extends DialogFragment {
                         EditText rateInput = (EditText) ((AlertDialog) dialog).findViewById(R.id.RateInput);
                         String name = nameInput.getText().toString();
                         DBHelper dbHelper = new DBHelper(getContext());
-                        if (rateInput.getText().toString().length()>0 && name.length()>0 && name.matches("[a-zA-Z]*")&& dbHelper.findService(name)==null){
+                        if (rateInput.getText().toString().length()>0 && !rateInput.getText().toString().equals(".") && name.length()>0 && name.matches("[a-zA-Z]*")&& dbHelper.findService(name)==null){
                             Double rate = Double.parseDouble(rateInput.getText().toString());
                             Bundle args = new Bundle();
                             args.putString("name", name);
@@ -87,7 +87,7 @@ public class NewServiceDialogFragment extends DialogFragment {
                             NewServiceDialogFragment.this.setArguments(args);
                             mListener.onDialogNew(NewServiceDialogFragment.this);
                         }
-                        else if(!(rateInput.getText().toString().length()>0) || !(name.length()>0)|| !name.matches("[a-zA-Z]*")){
+                        else if(!(rateInput.getText().toString().length()>0) || !(name.length()>0)|| !name.matches("[a-zA-Z]*") || !rateInput.getText().toString().equals(".")){
                             Toast.makeText(getContext(), "Service must have an alphanumeric name and a rate", Toast.LENGTH_LONG).show();
                         }
                         else{
