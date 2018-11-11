@@ -30,7 +30,7 @@ public class ServiceProvider extends UserType {
     ServiceProvider(String username, String password, String firstname, String lastname){
         super(username, password, firstname, lastname);
         services = new ArrayList<>();
-        Availability = new Date[7][2];
+        availabilities = new int[7][4];
     }
 
     /**
