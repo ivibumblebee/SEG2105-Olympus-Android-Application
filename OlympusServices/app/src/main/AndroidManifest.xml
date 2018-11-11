@@ -30,22 +30,45 @@
 
         <activity
             android:name=".SignUp"
+            android:label="Sign Up"
             android:screenOrientation="portrait" />
         <activity
             android:name=".LogIn"
+            android:label="Log In"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Welcome"
+            android:label="Welcome"
             android:screenOrientation="portrait" />
         <activity
             android:name=".AdminWelcome"
+            android:label="Welcome"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UsersList"
-            android:label="List of Users"/>
+            android:label="List of Users"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".ServicesList"
-            android:label="List of Services"></activity>
+            android:name=".AdminServicesList"
+            android:label="List of Services"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ServiceProviderWelcome"
+            android:label="Welcome"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".EditProfile"
+            android:label="Edit Profile"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ServiceProviderServicesList"
+            android:label="List of Services"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ServiceProviderAvailabilities"
+            android:label="Availabilities"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

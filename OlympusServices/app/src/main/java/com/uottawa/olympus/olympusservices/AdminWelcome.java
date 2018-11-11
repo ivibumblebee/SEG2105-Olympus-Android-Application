@@ -70,7 +70,7 @@ public class AdminWelcome extends AppCompatActivity {
      * @param view
      */
     public void goToServices(View view){
-        Intent intent = new Intent(getApplicationContext(), ServicesList.class);
+        Intent intent = new Intent(getApplicationContext(), AdminServicesList.class);
         startActivity(intent);
     }
 }

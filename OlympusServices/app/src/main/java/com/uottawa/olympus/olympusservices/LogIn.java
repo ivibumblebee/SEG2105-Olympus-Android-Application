@@ -50,6 +50,12 @@ public class LogIn extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
+                    else if(user.getRole()=="ServiceProvider"){
+                        Intent intent = new Intent(getApplicationContext(),ServiceProviderWelcome.class);
+                        intent.putExtra("username", username);
+                        startActivity(intent);
+                        finish();
+                    }
                     else {
                         Intent intent = new Intent(getApplicationContext(),Welcome.class);
                         intent.putExtra("username", username);

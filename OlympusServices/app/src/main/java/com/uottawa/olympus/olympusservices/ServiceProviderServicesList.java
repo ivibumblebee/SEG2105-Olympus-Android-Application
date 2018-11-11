@@ -1,7 +1,9 @@
 package com.uottawa.olympus.olympusservices;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,11 +12,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +27,7 @@ import java.util.List;
  * which the admin can view and manipulate.
  *
  */
-public class ServicesList extends AppCompatActivity implements NewServiceDialogFragment.NoticeDialogListener, EditServiceDialogFragment.NoticeDialogListener{
+public class ServiceProviderServicesList extends AppCompatActivity implements DeleteServiceDialogFragment.NoticeDialogListener{
 
     //field for RecyclerView
     private RecyclerView mRecyclerView;
@@ -32,6 +35,8 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
     private RecyclerView.Adapter mAdapter;
     //field for layout manager of Recyler view.
     private RecyclerView.LayoutManager mLayoutManager;
+
+    private String username;
 
     /**
      * On creation loads up the xml, and generates the services list,
@@ -42,14 +47,19 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_services_list);
+        setContentView(R.layout.activity_service_provider_services_list);
+
+        Bundle bundle = getIntent().getExtras();
+        username = bundle.getString("username");
         DBHelper dbHelper = new DBHelper(this);
-        List<String[]> serviceslist = dbHelper.getAllServices();
-        Service[] services = new Service[(serviceslist.size())];
-        Iterator iter = serviceslist.iterator();
-        for (int i=0; i<serviceslist.size();i++){
-            String[] current = (String[])iter.next();
-            services[i] = new Service(current[0], Double.parseDouble(current[1]));
+
+        //grid
+        List<String[]> serviceslist2 = dbHelper.getAllServices();
+        Service[] services2 = new Service[(serviceslist2.size())];
+        Iterator iter2 = serviceslist2.iterator();
+        for (int i=0; i<serviceslist2.size();i++){
+            String[] current = (String[])iter2.next();
+            services2[i] = new Service(current[0], Double.parseDouble(current[1]));
         }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.Services);
@@ -58,93 +68,101 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapter(services, this);
+        mAdapter = new MyAdapter(services2, this);
         mRecyclerView.setAdapter(mAdapter);
 
+        //spinner
+        MaterialSpinner spinner = findViewById(R.id.ServicesInput);
 
+        List<String[]> serviceslist = dbHelper.getAllServices();
+        String[] services = new String[(serviceslist.size())];
+        Iterator iter = serviceslist.iterator();
+        for (int i=0; i<serviceslist.size();i++){
+            String[] current = (String[])iter.next();
+            services[i] = current[0];
+        }
+        ArrayAdapter<String> servicesadapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_spinner_item, services);
+
+        servicesadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(servicesadapter);
+
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
 
     }
 
+
     /**
-     * Adds new services to the generated list.
+     * Override so that previous screen refreshes when pressing the
+     * back button on this activity of the app.
+     *
+     */
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(getApplicationContext(),ServiceProviderWelcome.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * Deletes services from the list.
      *
      * @param view View object contains the generated list and buttons
      */
-    public void addService(View view) {
-        DialogFragment newFragment = new NewServiceDialogFragment();
+    public void deleteService(View view, String name) {
+        DialogFragment newFragment = new DeleteServiceDialogFragment();
         newFragment.show(getSupportFragmentManager(), "addService");
-    }
-
-    /**
-     * Edits services to the generated list.
-     *
-     * @param view View object contains the generated list and buttons
-     */
-    public void editService(View view, String name) {
-        DialogFragment newFragment = new EditServiceDialogFragment();
-        newFragment.show(getSupportFragmentManager(), "editService");
         Bundle args = new Bundle();
         args.putString("name", name);
         newFragment.setArguments(args);
     }
-    //add new service
 
     /**
-     * Uses dialog to obtain the fields for addSerivce.
+     * Adds service to the list.
      *
-     * @param dialog DialogFragment used to obtain the fields for the added service
+     * @param view View object contains the generated list and buttons
      */
-    @Override
-    public void onDialogNew(DialogFragment dialog) {
-        DBHelper dbHelper = new DBHelper(this);
-        String name = (String)dialog.getArguments().get("name");
-        Double rate = (Double)dialog.getArguments().get("rate");
-        dbHelper.addService(new Service(name,rate));
-        dialog.dismiss();
-        this.recreate();
+    public void addService(View view, String name) {
+        MaterialSpinner spinner = findViewById(R.id.RoleInput);
+        String servicename = spinner.getText().toString();
+        //add service to service provider if doesn't already exist
     }
-    //user clicked cancel
 
-    /**
-     * Uses dialog to cancel adding a service.
-     *
-     * @param dialog DialogFragment that contains the cancel button.
-     */
-    @Override
-    public void onDialogNevermind(DialogFragment dialog) {
 
-    }
-    //edits service with info from dialog
-
-    /**
-     * Uses Dialog to edit service.
-     *
-     * @param dialog DialogFragment that contains the fields and buttons to edit rate.
-     */
-    @Override
-    public void onDialogEdit(DialogFragment dialog) {
-        DBHelper dbHelper = new DBHelper(this);
-        String name = (String)dialog.getArguments().get("name");
-        Double rate = (Double)dialog.getArguments().get("rate");
-        dbHelper.updateService(new Service(name,rate));
-        dialog.dismiss();
-        this.recreate();
-    }
-    //deletes service with info from dialog
 
     /**
      * Uses Dialog to delete a service from the serviceList.
      *
      * @param dialog DialogFragment that contains the delete service button.
      */
+
     @Override
     public void onDialogDelete(DialogFragment dialog) {
         DBHelper dbHelper = new DBHelper(this);
         String name = (String)dialog.getArguments().get("name");
-        dbHelper.deleteService(name);
-        Toast.makeText(this, "Service \""+(String)dialog.getArguments().get("name")+"\" has been deleted", Toast.LENGTH_LONG).show();
+        //remove service from service provider
+
+
+
         dialog.dismiss();
         this.recreate();
+    }
+
+    /**
+     * Does nothing
+     *
+     * @param dialog DialogFragment that contains the cancel button.
+     */
+    @Override
+    public void onDialogNevermind(DialogFragment dialog) {
+
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ServicesHolder> {
@@ -203,7 +221,7 @@ public class ServicesList extends AppCompatActivity implements NewServiceDialogF
             public void onClick(View view) {
                 TextView nameview = (TextView)view.findViewById(R.id.Name);
                 String name = nameview.getText().toString();
-                editService(view, name);
+                deleteService(view, name);
 
             }
 
