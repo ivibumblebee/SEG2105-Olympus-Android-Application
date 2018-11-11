@@ -25,6 +25,11 @@ public class ServiceProvider extends UserType {
      */
     private int[][] availabilities;
 
+    private String address;
+    private String phonenumber;
+    private String companyname;
+    private boolean licensed;
+
 
     /**
      * Constructor for the service object which takes the parameters to
