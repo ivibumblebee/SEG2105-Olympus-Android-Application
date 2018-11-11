@@ -1,6 +1,7 @@
 package com.uottawa.olympus.olympusservices;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,6 +14,9 @@ public class ServiceProvider extends UserType {
 
     //Field for list of services that service provider offers.
     private List<Service> services;
+    //Field for array of availabilities
+    private int[][] availabilities;
+
 
     /**
      * Constructor for the service object which takes the parameters to
@@ -26,6 +30,7 @@ public class ServiceProvider extends UserType {
     ServiceProvider(String username, String password, String firstname, String lastname){
         super(username, password, firstname, lastname);
         services = new ArrayList<>();
+        Availability = new Date[7][2];
     }
 
     /**
@@ -60,5 +65,18 @@ public class ServiceProvider extends UserType {
     public List<Service> getServices(){
         return services;
     }
+
+
+    public void setAvailabilities(int day, int startHour, int startMin, int endHour, int endMin){
+        availabilities[day][0] = startHour;
+        availabilities[day][1] = startMin;
+        availabilities[day][2] = endHour;
+        availabilities[day][3] = endMin;
+    }
+
+    public int[][] getAvailabilities(){
+        return availabilities;
+    }
+
 
 }
