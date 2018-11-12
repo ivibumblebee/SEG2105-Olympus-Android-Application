@@ -238,7 +238,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_FIRSTNAME, userType.getFirstname());
         values.put(COLUMN_LASTNAME, userType.getLastname());
         values.put(COLUMN_USERTYPE, userType.getClass().getSimpleName());
-        if (userType.getClass().getSimpleName().equals("Homeowner")){
+        if (userType instanceof ServiceProvider){
             ServiceProvider serviceProvider = (ServiceProvider)userType;
 
             String address = serviceProvider.getAddress();
@@ -676,6 +676,23 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
         return serviceProvider.getAvailabilities();
+    }
+
+    public int[][] getAvailabilities(String serviceProviderName){
+        int[][] availabilities = new int[7][4];
+        if (serviceProviderName==null) return availabilities;
+
+        Cursor cursor = readDB.rawQuery("SELECT * FROM " + TABLE_AVAILABILITY
+                        + " WHERE " + COLUMN_AVAILABILITYNAME + " = ?",
+                        new String[]{serviceProviderName});
+        if (cursor.moveToFirst()){
+            for (int i = 0; i < 7; i++) {
+                int start = cursor.getInt(i*2+1);
+                int end = cursor.getInt(i*2+2);
+                availabilities[i] = new int[]{start/60, start%60, end/60, end%60};
+            }
+        }
+        return availabilities;
     }
 
     /**
