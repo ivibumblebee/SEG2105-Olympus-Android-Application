@@ -91,5 +91,35 @@ public class ServiceProvider extends UserType {
         return availabilities;
     }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getCompanyname() {
+        return companyname;
+    }
+
+    public void setCompanyname(String companyname) {
+        this.companyname = companyname;
+    }
+
+    public boolean isLicensed() {
+        return licensed;
+    }
+
+    public void setLicensed(boolean licensed) {
+        this.licensed = licensed;
+    }
 }
