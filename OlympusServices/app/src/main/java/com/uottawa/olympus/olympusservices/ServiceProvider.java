@@ -15,7 +15,20 @@ public class ServiceProvider extends UserType {
     //Field for list of services that service provider offers.
     private List<Service> services;
     //Field for array of availabilities
+    /*
+    DO NOT CHANGE THIS ARRAY. The 2D array size is hard coded such that the first array has a size
+    of 7 and the array inside has an array size of 4. The array is setup such that the index represent a day of the
+    week. Monday is 0, Tuesday is 1, Wednesday is 2, Thursday is 3, Friday is 4, Saturday is 5,
+    Sunday is 6. so, [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]. Inside each of
+    the arrays there is a another array containing int values such that index 0,1,2,3 is startHour,
+    startMin, endHour, endMin respectively.
+     */
     private int[][] availabilities;
+
+    private String address;
+    private String phonenumber;
+    private String companyname;
+    private boolean licensed;
 
 
     /**
@@ -78,5 +91,35 @@ public class ServiceProvider extends UserType {
         return availabilities;
     }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getCompanyname() {
+        return companyname;
+    }
+
+    public void setCompanyname(String companyname) {
+        this.companyname = companyname;
+    }
+
+    public boolean isLicensed() {
+        return licensed;
+    }
+
+    public void setLicensed(boolean licensed) {
+        this.licensed = licensed;
+    }
 }
