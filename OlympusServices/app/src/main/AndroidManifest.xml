@@ -47,28 +47,28 @@
         <activity
             android:name=".UsersList"
             android:label="List of Users"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AdminServicesList"
             android:label="List of Services"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ServiceProviderWelcome"
             android:label="Welcome"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EditProfile"
             android:label="Edit Profile"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ServiceProviderServicesList"
             android:label="List of Services"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ServiceProviderAvailabilities"
             android:label="Availabilities"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".SignUpPart2"></activity>
     </application>
 
 </manifest>

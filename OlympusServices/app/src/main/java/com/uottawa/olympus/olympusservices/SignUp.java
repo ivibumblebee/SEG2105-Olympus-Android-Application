@@ -56,27 +56,45 @@ public class SignUp extends AppCompatActivity {
 
         if(username.length()>=5 && password.length()>5 && firstname.length()>0 && lastname.length()>0 && username.matches("[a-zA-Z0-9]*") && password.matches("[a-zA-Z0-9]*")
                 && firstname.matches("[a-zA-Z]*") && lastname.matches("[a-zA-Z]*")){
+            DBHelper dbHelper = new DBHelper(this);
+            Intent intent = new Intent(getApplicationContext(),LogIn.class);
             switch(spinner.getText().toString()){
                 case "Home Owner":
                     newUser = new HomeOwner(username,password,firstname,lastname);
+                    if(dbHelper.addUser(newUser)){
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(this,"Username is taken",Toast.LENGTH_LONG).show();
+                    }
                     break;
                 case "Service Provider":
-                    newUser = new ServiceProvider(username,password,firstname,lastname);
+                    if(dbHelper.findUserByUsername(username)==null) {
+                        Intent intent2 = new Intent(getApplicationContext(), SignUpPart2.class);
+                        intent2.putExtra("firstname", firstname);
+                        intent2.putExtra("lastname", lastname);
+                        intent2.putExtra("username", username);
+                        intent2.putExtra("password", password);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(this,"Username is taken",Toast.LENGTH_LONG).show();
+                    }
                     break;
+
                 default:
                     newUser = new HomeOwner(username,password,firstname,lastname); //if nothing is enter then defaults to user role.
+
+                    if(dbHelper.addUser(newUser)){
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(this,"Username is taken",Toast.LENGTH_LONG).show();
+                    }
                     break;
 
             }
 
-            DBHelper dbHelper = new DBHelper(this);
-            Intent intent = new Intent(getApplicationContext(),LogIn.class);
-            if(dbHelper.addUser(newUser)){
-                startActivity(intent);
-                finish();
-            }else{
-                Toast.makeText(this,"Username is taken",Toast.LENGTH_LONG).show();
-            }
         }
         else if(firstname.length()==0 || lastname.length()==0 || username.length()==0 || password.length()==0){
             Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_LONG).show();

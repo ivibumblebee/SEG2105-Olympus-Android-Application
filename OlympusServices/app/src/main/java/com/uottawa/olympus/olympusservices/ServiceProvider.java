@@ -31,6 +31,8 @@ public class ServiceProvider extends UserType {
     private boolean licensed;
 
 
+
+
     /**
      * Constructor for the service object which takes the parameters to
      * fill out the service providers field.
@@ -40,10 +42,15 @@ public class ServiceProvider extends UserType {
      * @param firstname String of the firstname.
      * @param lastname String of the lastname.
      */
-    ServiceProvider(String username, String password, String firstname, String lastname){
+    ServiceProvider(String username, String password, String firstname, String lastname, String address,
+                    String phonenumber, String companyname, boolean licensed){
         super(username, password, firstname, lastname);
         services = new ArrayList<>();
         availabilities = new int[7][4];
+        this.address = address;
+        this.phonenumber = phonenumber;
+        this.companyname = companyname;
+        this.licensed = licensed;
     }
 
     /**
@@ -75,9 +82,7 @@ public class ServiceProvider extends UserType {
      *
      * @return arrayList of Services
      */
-    public List<Service> getServices(){
-        return services;
-    }
+
 
 
     public void setAvailabilities(int day, int startHour, int startMin, int endHour, int endMin){
@@ -89,6 +94,17 @@ public class ServiceProvider extends UserType {
 
     public int[][] getAvailabilities(){
         return availabilities;
+    }
+
+    public void setAvailabilities(int[][] availabilities) {
+        this.availabilities = availabilities;
+    }
+    public void setServices(List<Service> services) {
+        this.services = services;
+    }
+
+    public List<Service> getServices(){
+        return services;
     }
 
     public String getAddress() {
