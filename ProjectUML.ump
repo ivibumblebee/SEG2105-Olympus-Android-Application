@@ -1,0 +1,62 @@
+class UserType
+{
+  firstname;
+  lastname;
+  username;
+  password;
+}
+
+class HomeOwner
+{
+  isA UserType;
+}
+
+class ServiceProvider
+{
+  int[] availabilities;
+address;
+int phonenumber;
+companyname;
+boolean licensed;
+isA UserType;
+}
+
+class Admin
+{
+  isA UserType;
+}
+
+class Service
+{
+  name;
+double rate;
+* -- * ServiceProvider;
+}
+
+//$?[End_of_model]$?
+
+class UserType
+{
+  position 475 69 141 109;
+}
+
+class HomeOwner
+{
+  position 109 233 109 41;
+}
+
+class ServiceProvider
+{
+  position 849 239 173 126;
+}
+
+class Admin
+{
+  position 490 236 109 41;
+}
+
+class Service
+{
+  position 853 422 112 75;
+  position.association Service__ServiceProvider 65,0 61,126;
+}
