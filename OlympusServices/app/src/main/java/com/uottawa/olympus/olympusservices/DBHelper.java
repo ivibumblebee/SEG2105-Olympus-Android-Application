@@ -286,18 +286,18 @@ public class DBHelper extends SQLiteOpenHelper {
             String password = cursor.getString(1);
             String firstname = cursor.getString(2);
             String lastname = cursor.getString(3);
+            String address = cursor.getString(5);
+            String phonenumber = cursor.getString(6);
+            String companyname = cursor.getString(7);
+            boolean licensed = Boolean.parseBoolean(cursor.getString(8));
             if (cursor.getString(4)
                     .equals("Admin")){
                 usertype = new Admin();
             } else if (cursor.getString(4)
                     .equals("ServiceProvider")){
-                ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname);
+                ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname, address, phonenumber, companyname, licensed);
                 getAllServicesProvidedByUser(serviceProvider);
                 getAvailabilities(serviceProvider);
-                serviceProvider.setAddress(cursor.getString(5));
-                serviceProvider.setPhonenumber(cursor.getString(6));
-                serviceProvider.setCompanyname(cursor.getString(7));
-                serviceProvider.setLicensed(Boolean.parseBoolean(cursor.getString(8)));
                 usertype = serviceProvider;
             } else {
                 usertype = new HomeOwner(username, password, firstname, lastname);
