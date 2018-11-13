@@ -54,7 +54,7 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
         DBHelper dbHelper = new DBHelper(this);
 
         //grid
-        List<String[]> serviceslist2 = dbHelper.getAllServices();
+        List<String[]> serviceslist2 = dbHelper.getAllServicesProvidedByUser(username);
         Service[] services2 = new Service[(serviceslist2.size())];
         Iterator iter2 = serviceslist2.iterator();
         for (int i=0; i<serviceslist2.size();i++){
@@ -129,10 +129,12 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
      *
      * @param view View object contains the generated list and buttons
      */
-    public void addService(View view, String name) {
-        MaterialSpinner spinner = findViewById(R.id.RoleInput);
+    public void addService(View view) {
+        MaterialSpinner spinner = findViewById(R.id.ServicesInput);
         String servicename = spinner.getText().toString();
-        //add service to service provider if doesn't already exist
+        DBHelper dbHelper = new DBHelper(this);
+        dbHelper.addServiceProvidedByUser(servicename, username);
+        this.recreate();
     }
 
 
