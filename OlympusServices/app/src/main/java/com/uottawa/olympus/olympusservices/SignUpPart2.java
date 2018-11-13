@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class SignUpPart2 extends AppCompatActivity {
     private String username;
@@ -32,8 +33,22 @@ public class SignUpPart2 extends AppCompatActivity {
         String address = ((EditText) findViewById(R.id.AddressInput)).getText().toString();
         boolean licensed = ((CheckBox) findViewById(R.id.LicensedInput)).isChecked();
 
-        ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname,
-                address, phonenumber, companyname, licensed);
+        if(companyname.length()>0 && address.length()>0 && phonenumber.length()>0
+                && companyname.matches("[a-zA-Z0-9]*") && address.matches("[a-zA-Z]*")
+                && phonenumber.matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")) {
+
+            ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname,
+                    address, phonenumber, companyname, licensed);
+            if(dbHelper.addUser(serviceProvider)){
+                startActivity(intent);
+                finish();
+            }else{
+                Toast.makeText(this,"Could not create account",Toast.LENGTH_LONG).show();
+            }
+        }
+        else{
+            Toast.makeText(this, "Fields cannot be empty and must be formatted correctly", Toast.LENGTH_LONG).show();
+        }
 
     }
 }
