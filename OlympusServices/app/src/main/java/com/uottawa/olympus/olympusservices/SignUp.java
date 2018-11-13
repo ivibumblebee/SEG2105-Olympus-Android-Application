@@ -75,7 +75,7 @@ public class SignUp extends AppCompatActivity {
                         intent2.putExtra("lastname", lastname);
                         intent2.putExtra("username", username);
                         intent2.putExtra("password", password);
-                        startActivity(intent);
+                        startActivity(intent2);
                         finish();
                     }else{
                         Toast.makeText(this,"Username is taken",Toast.LENGTH_LONG).show();

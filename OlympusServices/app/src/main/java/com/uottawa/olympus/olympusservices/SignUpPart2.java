@@ -34,7 +34,7 @@ public class SignUpPart2 extends AppCompatActivity {
         boolean licensed = ((CheckBox) findViewById(R.id.LicensedInput)).isChecked();
 
         if(companyname.length()>0 && address.length()>0 && phonenumber.length()>0
-                && companyname.matches("[a-zA-Z0-9]*") && address.matches("[a-zA-Z]*")
+                && companyname.matches("^[a-zA-Z0-9_ ]*$") && address.matches("^[a-zA-Z0-9_ ]*$")
                 && phonenumber.matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")) {
 
             ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname,
