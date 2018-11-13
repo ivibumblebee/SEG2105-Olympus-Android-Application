@@ -19,7 +19,8 @@ public class UserTypeTest {
     public void userTypeComparaison() {
         UserType user = new HomeOwner("John123", "1234567890", "John", "Doe");
         UserType admin = new Admin();
-        UserType serviceprovider = new ServiceProvider( "Jane123", "1234567890", "Jane", "Doe");
+        UserType serviceprovider = new ServiceProvider( "Jane123", "1234567890", "Jane", "Doe",
+                "testaddress", "8888888888", "companydotcom", true);
         boolean userservice = user.equals(serviceprovider);
         boolean useradmin = user.equals(admin);
         boolean serviceadmin = serviceprovider.equals(admin);
