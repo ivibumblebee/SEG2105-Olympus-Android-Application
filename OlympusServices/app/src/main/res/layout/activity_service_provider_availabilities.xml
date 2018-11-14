@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"
+    tools:context=".ServiceProviderAvailabilities">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/Day"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Day"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+            <TextView
+                android:id="@+id/Start"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="20dp"
+                android:text="Start"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+            <TextView
+                android:id="@+id/End"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="20dp"
+                android:text="End"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+
+            <TextView
+                android:id="@+id/Monday"
+                android:layout_width="105dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Monday"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+            <Button
+                android:id="@+id/MondayStart"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:theme="@style/AppTheme.Button"
+                android:onClick="onClick"
+                android:layout_marginRight="10dp"/>
+            <Button
+                android:id="@+id/MondayEnd"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="End"
+                android:layout_marginRight="10dp"
+                android:onClick="onClick"
+                android:theme="@style/AppTheme.Button" />
+
+            <Button
+                android:id="@+id/DeleteMon"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:onClick="onRemove"
+                android:theme="@style/AppTheme.Button" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/Tuesday"
+                android:layout_width="105dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Tuesday"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+            <Button
+                android:id="@+id/TuesdayStart"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:theme="@style/AppTheme.Button"
+                android:onClick="onClick"
+                android:layout_marginRight="10dp"/>
+            <Button
+                android:id="@+id/TuesdayEnd"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="End"
+                android:layout_marginRight="10dp"
+                android:onClick="onClick"
+                android:theme="@style/AppTheme.Button" />
+            <Button
+                android:id="@+id/DeleteTuesday"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:onClick="onRemove"
+                android:theme="@style/AppTheme.Button" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/Wednesday"
+                android:layout_width="105dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Wednesday"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+            <Button
+                android:id="@+id/WednesdayStart"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:theme="@style/AppTheme.Button"
+                android:onClick="onClick"
+                android:layout_marginRight="10dp"/>
+            <Button
+                android:id="@+id/WednesdayEnd"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="End"
+                android:layout_marginRight="10dp"
+                android:onClick="onClick"
+                android:theme="@style/AppTheme.Button" />
+            <Button
+                android:id="@+id/DeleteWednesday"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:onClick="onRemove"
+                android:theme="@style/AppTheme.Button" />
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/Thursday"
+                android:layout_width="105dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Thursday"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+            <Button
+                android:id="@+id/ThursdayStart"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:theme="@style/AppTheme.Button"
+                android:onClick="onClick"
+                android:layout_marginRight="10dp"/>
+            <Button
+                android:id="@+id/ThursdayEnd"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="End"
+                android:layout_marginRight="10dp"
+                android:onClick="onClick"
+                android:theme="@style/AppTheme.Button" />
+            <Button
+                android:id="@+id/DeleteThursday"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:onClick="onRemove"
+                android:theme="@style/AppTheme.Button" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/Friday"
+                android:layout_width="105dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Friday"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+            <Button
+                android:id="@+id/FridayStart"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:theme="@style/AppTheme.Button"
+                android:onClick="onClick"
+                android:layout_marginRight="10dp"/>
+            <Button
+                android:id="@+id/FridayEnd"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="End"
+                android:layout_marginRight="10dp"
+                android:onClick="onClick"
+                android:theme="@style/AppTheme.Button" />
+            <Button
+                android:id="@+id/DeleteFriday"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:onClick="onRemove"
+                android:theme="@style/AppTheme.Button" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/Saturday"
+                android:layout_width="105dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Saturday"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+            <Button
+                android:id="@+id/SaturdayStart"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:theme="@style/AppTheme.Button"
+                android:onClick="onClick"
+                android:layout_marginRight="10dp"/>
+            <Button
+                android:id="@+id/SaturdayEnd"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="End"
+                android:layout_marginRight="10dp"
+                android:onClick="onClick"
+                android:theme="@style/AppTheme.Button" />
+            <Button
+                android:id="@+id/DeleteSaturday"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:onClick="onRemove"
+                android:theme="@style/AppTheme.Button" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/Sunday"
+                android:layout_width="105dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Sunday"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"/>
+            <Button
+                android:id="@+id/SundayStart"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:theme="@style/AppTheme.Button"
+                android:onClick="onClick"
+                android:layout_marginRight="10dp"/>
+            <Button
+                android:id="@+id/SundayEnd"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="End"
+                android:layout_marginRight="10dp"
+                android:onClick="onClick"
+                android:theme="@style/AppTheme.Button" />
+            <Button
+                android:id="@+id/DeleteSunday"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:onClick="onRemove"
+                android:theme="@style/AppTheme.Button" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>

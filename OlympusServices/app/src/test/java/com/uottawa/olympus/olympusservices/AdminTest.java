@@ -6,6 +6,10 @@ import static org.junit.Assert.*;
 
 public class AdminTest {
 
+    /**
+     * Initiates an Admin account and tests if the strings match to the required inputs.
+     */
+
     @Test
     public void testAdmin() {
         Admin admin = new Admin();

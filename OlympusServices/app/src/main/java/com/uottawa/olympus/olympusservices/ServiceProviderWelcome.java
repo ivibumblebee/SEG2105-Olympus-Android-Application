@@ -12,7 +12,8 @@ import android.content.Intent;
  * implemented.
  *
  */
-public class Welcome extends AppCompatActivity {
+public class ServiceProviderWelcome extends AppCompatActivity {
+    String username;
 
     /**
      * On creation of this object the app will display the xml file for
@@ -24,16 +25,15 @@ public class Welcome extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
+        setContentView(R.layout.activity_service_provider_welcome);
         Bundle bundle = getIntent().getExtras();
-        String username = bundle.getString("username");
+        username = bundle.getString("username");
         DBHelper dbHelper = new DBHelper(this);
         UserType user;
         user = dbHelper.findUserByUsername(username);
-        TextView role = findViewById(R.id.Role);
-        TextView name = findViewById(R.id.name);
-        role.setText(user.getRole());
-        name.setText(user.getFirstname());
+        TextView welcome = findViewById(R.id.Welcome);
+        welcome.setText("Welcome "+user.getFirstname()+ " you are logged in as a Service Provider");
+
 
 
     }
@@ -56,6 +56,26 @@ public class Welcome extends AppCompatActivity {
      */
     public void LogOut(View view){
         Intent intent = new Intent(getApplicationContext(), Main.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void EditProfile(View view){
+        Intent intent = new Intent(getApplicationContext(),EditProfile.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
+        finish();
+    }
+
+    public void EditServices(View view){
+        Intent intent = new Intent(getApplicationContext(),ServiceProviderServicesList.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
+        finish();
+    }
+    public void EditAvailabilities(View view){
+        Intent intent = new Intent(getApplicationContext(),ServiceProviderAvailabilities.class);
+        intent.putExtra("username", username);
         startActivity(intent);
         finish();
     }

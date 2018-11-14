@@ -11,11 +11,16 @@ import static org.junit.Assert.*;
 
 public class UserTypeTest {
 
+    /**
+     * Tests if the every user that is created is equal to each other or not.
+     */
+
     @Test
     public void userTypeComparaison() {
         UserType user = new HomeOwner("John123", "1234567890", "John", "Doe");
         UserType admin = new Admin();
-        UserType serviceprovider = new ServiceProvider( "Jane123", "1234567890", "Jane", "Doe");
+        UserType serviceprovider = new ServiceProvider( "Jane123", "1234567890", "Jane", "Doe",
+                "testaddress", "8888888888", "companydotcom", true);
         boolean userservice = user.equals(serviceprovider);
         boolean useradmin = user.equals(admin);
         boolean serviceadmin = serviceprovider.equals(admin);

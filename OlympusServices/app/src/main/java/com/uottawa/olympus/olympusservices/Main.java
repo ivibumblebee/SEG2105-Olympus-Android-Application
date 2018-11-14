@@ -5,8 +5,21 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
 
+/**
+ * The starting page of the app which contains two buttons
+ * of either registering for the app or logging into an existing
+ * account.
+ *
+ */
+
 public class Main extends AppCompatActivity {
 
+    /**
+     * On creation of the object the app loads up the xml page
+     * for the class and creates dbHelper object and Admin object
+     * and then add the admin into the database.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +31,11 @@ public class Main extends AppCompatActivity {
 
     }
 
+    /**
+     * On click of the sign up button loads up the sign up activity
+     *
+     * @param view View object containing the buttons.
+     */
     public void onClickSignUp(View view){
         Intent intent = new Intent(getApplicationContext(),SignUp.class);
         startActivity(intent);
@@ -25,6 +43,11 @@ public class Main extends AppCompatActivity {
 
     }
 
+    /**
+     * On click of the Login button loads up the login activity.
+     *
+     * @param view View object containing the buttons.
+     */
     public void onClickLogIn(View view){
         Intent intent = new Intent(getApplicationContext(),LogIn.class);
         startActivity(intent);

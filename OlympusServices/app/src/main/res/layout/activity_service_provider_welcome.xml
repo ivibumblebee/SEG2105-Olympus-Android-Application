@@ -11,14 +11,14 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/background"
-    tools:context=".Welcome">
+    tools:context=".ServiceProviderWelcome">
     <TextView
         android:id="@+id/Welcome"
         android:layout_width="300dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:text="Welcome Admin"
+        android:text="Welcome"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@android:color/white"
         android:textSize="20sp"
@@ -28,26 +28,41 @@
 
 
     <Button
-        android:id="@+id/Users"
+        android:id="@+id/Profile"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="20dp"
-        android:onClick="goToUsers"
-        android:text="List of Users"
+        android:layout_marginTop="10dp"
+        android:onClick="EditProfile"
+        android:text="Profile"
         android:theme="@style/AppTheme.Button" />
     <Button
         android:id="@+id/Services"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginTop="15dp"
+        android:onClick="EditServices"
+        android:text="Services"
+        android:theme="@style/AppTheme.Button" />
+    <Button
+        android:id="@+id/Availabilities"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="15dp"
+        android:text="Availabilities"
+        android:onClick="EditAvailabilities"
+        android:theme="@style/AppTheme.Button" />
+    <Button
+        android:id="@+id/Bookings"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
-        android:onClick="goToServices"
-        android:text="List of Services"
+        android:text="Bookings"
         android:theme="@style/AppTheme.Button" />
     <Button
         android:id="@+id/LogOut"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="15dp"
         android:onClick="LogOut"
         android:text="Logout"
         android:theme="@style/AppTheme.Button" />

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"
+    tools:context=".EditProfile">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            //component used from https://github.com/rengwuxian/MaterialEditText
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/FirstNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/customborder"
+                android:hint="First Name"
+                android:textSize="15sp"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorWhite"
+                app:met_singleLineEllipsis="true"
+                android:textCursorDrawable="@color/colorWhite" />
+
+            //component used from https://github.com/rengwuxian/MaterialEditText
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/LastNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/customborder"
+                android:hint="Last Name"
+                android:textSize="15sp"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorWhite"
+                app:met_singleLineEllipsis="true"
+                android:textCursorDrawable="@color/colorWhite"/>
+
+            //component used from https://github.com/rengwuxian/MaterialEditText
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/CompanyNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/customborder"
+                android:hint="Company Name"
+                android:textSize="15sp"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorWhite"
+                app:met_singleLineEllipsis="true"
+                android:textCursorDrawable="@color/colorWhite"/>
+
+
+            //component used from https://github.com/rengwuxian/MaterialEditText
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/PhoneNumberInput"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/customborder"
+                android:hint="Phone Number"
+                android:textSize="15sp"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorWhite"
+                app:met_singleLineEllipsis="true"
+                android:inputType="phone"
+                android:textCursorDrawable="@color/colorWhite"/>
+
+
+            //component used from https://github.com/rengwuxian/MaterialEditText
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/AddressInput"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/customborder"
+                android:hint="Address"
+                android:textSize="15sp"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorWhite"
+                app:met_singleLineEllipsis="true"
+                android:textCursorDrawable="@color/colorWhite"/>
+
+
+            <CheckBox
+                android:id="@+id/LicensedInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Licensed"
+                android:textSize="15sp"
+                android:textColor="@color/colorWhite"
+                android:buttonTint="@color/colorWhite"
+                android:layout_marginBottom="15dp"/>
+
+
+            //component used from https://github.com/rengwuxian/MaterialEditText
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/PasswordInput"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/customborder"
+                android:hint="Password"
+                android:textSize="15sp"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorWhite"
+                app:met_singleLineEllipsis="true"
+                android:inputType="textPassword"
+                android:textCursorDrawable="@color/colorWhite"/>
+
+            <Button
+                android:id="@+id/SignUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:onClick="Save"
+                android:theme="@style/AppTheme.Button" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

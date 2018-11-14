@@ -48,7 +48,8 @@ public class DBIntegrationTest {
         assertEquals("Garzon", dbUser.getLastname());
 
 
-        originalUser = new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman");
+        originalUser = new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman",
+                "testaddress", "8888888888", "companydotcom", true);
         addedTwo = dbHelper.addUser(originalUser);
         dbUser = dbHelper.findUserByUsername("jbO4aBF4dC");
 
@@ -79,7 +80,8 @@ public class DBIntegrationTest {
         assertTrue(added);
         added = dbHelper.addUser(new HomeOwner("jbO4aBF4dC", "seg2105", "Miguel", "Garzon"));
         assertTrue(!added);
-        added = dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman"));
+        added = dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman",
+                "testaddress", "8888888888", "companydotcom", true));
         assertTrue(!added);
 
         dbHelper.deleteUser("jbO4aBF4dC");
@@ -140,7 +142,7 @@ public class DBIntegrationTest {
         addedOne = dbHelper.addService(originalService);
         dbService = dbHelper.findService("Exterminating flatworms");
 
-        assertEquals("Exterminating flatworms", dbService.getName());
+        assertEquals("exterminating flatworms", dbService.getName());
         assertEquals(20.00, dbService.getRate(), 0.001);
 
 
@@ -148,7 +150,7 @@ public class DBIntegrationTest {
         addedTwo = dbHelper.addService(originalService);
         dbService = dbHelper.findService("Cleaning fishtanks");
 
-        assertEquals("Cleaning fishtanks", dbService.getName());
+        assertEquals("cleaning fishtanks", dbService.getName());
         assertEquals(15.00, dbService.getRate(), 0.001);
 
         if (addedOne) {
@@ -186,7 +188,7 @@ public class DBIntegrationTest {
 
         service = dbHelper.findService("Exterminating flatworms");
 
-        assertEquals("Exterminating flatworms", service.getName());
+        assertEquals("exterminating flatworms", service.getName());
         assertEquals(25.00, service.getRate(), 0.001);
 
         dbHelper.deleteService("Exterminating flatworms");
@@ -208,6 +210,101 @@ public class DBIntegrationTest {
         }
 
         dbHelper.deleteService("Exterminating flatworms");
+    }
+
+    @Test
+    public void testAddAndDeleteServiceProvidedByUser(){
+        dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true));
+        dbHelper.addService(new Service("Hitman", 12358));
+        boolean added = dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "hitman");
+        assertTrue(added);
+        boolean deleted = dbHelper.deleteServiceProvidedByUser("jbO4aBF4dC", "Hitman");
+        assertTrue(deleted);
+        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteService("hitman");
+    }
+
+    @Test
+    public void testGetAllServicesProvidedByUserAndDeleteService(){
+        dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true));
+
+        dbHelper.addService(new Service("Hitman", 12358));
+        dbHelper.addService(new Service("Exterminating flatworms", 392.457));
+
+        dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "hitman");
+        dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "exterminating flatworms");
+
+        List<String[]> servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
+        assertEquals(2, servicesProvidedByUser.size());
+        assertEquals("hitman", servicesProvidedByUser.get(0)[0]);
+        assertEquals(12358, Double.parseDouble(servicesProvidedByUser.get(0)[1]), 0.00001);
+        assertEquals("exterminating flatworms", servicesProvidedByUser.get(1)[0]);
+        assertEquals(392.457, Double.parseDouble(servicesProvidedByUser.get(1)[1]), 0.00001);
+
+        dbHelper.deleteService("hitman");
+        servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
+        assertEquals(1, servicesProvidedByUser.size());
+
+        dbHelper.deleteService("exterminating flatworms");
+        servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
+        assertEquals(0, servicesProvidedByUser.size());
+
+        dbHelper.deleteUser("jbO4aBF4dC");
+    }
+
+    @Test
+    public void testGetAllProvidersByService(){
+        dbHelper.addService(new Service("Exterminating flatworms", 392.457));
+        dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true));
+        dbHelper.addUser(new ServiceProvider("7MuF1c59XP", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true));
+
+        dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "exterminating flatworms");
+        dbHelper.addServiceProvidedByUser("7MuF1c59XP", "exterminating flatworms");
+
+        List<String[]> providersByService = dbHelper.getAllProvidersByService("exterminating flatworms");
+
+        assertEquals(2, providersByService.size());
+        assertEquals("jbO4aBF4dC", providersByService.get(0)[0]);
+        assertEquals("7MuF1c59XP", providersByService.get(1)[0]);
+
+        dbHelper.deleteService("Exterminating flatworms");
+        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteUser("7MuF1c59XP");
+    }
+
+    @Test
+    public void testUpdateAndGetAvailability(){
+        ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true);
+        serviceProvider.setAvailabilities(0, 4, 18, 19, 30);
+        serviceProvider.setAvailabilities(3, 8, 12, 15, 14);
+
+        //TODO:Perhaps implement a deep clone function for UserType?
+        ServiceProvider serviceProvider2 = new ServiceProvider("jbO4aBF4dC", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true);
+        serviceProvider2.setAvailabilities(0, 4, 18, 19, 30);
+        serviceProvider2.setAvailabilities(3, 8, 12, 15, 14);
+
+        dbHelper.addUser(serviceProvider2);
+
+        boolean updated = dbHelper.updateAvailability(serviceProvider2);
+        assertTrue(updated);
+
+        serviceProvider2.setAvailabilities(3, 8, 12, 15, 10);
+        int[][] dbAvailabilities = dbHelper.getAvailabilities(serviceProvider2);
+        int[][] availabilities = serviceProvider.getAvailabilities();
+
+        assertEquals(14, serviceProvider2.getAvailabilities()[3][3]);
+
+        for (int i = 0; i < 7; i++){
+            for (int j = 0; j < 4; j++){
+                assertEquals(availabilities[i][j], dbAvailabilities[i][j]);
+            }
+        }
     }
 
 }
