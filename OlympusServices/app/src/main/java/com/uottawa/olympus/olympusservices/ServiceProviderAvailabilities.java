@@ -37,7 +37,12 @@ public class ServiceProviderAvailabilities extends AppCompatActivity {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay,
                                               int minute) {
-                            button.setText(hourOfDay + ":" + minute);
+                            if (minute==0){
+                                button.setText(hourOfDay + ":00");
+                            }
+                            else {
+                                button.setText(hourOfDay + ":" + minute);
+                            }
 
                             //set availibility for service provider and check start time is less than finish
                         }
