@@ -99,6 +99,7 @@ public class ServiceProvider extends UserType {
     public void setAvailabilities(int[][] availabilities) {
         this.availabilities = availabilities;
     }
+
     public void setServices(List<Service> services) {
         this.services = services;
     }
