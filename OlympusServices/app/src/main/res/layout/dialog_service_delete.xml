@@ -17,7 +17,7 @@
         android:textSize="15sp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:textAlignment="center"/>
+        />
 
 
 </LinearLayout>

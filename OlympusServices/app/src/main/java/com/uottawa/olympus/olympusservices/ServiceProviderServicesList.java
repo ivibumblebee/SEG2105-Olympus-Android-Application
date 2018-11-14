@@ -133,8 +133,13 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
         MaterialSpinner spinner = findViewById(R.id.ServicesInput);
         String servicename = spinner.getText().toString();
         DBHelper dbHelper = new DBHelper(this);
-        dbHelper.addServiceProvidedByUser(servicename, username);
-        this.recreate();
+        if(dbHelper.addServiceProvidedByUser(username, servicename)){
+            this.recreate();
+        }
+        else{
+            Toast.makeText(this, "Could not add service", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
@@ -149,10 +154,7 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
     public void onDialogDelete(DialogFragment dialog) {
         DBHelper dbHelper = new DBHelper(this);
         String name = (String)dialog.getArguments().get("name");
-        //remove service from service provider
-
-
-
+        dbHelper.deleteServiceProvidedByUser(username, name);
         dialog.dismiss();
         this.recreate();
     }

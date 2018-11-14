@@ -80,14 +80,14 @@
         <com.jaredrummler.materialspinner.MaterialSpinner
             android:id="@+id/ServicesInput"
             android:layout_width="250dp"
-            android:layout_height="45dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="4dp"/>
 
         <Button
             android:id="@+id/newService"
             android:layout_width="wrap_content"
-            android:layout_height="55dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:onClick="addService"
             android:text="Add"

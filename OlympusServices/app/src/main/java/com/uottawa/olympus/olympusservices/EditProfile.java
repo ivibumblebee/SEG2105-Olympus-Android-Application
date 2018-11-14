@@ -62,20 +62,26 @@ public class EditProfile extends AppCompatActivity {
         TextView phonenumber = findViewById(R.id.PhoneNumberInput);
         CheckBox licensed = findViewById(R.id.LicensedInput);
 
-        if(password.getText().toString().length()>5 && firstname.getText().toString().length()>0
-                && lastname.getText().toString().length()>0 && companyname.getText().toString().length()>0
-                && address.getText().toString().length()>0 && phonenumber.getText().toString().length()>0
-                && password.getText().toString().matches("[a-zA-Z0-9]*")
-                && firstname.getText().toString().matches("[a-zA-Z]*")
-                && lastname.getText().toString().matches("[a-zA-Z]*")
-                && companyname.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
-                && address.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
-                && phonenumber.getText().toString().matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")
-                ) {
+        if(password.getText().toString().length()>=5 && firstname.getText().toString().length()>0
+            && lastname.getText().toString().length()>0 && companyname.getText().toString().length()>0
+            && address.getText().toString().length()>0 && phonenumber.getText().toString().length()>0
+            && password.getText().toString().matches("[a-zA-Z0-9]*")
+            && firstname.getText().toString().matches("[a-zA-Z]*")
+            && lastname.getText().toString().matches("[a-zA-Z]*")
+            && companyname.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
+            && address.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
+            && phonenumber.getText().toString().matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")
+            ) {
 
-            dbHelper.updateUserInfo(username, password.getText().toString(), firstname.getText().toString(), lastname.getText().toString(),
-                    address.getText().toString(), phonenumber.getText().toString(), companyname.getText().toString(), new Boolean(licensed.isChecked()));
-            Toast.makeText(this, "Profile has been updated", Toast.LENGTH_LONG).show();
+            if(dbHelper.updateUserInfo(username, password.getText().toString(), firstname.getText().toString(), lastname.getText().toString(),
+                address.getText().toString(), phonenumber.getText().toString(), companyname.getText().toString(), licensed.isChecked())){
+                Toast.makeText(this, "Profile has been updated ", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(this, "Could not update profile ", Toast.LENGTH_LONG).show();
+
+            }
+
         }
         else{
             Toast.makeText(this, "Fields cannot be empty and must be formatted correctly", Toast.LENGTH_LONG).show();
