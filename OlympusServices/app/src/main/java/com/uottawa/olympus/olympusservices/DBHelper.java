@@ -338,7 +338,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if (address != null && !address.equals(""))values.put(COLUMN_ADDRESS, address);
         if (phonenumber != null && !phonenumber.equals(""))values.put(COLUMN_PHONE, phonenumber);
         if (companyname != null && !companyname.equals(""))values.put(COLUMN_COMPANY, companyname);
-        if (licensed != null)values.put(COLUMN_LICENSED, licensed.booleanValue());
+        if (licensed != null)values.put(COLUMN_LICENSED, Boolean.toString(licensed));
 
 
         return writeDB.update(TABLE_LOGIN, values, COLUMN_USERNAME+" = ?",

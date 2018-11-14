@@ -75,7 +75,7 @@ public class EditProfile extends AppCompatActivity {
 
             if(dbHelper.updateUserInfo(username, password.getText().toString(), firstname.getText().toString(), lastname.getText().toString(),
                 address.getText().toString(), phonenumber.getText().toString(), companyname.getText().toString(), licensed.isChecked())){
-                Toast.makeText(this, "Profile has been updated ", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Profile has been updated", Toast.LENGTH_LONG).show();
             }
             else{
                 Toast.makeText(this, "Could not update profile ", Toast.LENGTH_LONG).show();
