@@ -54,7 +54,8 @@ public class SignUp extends AppCompatActivity {
         String lastname = ((EditText) findViewById(R.id.LastNameInput)).getText().toString();
         MaterialSpinner spinner = findViewById(R.id.RoleInput);
 
-        if(username.length()>=5 && password.length()>=5 && firstname.length()>0 && lastname.length()>0 && username.matches("[a-zA-Z0-9]*") && password.matches("[a-zA-Z0-9]*")
+        if(username.length()>=5 && password.length()>=5 && firstname.length()>0 && lastname.length()>0
+                && username.matches("[a-zA-Z0-9]*") && password.matches("[a-zA-Z0-9]*")
                 && firstname.matches("[a-zA-Z]*") && lastname.matches("[a-zA-Z]*")){
             DBHelper dbHelper = new DBHelper(this);
             Intent intent = new Intent(getApplicationContext(),LogIn.class);

@@ -163,7 +163,7 @@ public class AdminServicesList extends AppCompatActivity implements NewServiceDi
         @Override
         public ServicesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_item, parent, false);
+                    .inflate(R.layout.service_list_item, parent, false);
             ServicesHolder vh = new ServicesHolder(v);
             return vh;
         }

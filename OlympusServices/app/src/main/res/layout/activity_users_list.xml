@@ -34,7 +34,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            android:gravity="center"/>
+            android:paddingLeft="10dp"/>
 
         <TextView
             android:id="@+id/Title2"
@@ -47,19 +47,21 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            android:gravity="center"/>
+            android:gravity="end"
+            android:paddingRight="10dp"/>
         </LinearLayout>
 
-        <GridView
-            android:id="@+id/Users"
-            android:layout_width="fill_parent"
-            android:layout_weight="1"
-            android:layout_height="450dp"
-            android:numColumns="2"
-            android:textColor="@android:color/white"
-            android:textSize="15sp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/Users"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

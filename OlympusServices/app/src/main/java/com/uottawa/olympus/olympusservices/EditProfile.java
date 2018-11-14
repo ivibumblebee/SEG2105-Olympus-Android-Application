@@ -71,7 +71,7 @@ public class EditProfile extends AppCompatActivity {
             && companyname.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
             && address.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
             && phonenumber.getText().toString().matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")
-            ) {
+            && address.getText().toString().replaceAll("\\s+","").length()>0) {
 
             if(dbHelper.updateUserInfo(username, password.getText().toString(), firstname.getText().toString(), lastname.getText().toString(),
                 address.getText().toString(), phonenumber.getText().toString(), companyname.getText().toString(), licensed.isChecked())){

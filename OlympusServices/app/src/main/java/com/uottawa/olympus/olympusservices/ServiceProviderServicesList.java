@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -188,7 +187,7 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
         @Override
         public ServicesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.list_item, parent, false);
+                    .inflate(R.layout.service_list_item, parent, false);
             ServicesHolder vh = new ServicesHolder(v);
             return vh;
         }
