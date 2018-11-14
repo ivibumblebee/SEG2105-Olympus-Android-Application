@@ -257,7 +257,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
 
             boolean licensed = serviceProvider.isLicensed();
-            values.put(COLUMN_LICENSED, licensed);
+            values.put(COLUMN_LICENSED, Boolean.toString(licensed));
 
         }
 

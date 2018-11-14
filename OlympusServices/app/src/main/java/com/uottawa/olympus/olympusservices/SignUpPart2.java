@@ -40,6 +40,7 @@ public class SignUpPart2 extends AppCompatActivity {
             ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname,
                     address, phonenumber, companyname, licensed);
             if(dbHelper.addUser(serviceProvider)){
+                Toast.makeText(this, licensed+":"+((ServiceProvider)dbHelper.findUserByUsername(username)).isLicensed(), Toast.LENGTH_SHORT).show();
                 startActivity(intent);
                 finish();
             }else{
