@@ -12,6 +12,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/background"
     tools:context=".LogIn">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/Title"
@@ -66,7 +73,8 @@
         android:onClick="onClickLogIn"
         android:text="@string/login"
         android:theme="@style/AppTheme.Button" />
-
+    </LinearLayout>
+    </ScrollView>
 
 
 

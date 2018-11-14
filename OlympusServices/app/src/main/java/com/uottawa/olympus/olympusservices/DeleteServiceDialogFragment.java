@@ -40,7 +40,7 @@ public class DeleteServiceDialogFragment extends DialogFragment{
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(inflater.inflate(R.layout.dialog_service_delete, null))
                 // Add action buttons
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Bundle args = new Bundle();
