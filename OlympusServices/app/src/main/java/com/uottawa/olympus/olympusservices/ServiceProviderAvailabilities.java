@@ -27,7 +27,6 @@ public class ServiceProviderAvailabilities extends AppCompatActivity {
             final Calendar c = Calendar.getInstance();
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
-
             final Button button = (Button)v;
 
             // Launch Time Picker Dialog
