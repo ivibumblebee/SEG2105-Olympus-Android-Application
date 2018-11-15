@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -142,10 +143,22 @@ public class ServiceProviderAvailabilities extends AppCompatActivity {
         int[] saturdayTime = parseTime( ((Button)findViewById(R.id.SaturdayStart)).getText().toString(),((Button)findViewById(R.id.SaturdayEnd)).getText().toString() );
         int[] sundayTime = parseTime( ((Button)findViewById(R.id.SundayStart)).getText().toString(),((Button)findViewById(R.id.SundayEnd)).getText().toString() );
         int[][] availabilities = {mondayTime,tuesdayTime,wednesdayTime,thursdayTime,fridayTime,saturdayTime,sundayTime};
-        DBHelper dbHelper = new DBHelper(this);
-        ServiceProvider user = (ServiceProvider) dbHelper.findUserByUsername(username);
-        user.setAvailabilities(availabilities);
-        dbHelper.updateAvailability(user);
+        boolean validation = true;
+        for(int[] times: availabilities){
+            if(!validateTime(times)){
+                validation = false;
+            }
+        }
+        if(validation){
+            DBHelper dbHelper = new DBHelper(this);
+            ServiceProvider user = (ServiceProvider) dbHelper.findUserByUsername(username);
+            user.setAvailabilities(availabilities);
+            dbHelper.updateAvailability(user);
+            Toast.makeText(this, "New Availabilities have been set.", Toast.LENGTH_LONG).show();
+        } else{
+            Toast.makeText(this, "All end times must be later then start times.", Toast.LENGTH_LONG).show();
+        }
+
 
     }
 
@@ -195,5 +208,20 @@ public class ServiceProviderAvailabilities extends AppCompatActivity {
             times[3] = Integer.parseInt(endTime.substring(3));
         }
         return times;
+    }
+
+    private boolean validateTime(int[] time){
+        if(time[0]==0&&time[1]==0&&time[2]==0&&time[3]==0){
+            return true;
+        }
+        if(time[2]>time[0]){
+            return true;
+        }else{
+            if(time[2]==time[0]&&time[3]>time[1]){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 }
