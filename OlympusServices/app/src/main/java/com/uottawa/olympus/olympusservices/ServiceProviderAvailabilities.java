@@ -127,6 +127,12 @@ public class ServiceProviderAvailabilities extends AppCompatActivity {
         }
     }
 
+    /**
+     * Parses the views of the UI to generate 2D int array and updates the database and user with
+     * the new 2D on click of the setTime button.
+     * 
+     * @param view
+     */
     public void onSetTimes(View view){
         String mondayStratTime = ((Button)findViewById(R.id.MondayStart)).getText().toString();
         String mondayEndTime = ((Button)findViewById(R.id.MondayEnd)).getText().toString();
