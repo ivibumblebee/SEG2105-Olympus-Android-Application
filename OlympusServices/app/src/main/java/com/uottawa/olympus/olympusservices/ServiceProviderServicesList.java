@@ -80,12 +80,10 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
             String[] current = (String[])iter.next();
             services[i] = current[0];
         }
-        ArrayAdapter<String> servicesadapter = new ArrayAdapter<String>
-                (this, android.R.layout.simple_spinner_item, services);
+        spinner.setItems(services);
 
-        servicesadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spinner.setAdapter(servicesadapter);
+
 
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
