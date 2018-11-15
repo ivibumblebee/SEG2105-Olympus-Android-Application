@@ -353,8 +353,32 @@ public class DBHelper extends SQLiteOpenHelper {
      * @return whether a user was deleted
      */
     public boolean deleteUser(String username) {
-        return writeDB.delete(TABLE_LOGIN,  COLUMN_USERNAME+" = ?",
-                new String[]{username}) > 0;
+        if (username == null) return false;
+
+        Cursor cursor = readDB.rawQuery("SELECT * FROM " + TABLE_LOGIN
+                        + " WHERE " + COLUMN_USERNAME + " = ?",
+                        new String[]{username});
+
+        if (!cursor.moveToFirst()) return false;
+
+        boolean deleted;
+        if (cursor.getString(4).equals("ServiceProvider")) {
+            deleted = writeDB.delete(TABLE_LOGIN,  COLUMN_USERNAME+" = ?",
+                    new String[]{username}) > 0;
+
+            if (deleted) {
+                writeDB.delete(TABLE_SERVICEPROVIDERS, COLUMN_SERVICEPROVIDERNAME + " = ?",
+                        new String[]{username});
+                writeDB.delete(TABLE_AVAILABILITY, COLUMN_AVAILABILITYNAME + " = ?",
+                        new String[]{username});
+            }
+            cursor.close();
+            return deleted;
+        } else {
+            cursor.close();
+            return writeDB.delete(TABLE_LOGIN,  COLUMN_USERNAME+" = ?",
+                    new String[]{username}) > 0;
+        }
     }
 
     /**
@@ -487,22 +511,13 @@ public class DBHelper extends SQLiteOpenHelper {
         boolean deleted;
         String nullify = null;
         service = service.toLowerCase().trim();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_SERVICEPROVIDERSERVICE, nullify);
-        writeDB.update(TABLE_SERVICEPROVIDERS, contentValues, COLUMN_SERVICEPROVIDERSERVICE+" = ?",
-                new String[]{service});
 
         deleted = writeDB.delete(TABLE_SERVICES,  COLUMN_SERVICE+" = ?",
                 new String[]{service}) > 0;
 
         if (deleted) {
-            writeDB.delete(TABLE_SERVICEPROVIDERS, COLUMN_SERVICEPROVIDERSERVICE+" = ?",
+            writeDB.delete(TABLE_SERVICEPROVIDERS, COLUMN_SERVICEPROVIDERSERVICE + " = ?",
                     new String[]{service});
-        } else {
-            ContentValues restoreContentValues = new ContentValues();
-            restoreContentValues.put(COLUMN_SERVICEPROVIDERSERVICE, service);
-            writeDB.update(TABLE_SERVICEPROVIDERS, restoreContentValues, COLUMN_SERVICEPROVIDERSERVICE+" = ?",
-                    null);
         }
         return deleted;
     }
@@ -675,6 +690,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 serviceProvider.setAvailabilities(i, start/60, start%60,
                                                     end/60, end%60);
             }
+        } else {
+            return new int[7][4];
         }
         return serviceProvider.getAvailabilities();
     }

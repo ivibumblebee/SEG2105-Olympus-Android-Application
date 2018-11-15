@@ -23,6 +23,8 @@ public class DBIntegrationTest {
     //testing user login table
     @Test
     public void testAdminExists(){
+        //Admin is automatically created when DB starts up, if admin does not already exist.
+        //so findUserByUsername("admin") should always return an Admin object
         UserType dbUser = dbHelper.findUserByUsername("admin");
         assertEquals("Admin", dbUser.getClass().getSimpleName());
         assertEquals("admin", dbUser.getUsername());
@@ -36,29 +38,32 @@ public class DBIntegrationTest {
         UserType originalUser, dbUser;
         boolean deleted, addedOne, addedTwo;
 
-
+        //add a HomeOwner to database
         originalUser = new HomeOwner("mgarzon", "soccer", "Miguel", "Garzon");
         addedOne = dbHelper.addUser(originalUser);
-        dbUser = dbHelper.findUserByUsername("mgarzon");
 
+        //test retrieving HomeOwner, and confirm that user info is the same as that in object passed
+        dbUser = dbHelper.findUserByUsername("mgarzon");
         assertEquals("HomeOwner", dbUser.getClass().getSimpleName());
         assertEquals("mgarzon", dbUser.getUsername());
         assertEquals("soccer", dbUser.getPassword());
         assertEquals("Miguel", dbUser.getFirstname());
         assertEquals("Garzon", dbUser.getLastname());
 
-
+        //add a ServiceProvider to database
         originalUser = new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman",
                 "testaddress", "8888888888", "companydotcom", true);
         addedTwo = dbHelper.addUser(originalUser);
-        dbUser = dbHelper.findUserByUsername("jbO4aBF4dC");
 
+        //test retrieving ServiceProvider, and confirm that user info is the same as that in object passed
+        dbUser = dbHelper.findUserByUsername("jbO4aBF4dC");
         assertEquals("ServiceProvider", dbUser.getClass().getSimpleName());
         assertEquals("jbO4aBF4dC", dbUser.getUsername());
         assertEquals("seg2105", dbUser.getPassword());
         assertEquals("Juan", dbUser.getFirstname());
         assertEquals("Guzman", dbUser.getLastname());
 
+        //if user exsists in database, delete and test that user has been deleted
         if (addedOne) {
             deleted = dbHelper.deleteUser("mgarzon");
             assertTrue(deleted);
@@ -68,16 +73,72 @@ public class DBIntegrationTest {
             deleted = dbHelper.deleteUser("jbO4aBF4dC");
             assertTrue(deleted);
         }
-
     }
 
+    @Test
+    public void testAddAndGetServiceProvider(){
+        //ServiceProviders have extra fields that can be added to the DB
+        ServiceProvider serviceProvider = new ServiceProvider("7MuF1c59XP", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true);
+        dbHelper.addUser(serviceProvider);
+
+        //retrieve ServiceProvider and test the newly added fields
+        UserType userType = dbHelper.findUserByUsername("7MuF1c59XP");
+        //UserType returned should be an instance of ServiceProvider.
+        //Also serves as check before casting
+        assertTrue(userType instanceof ServiceProvider);
+
+        ServiceProvider dbServiceProvider = (ServiceProvider) userType;
+        assertEquals(serviceProvider.getAddress(), dbServiceProvider.getAddress());
+        assertEquals(serviceProvider.getPhonenumber(), dbServiceProvider.getPhonenumber());
+        assertEquals(serviceProvider.getCompanyname(), dbServiceProvider.getCompanyname());
+        assertEquals(serviceProvider.isLicensed(), dbServiceProvider.isLicensed());
+
+        dbHelper.deleteUser("7MuF1c59XP");
+    }
+
+    @Test
+    public void testDeleteServiceProvider(){
+        //make sure all the rows related to ServiceProvider in all tables are deleted
+        ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true);
+        dbHelper.addUser(serviceProvider);
+
+        Service service1 = new Service("Hitman", 12358);
+        Service service2 = new Service("Exterminating flatworms", 392.457);
+        dbHelper.addService(service1);
+        dbHelper.addService(service2);
+
+        dbHelper.addServiceProvidedByUser(serviceProvider, service1);
+        dbHelper.addServiceProvidedByUser(serviceProvider, service2);
+
+        serviceProvider.setAvailabilities(0, 4, 18, 19, 30);
+        serviceProvider.setAvailabilities(1, 5, 20, 21, 11);
+        serviceProvider.setAvailabilities(3, 7, 12, 15, 14);
+        serviceProvider.setAvailabilities(4, 0, 0, 23, 29);
+        dbHelper.updateAvailability(serviceProvider);
+
+        dbHelper.deleteUser("jbO4aBF4dC");
+
+        List<String[]> providersList = dbHelper.getAllProvidersByService("hitman");
+        assertEquals(0, providersList.size());
+        providersList = dbHelper.getAllProvidersByService("hitman");
+        assertEquals(0, providersList.size());
+
+        int[][] availabilities = dbHelper.getAvailabilities(serviceProvider);
+        for (int i = 0; i<7; i++) {
+            for (int j = 0; j < 4; j++) {
+                assertEquals(0, availabilities[i][j]);
+            }
+        }
+    }
 
     @Test
     public void testAddDuplicateUsers(){
         boolean added;
-
         added = dbHelper.addUser(new HomeOwner("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
         assertTrue(added);
+        //should not be able to add user of same username, regardless of user type
         added = dbHelper.addUser(new HomeOwner("jbO4aBF4dC", "seg2105", "Miguel", "Garzon"));
         assertTrue(!added);
         added = dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman",
@@ -281,6 +342,37 @@ public class DBIntegrationTest {
         dbHelper.deleteUser("7MuF1c59XP");
     }
 
+
+    @Test
+    public void testDeleteServiceProvidedByUser(){
+        ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true);
+        dbHelper.addUser(serviceProvider);
+
+        Service service1 = new Service("Hitman", 12358);
+        Service service2 = new Service("Exterminating flatworms", 392.457);
+        dbHelper.addService(service1);
+        dbHelper.addService(service2);
+
+        dbHelper.addServiceProvidedByUser(serviceProvider, service1);
+        dbHelper.addServiceProvidedByUser(serviceProvider, service2);
+
+        List<String[]> servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser(serviceProvider);
+        assertEquals(2, servicesProvidedByUser.size());
+
+        dbHelper.deleteServiceProvidedByUser("jbO4aBF4dC","hitman");
+        servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
+        assertEquals(1, servicesProvidedByUser.size());
+
+        dbHelper.deleteServiceProvidedByUser("jbO4aBF4dC", "exterminating flatworms");
+        servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
+        assertEquals(0, servicesProvidedByUser.size());
+
+        dbHelper.deleteUser("jbO4aBF4dC");
+    }
+
+
+
     @Test
     public void testUpdateAndGetAvailability(){
         ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
@@ -314,59 +406,32 @@ public class DBIntegrationTest {
                 assertEquals(availabilities[i][j], dbAvailabilities[i][j]);
             }
         }
+        dbHelper.deleteUser("jbO4aBF4dC");
     }
+
 
     @Test
-    public void testAddServiceProvider(){
-        ServiceProvider serviceProvider = new ServiceProvider("7MuF1c59XP", null, null, null,
+    public void testInvalidAvailability(){
+        ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
                 "testaddress", "8888888888", "companydotcom", true);
+        serviceProvider.setAvailabilities(2, 8, 14, 8, 14);
+        serviceProvider.setAvailabilities(3, 15, 12, 8, 14);
+
+
         dbHelper.addUser(serviceProvider);
 
-        UserType userType = dbHelper.findUserByUsername("7MuF1c59XP");
-        assertTrue(userType instanceof ServiceProvider);
-        ServiceProvider dbServiceProvider = (ServiceProvider) userType;
-        assertEquals(serviceProvider.getAddress(), dbServiceProvider.getAddress());
-        assertEquals(serviceProvider.getPhonenumber(), dbServiceProvider.getPhonenumber());
-        assertEquals(serviceProvider.getCompanyname(), dbServiceProvider.getCompanyname());
-        assertEquals(serviceProvider.isLicensed(), dbServiceProvider.isLicensed());
+        boolean updated = dbHelper.updateAvailability(serviceProvider);
+        assertTrue(updated);
+        int[][] dbAvailabilities = dbHelper.getAvailabilities(serviceProvider);
+        int[][] availabilities = serviceProvider.getAvailabilities();
 
+        for (int i = 0; i<7; i++) {
+            for (int j = 0; j < 4; j++) {
+                assertEquals(0, availabilities[i][j]);
+                assertEquals(0, dbAvailabilities[i][j]);
+            }
+        }
+        dbHelper.deleteUser("jbO4aBF4dC");
     }
-//
-//    @Test
-//    public void testDeleteServiceProvidedByUser(){
-//
-//    }
-
-//    @Test
-//    public void testInvalidAvailability(){
-//        ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
-//                "testaddress", "8888888888", "companydotcom", true);
-//        serviceProvider.setAvailabilities(0, 4, 18, 19, 30);
-//        serviceProvider.setAvailabilities(3, 8, 12, 15, 14);
-//
-//        //TODO:Perhaps implement a deep clone function for UserType?
-//        ServiceProvider serviceProvider2 = new ServiceProvider("jbO4aBF4dC", null, null, null,
-//                "testaddress", "8888888888", "companydotcom", true);
-//        serviceProvider2.setAvailabilities(0, 4, 18, 19, 30);
-//        serviceProvider2.setAvailabilities(3, 8, 12, 15, 14);
-//
-//        dbHelper.addUser(serviceProvider2);
-//
-//        boolean updated = dbHelper.updateAvailability(serviceProvider2);
-//        assertTrue(updated);
-//
-//        serviceProvider2.setAvailabilities(3, 8, 12, 15, 10);
-//        int[][] dbAvailabilities = dbHelper.getAvailabilities(serviceProvider2);
-//        int[][] availabilities = serviceProvider.getAvailabilities();
-//
-//        assertEquals(14, serviceProvider2.getAvailabilities()[3][3]);
-//
-//        for (int i = 0; i < 7; i++){
-//            for (int j = 0; j < 4; j++){
-//                assertEquals(availabilities[i][j], dbAvailabilities[i][j]);
-//            }
-//        }
-//    }
-
 }
 
