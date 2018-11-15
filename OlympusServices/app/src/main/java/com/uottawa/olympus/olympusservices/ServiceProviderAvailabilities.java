@@ -130,26 +130,23 @@ public class ServiceProviderAvailabilities extends AppCompatActivity {
     /**
      * Parses the views of the UI to generate 2D int array and updates the database and user with
      * the new 2D on click of the setTime button.
-     * 
+     *
      * @param view
      */
     public void onSetTimes(View view){
-        String mondayStratTime = ((Button)findViewById(R.id.MondayStart)).getText().toString();
-        String mondayEndTime = ((Button)findViewById(R.id.MondayEnd)).getText().toString();
-        String tuesdayStratTime = ((Button)findViewById(R.id.TuesdayStart)).getText().toString();
-        String tuesdayEndTime = ((Button)findViewById(R.id.TuesdayEnd)).getText().toString();
-        String wednesdayStratTime = ((Button)findViewById(R.id.WednesdayStart)).getText().toString();
-        String wednesdayEndTime = ((Button)findViewById(R.id.WednesdayEnd)).getText().toString();
-        String thursdayStratTime = ((Button)findViewById(R.id.ThursdayStart)).getText().toString();
-        String thursdayEndTime = ((Button)findViewById(R.id.ThursdayEnd)).getText().toString();
-        String fridayStratTime = ((Button)findViewById(R.id.FridayStart)).getText().toString();
-        String fridayEndTime = ((Button)findViewById(R.id.FridayEnd)).getText().toString();
-        String saturdayStratTime = ((Button)findViewById(R.id.SaturdayStart)).getText().toString();
-        String saturdayEndTime = ((Button)findViewById(R.id.SaturdayEnd)).getText().toString();
-        String sundayStratTime = ((Button)findViewById(R.id.SundayStart)).getText().toString();
-        String sundayEndTime = ((Button)findViewById(R.id.SundayEnd)).getText().toString();
+        int[] mondayTime = parseTime( ((Button)findViewById(R.id.MondayStart)).getText().toString(),((Button)findViewById(R.id.MondayEnd)).getText().toString() );
+        int[] tuesdayTime = parseTime( ((Button)findViewById(R.id.TuesdayStart)).getText().toString(),((Button)findViewById(R.id.TuesdayEnd)).getText().toString() );
+        int[] wednesdayTime = parseTime( ((Button)findViewById(R.id.WednesdayStart)).getText().toString(),((Button)findViewById(R.id.WednesdayEnd)).getText().toString() );
+        int[] thursdayTime = parseTime( ((Button)findViewById(R.id.ThursdayStart)).getText().toString(),((Button)findViewById(R.id.ThursdayEnd)).getText().toString() );
+        int[] fridayTime = parseTime( ((Button)findViewById(R.id.FridayStart)).getText().toString(), ((Button)findViewById(R.id.FridayEnd)).getText().toString() );
+        int[] saturdayTime = parseTime( ((Button)findViewById(R.id.SaturdayStart)).getText().toString(),((Button)findViewById(R.id.SaturdayEnd)).getText().toString() );
+        int[] sundayTime = parseTime( ((Button)findViewById(R.id.SundayStart)).getText().toString(),((Button)findViewById(R.id.SundayEnd)).getText().toString() );
+        int[][] availabilities = {mondayTime,tuesdayTime,wednesdayTime,thursdayTime,fridayTime,saturdayTime,sundayTime};
+        DBHelper dbHelper = new DBHelper(this);
+        ServiceProvider user = (ServiceProvider) dbHelper.findUserByUsername(username);
+        user.setAvailabilities(availabilities);
+        dbHelper.updateAvailability(user);
 
-        System.out.println(mondayEndTime);
     }
 
     /**
@@ -181,8 +178,22 @@ public class ServiceProviderAvailabilities extends AppCompatActivity {
         return time;
     }
 
-    private int[] parseTime(String time){
-        int[] apple = {1};
-        return apple;
+    private int[] parseTime(String startTime, String endTime){
+        int[] times = new int[4];
+        if(startTime.equals("START")){
+            times[0]=0;
+            times[1]=0;
+        }else{
+            times[0] = Integer.parseInt(startTime.substring(0,2));
+            times[1] = Integer.parseInt(startTime.substring(3));
+        }
+        if(endTime.equals("END")){
+            times[2]=0;
+            times[3]=0;
+        }else{
+            times[2] = Integer.parseInt(endTime.substring(0,2));
+            times[3] = Integer.parseInt(endTime.substring(3));
+        }
+        return times;
     }
 }
