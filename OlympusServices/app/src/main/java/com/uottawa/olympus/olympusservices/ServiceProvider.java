@@ -29,6 +29,7 @@ public class ServiceProvider extends UserType {
     private String phonenumber;
     private String companyname;
     private boolean licensed;
+    private String description;
 
 
 
@@ -43,7 +44,7 @@ public class ServiceProvider extends UserType {
      * @param lastname String of the lastname.
      */
     ServiceProvider(String username, String password, String firstname, String lastname, String address,
-                    String phonenumber, String companyname, boolean licensed){
+                    String phonenumber, String companyname, boolean licensed, String description){
         super(username, password, firstname, lastname);
         services = new ArrayList<>();
         availabilities = new int[7][4];
@@ -51,6 +52,7 @@ public class ServiceProvider extends UserType {
         this.phonenumber = phonenumber;
         this.companyname = companyname;
         this.licensed = licensed;
+        this.description = description;
     }
 
     /**
@@ -138,5 +140,13 @@ public class ServiceProvider extends UserType {
 
     public void setLicensed(boolean licensed) {
         this.licensed = licensed;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String phonenumber) {
+        this.description = description;
     }
 }

@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 public class ServiceProviderTest {
 
     ServiceProvider serviceprovider = new ServiceProvider("John123", "1234567890", "John", "Doe",
-            "testaddress", "8888888888", "companydotcom", true);
+            "testaddress", "8888888888", "companydotcom", true, "LOL");
 
     /**
      * Initiates an ServiceProvider account and tests if the random strings match to the required inputs.

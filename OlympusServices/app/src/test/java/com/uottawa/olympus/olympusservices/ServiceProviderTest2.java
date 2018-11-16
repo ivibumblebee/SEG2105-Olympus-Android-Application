@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class ServiceProviderTest2 {
     ServiceProvider serviceprovider = new ServiceProvider("John123", "1234567890", "John", "Doe",
-            "testaddress", "8888888888", "companydotcom", true);
+            "testaddress", "8888888888", "companydotcom", true, "LOL");
 
     /**
      * sets availabilities and tests them.
@@ -33,13 +33,16 @@ public class ServiceProviderTest2 {
         assertEquals( "8888888888", serviceprovider.getPhonenumber() );
         assertEquals( "companydotcom", serviceprovider.getCompanyname() );
         assertEquals( true, serviceprovider.isLicensed() );
+        assertEquals( "LOL", serviceprovider.getDescription() );
         serviceprovider.setAddress( "Canada, Ontario" );
         serviceprovider.setPhonenumber( "+1-416-555-0182" );
         serviceprovider.setCompanyname( "Google" );
         serviceprovider.setLicensed( false );
+        serviceprovider.setDescription( "Nope" );
         assertNotEquals( "testaddress", serviceprovider.getAddress() );
         assertNotEquals( "8888888888", serviceprovider.getPhonenumber() );
         assertNotEquals( "companydotcom", serviceprovider.getCompanyname() );
         assertNotEquals( true, serviceprovider.isLicensed() );
+        assertNotEquals( "LOL", serviceprovider.getDescription() );
     }
 }
