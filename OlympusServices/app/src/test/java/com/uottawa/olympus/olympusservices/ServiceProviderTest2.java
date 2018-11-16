@@ -8,6 +8,9 @@ public class ServiceProviderTest2 {
     ServiceProvider serviceprovider = new ServiceProvider("John123", "1234567890", "John", "Doe",
             "testaddress", "8888888888", "companydotcom", true);
 
+    /**
+     * sets availabilities and tests them.
+     */
     @Test
     public void testAvailabilities() {
         int [][] availability = new int[7][4];
@@ -20,6 +23,10 @@ public class ServiceProviderTest2 {
         assertEquals( availability, serviceprovider.getAvailabilities());
     }
 
+    /**
+     * Tests other instances and checks if they are correct
+     *
+     */
     @Test
     public void testOtherInstances() {
         assertEquals( "testaddress", serviceprovider.getAddress() );
