@@ -11,9 +11,25 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+/**
+ *
+ * This class is the java class for the Service Provider's Availabilities menu. This class generates the menu from
+ * the saved Availabilities that the user has set previously or on default set no Availabilities.
+ * The menu gives the option to change availabilities for each day of the week or remove his availability on that
+ * day. User will receive a toast if they set impossible availabilities or they will receive a toast saying
+ * that their availabilities have been saved.
+ *
+ */
+
 public class ServiceProviderAvailabilities extends AppCompatActivity {
     private String username;
 
+    /**
+     * This class generates the availabilities from the serviceProvider class fields
+     * on creation of this menu so the user can edit and change it on the menu.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,8 +38,6 @@ public class ServiceProviderAvailabilities extends AppCompatActivity {
         username = bundle.getString("username");
         DBHelper dbHelper = new DBHelper(this);
         ServiceProvider user = (ServiceProvider) dbHelper.findUserByUsername(username);
-        //int[][] test = {{12,9,17,50},{0,0,0,0},{7,31,17,9},{12,9,17,50},{0,0,0,0},{7,31,17,9},{4,0,19,30}};
-        //user.setAvailabilities(test);
         int[][] days  = user.getAvailabilities();
         String startTime;
         String endTime;
