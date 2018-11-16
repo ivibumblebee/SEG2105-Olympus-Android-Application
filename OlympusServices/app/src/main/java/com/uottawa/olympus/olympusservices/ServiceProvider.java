@@ -44,7 +44,7 @@ public class ServiceProvider extends UserType {
      * @param lastname String of the lastname.
      */
     ServiceProvider(String username, String password, String firstname, String lastname, String address,
-                    String phonenumber, String companyname, boolean licensed, String description){
+                    String phonenumber, String companyname, boolean licensed){
         super(username, password, firstname, lastname);
         services = new ArrayList<>();
         availabilities = new int[7][4];
@@ -52,7 +52,6 @@ public class ServiceProvider extends UserType {
         this.phonenumber = phonenumber;
         this.companyname = companyname;
         this.licensed = licensed;
-        this.description = description;
     }
 
     /**
