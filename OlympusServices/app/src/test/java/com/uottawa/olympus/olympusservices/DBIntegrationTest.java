@@ -52,7 +52,7 @@ public class DBIntegrationTest {
 
         //add a ServiceProvider to database
         originalUser = new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman",
-                "testaddress", "8888888888", "companydotcom", true);
+                "testaddress", "8888888888", "companydotcom", true, null);
         addedTwo = dbHelper.addUser(originalUser);
 
         //test retrieving ServiceProvider, and confirm that user info is the same as that in object passed
@@ -79,7 +79,7 @@ public class DBIntegrationTest {
     public void testAddAndGetServiceProvider(){
         //ServiceProviders have extra fields that can be added to the DB
         ServiceProvider serviceProvider = new ServiceProvider("7MuF1c59XP", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true);
+                "testaddress", "8888888888", "companydotcom", true, "Not a penguin");
         dbHelper.addUser(serviceProvider);
 
         //retrieve ServiceProvider and test the newly added fields
@@ -93,6 +93,7 @@ public class DBIntegrationTest {
         assertEquals(serviceProvider.getPhonenumber(), dbServiceProvider.getPhonenumber());
         assertEquals(serviceProvider.getCompanyname(), dbServiceProvider.getCompanyname());
         assertEquals(serviceProvider.isLicensed(), dbServiceProvider.isLicensed());
+        assertEquals(serviceProvider.getDescription(), dbServiceProvider.getDescription());
 
         dbHelper.deleteUser("7MuF1c59XP");
     }
@@ -101,7 +102,7 @@ public class DBIntegrationTest {
     public void testDeleteServiceProvider(){
         //make sure all the rows related to ServiceProvider in all tables are deleted
         ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true);
+                "testaddress", "8888888888", "companydotcom", true, null);
         dbHelper.addUser(serviceProvider);
 
         Service service1 = new Service("Hitman", 12358);
@@ -142,7 +143,7 @@ public class DBIntegrationTest {
         added = dbHelper.addUser(new HomeOwner("jbO4aBF4dC", "seg2105", "Miguel", "Garzon"));
         assertTrue(!added);
         added = dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", "seg2105", "Juan", "Guzman",
-                "testaddress", "8888888888", "companydotcom", true));
+                "testaddress", "8888888888", "companydotcom", true, null));
         assertTrue(!added);
 
         dbHelper.deleteUser("jbO4aBF4dC");
@@ -278,7 +279,7 @@ public class DBIntegrationTest {
     @Test
     public void testAddAndDeleteServiceProvidedByUser(){
         dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true));
+                "testaddress", "8888888888", "companydotcom", true, null));
         dbHelper.addService(new Service("Hitman", 12358));
         boolean added = dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "hitman");
         assertTrue(added);
@@ -291,7 +292,7 @@ public class DBIntegrationTest {
     @Test
     public void testGetAllServicesProvidedByUserAndDeleteService(){
         ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true);
+                "testaddress", "8888888888", "companydotcom", true, null);
         dbHelper.addUser(serviceProvider);
 
         Service service1 = new Service("Hitman", 12358);
@@ -324,9 +325,9 @@ public class DBIntegrationTest {
     public void testGetAllProvidersByService(){
         dbHelper.addService(new Service("Exterminating flatworms", 392.457));
         dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true));
+                "testaddress", "8888888888", "companydotcom", true, null));
         dbHelper.addUser(new ServiceProvider("7MuF1c59XP", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true));
+                "testaddress", "8888888888", "companydotcom", true, null));
 
         dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "exterminating flatworms");
         dbHelper.addServiceProvidedByUser("7MuF1c59XP", "exterminating flatworms");
@@ -346,7 +347,7 @@ public class DBIntegrationTest {
     @Test
     public void testDeleteServiceProvidedByUser(){
         ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true);
+                "testaddress", "8888888888", "companydotcom", true, null);
         dbHelper.addUser(serviceProvider);
 
         Service service1 = new Service("Hitman", 12358);
@@ -376,7 +377,7 @@ public class DBIntegrationTest {
     @Test
     public void testUpdateAndGetAvailability(){
         ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true);
+                "testaddress", "8888888888", "companydotcom", true, null);
         serviceProvider.setAvailabilities(0, 4, 18, 19, 30);
         serviceProvider.setAvailabilities(1, 5, 20, 21, 11);
         serviceProvider.setAvailabilities(3, 7, 12, 15, 14);
@@ -384,7 +385,7 @@ public class DBIntegrationTest {
 
         //TODO:Perhaps implement a deep clone function for UserType?
         ServiceProvider serviceProvider2 = new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true);
+                "testaddress", "8888888888", "companydotcom", true, null);
         serviceProvider2.setAvailabilities(0, 4, 18, 19, 30);
         serviceProvider2.setAvailabilities(1, 5, 20, 21, 11);
         serviceProvider2.setAvailabilities(3, 7, 12, 15, 14);
@@ -413,7 +414,7 @@ public class DBIntegrationTest {
     @Test
     public void testInvalidAvailability(){
         ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true);
+                "testaddress", "8888888888", "companydotcom", true, null);
         serviceProvider.setAvailabilities(2, 8, 14, 8, 14);
         serviceProvider.setAvailabilities(3, 15, 12, 8, 14);
 

@@ -23,7 +23,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
 
     //version of db used for update method
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
     //name of db in app data
     private static final String DB_NAME = "UsersDB.db";
 
@@ -45,6 +45,8 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PHONE = "phone";
     private static final String COLUMN_COMPANY = "company";
     private static final String COLUMN_LICENSED = "licensed";
+    private static final String COLUMN_DESCRIPTION = "description";
+    private static final String COLUMN_SALT = "salt";
 
     //name of table containing services and rates
     private static final String TABLE_SERVICES = "services";
@@ -108,7 +110,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 + COLUMN_ADDRESS + " TEXT, "
                 + COLUMN_PHONE + " TEXT, "
                 + COLUMN_COMPANY + " TEXT, "
-                + COLUMN_LICENSED + " TEXT "
+                + COLUMN_LICENSED + " TEXT, "
+                + COLUMN_DESCRIPTION + " TEXT, "
+                + COLUMN_SALT + " TEXT "
                 + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
@@ -197,6 +201,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE " + TABLE_LOGIN + " ADD COLUMN " + COLUMN_PHONE + " TEXT");
                 db.execSQL("ALTER TABLE " + TABLE_LOGIN + " ADD COLUMN " + COLUMN_COMPANY + " TEXT");
                 db.execSQL("ALTER TABLE " + TABLE_LOGIN + " ADD COLUMN " + COLUMN_LICENSED + " TEXT");
+            case 3:
+                db.execSQL("ALTER TABLE " + TABLE_LOGIN + " ADD COLUMN " + COLUMN_DESCRIPTION + " TEXT");
+                db.execSQL("ALTER TABLE " + TABLE_LOGIN + " ADD COLUMN " + COLUMN_SALT + " TEXT");
+
         }
     }
 
@@ -258,6 +266,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
             String licensed = String.valueOf(serviceProvider.isLicensed());
             values.put(COLUMN_LICENSED, licensed);
+
+            String description = serviceProvider.getDescription();
+            if (description != null){
+                values.put(COLUMN_DESCRIPTION, description);
+            }
 
         }
 
@@ -324,14 +337,14 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     public boolean updateUserInfo(String username, String password, String firstname, String lastname){
         return updateUserInfo(username, password, firstname, lastname,
-                null, null, null, null);
+                null, null, null, null, null);
     }
 
 
 
-
     public boolean updateUserInfo(String username, String password, String firstname, String lastname,
-                                    String address, String phonenumber, String companyname, Boolean licensed){
+                                  String address, String phonenumber, String companyname, Boolean licensed,
+                                  String description){
         ContentValues values = new ContentValues();
         if (password != null && !password.equals("")) values.put(COLUMN_PASSWORD, password);
         if (firstname != null && !firstname.equals("")) values.put(COLUMN_FIRSTNAME, firstname);
@@ -339,7 +352,8 @@ public class DBHelper extends SQLiteOpenHelper {
         if (address != null && !address.equals(""))values.put(COLUMN_ADDRESS, address);
         if (phonenumber != null && !phonenumber.equals(""))values.put(COLUMN_PHONE, phonenumber);
         if (companyname != null && !companyname.equals(""))values.put(COLUMN_COMPANY, companyname);
-        if (licensed != null)values.put(COLUMN_LICENSED, String.valueOf(licensed));
+        if (licensed != null) values.put(COLUMN_LICENSED, String.valueOf(licensed));
+        if (description != null && !description.equals(""))values.put(COLUMN_DESCRIPTION, description);
 
 
         return writeDB.update(TABLE_LOGIN, values, COLUMN_USERNAME+" = ?",
@@ -358,7 +372,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         Cursor cursor = readDB.rawQuery("SELECT * FROM " + TABLE_LOGIN
                         + " WHERE " + COLUMN_USERNAME + " = ?",
-                        new String[]{username});
+                new String[]{username});
 
         if (!cursor.moveToFirst()) return false;
 
@@ -589,7 +603,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return writeDB.delete(TABLE_SERVICEPROVIDERS,
                 COLUMN_SERVICEPROVIDERNAME + " = ? AND "
                         + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
-                        new String[]{serviceProviderUsername, serviceName}) > 0;
+                new String[]{serviceProviderUsername, serviceName}) > 0;
     }
 
     public List<String[]> getAllServicesProvidedByUser(ServiceProvider serviceProvider){
@@ -622,9 +636,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         serviceName = serviceName.toLowerCase().trim();
         return getAll("SELECT " + COLUMN_SERVICEPROVIDERNAME
-                    + " FROM " + TABLE_SERVICEPROVIDERS
-                    + " WHERE " + COLUMN_SERVICEPROVIDERSERVICE + " = '"
-                    + serviceName + "'");
+                + " FROM " + TABLE_SERVICEPROVIDERS
+                + " WHERE " + COLUMN_SERVICEPROVIDERSERVICE + " = '"
+                + serviceName + "'");
     }
 
     public boolean updateAvailability(ServiceProvider serviceProvider){
@@ -635,7 +649,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         Cursor cursor = readDB.rawQuery("SELECT * FROM " + TABLE_AVAILABILITY
                         + " WHERE " + COLUMN_AVAILABILITYNAME + " = ?",
-                        new String[]{serviceProvider.getUsername()});
+                new String[]{serviceProvider.getUsername()});
 
         ContentValues contentValues = new ContentValues();
         addAvailabilityToContentValues(contentValues, COLUMN_MONSTART, COLUMN_MONEND, availabilities[0]);
@@ -682,14 +696,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public int[][] getAvailabilities(ServiceProvider serviceProvider){
         if (serviceProvider==null) return new int[7][4];
         Cursor cursor = readDB.rawQuery("SELECT * FROM " + TABLE_AVAILABILITY
-                                        + " WHERE " + COLUMN_AVAILABILITYNAME + " = ?",
-                                        new String[]{serviceProvider.getUsername()});
+                        + " WHERE " + COLUMN_AVAILABILITYNAME + " = ?",
+                new String[]{serviceProvider.getUsername()});
         if (cursor.moveToFirst()){
             for (int i = 0; i < 7; i++) {
                 int start = cursor.getInt(i*2+1);
                 int end = cursor.getInt(i*2+2);
                 serviceProvider.setAvailabilities(i, start/60, start%60,
-                                                    end/60, end%60);
+                        end/60, end%60);
             }
         } else {
             return new int[7][4];
@@ -703,7 +717,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         Cursor cursor = readDB.rawQuery("SELECT * FROM " + TABLE_AVAILABILITY
                         + " WHERE " + COLUMN_AVAILABILITYNAME + " = ?",
-                        new String[]{serviceProviderName});
+                new String[]{serviceProviderName});
         if (cursor.moveToFirst()){
             for (int i = 0; i < 7; i++) {
                 int start = cursor.getInt(i*2+1);

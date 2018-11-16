@@ -79,7 +79,7 @@ public class EditProfile extends AppCompatActivity {
             && address.getText().toString().replaceAll("\\s+","").length()>0) {
 
             if(dbHelper.updateUserInfo(username, password.getText().toString(), firstname.getText().toString(), lastname.getText().toString(),
-                address.getText().toString(), phonenumber.getText().toString(), companyname.getText().toString(), licensed.isChecked())){
+                address.getText().toString(), phonenumber.getText().toString(), companyname.getText().toString(), licensed.isChecked(), description.getText().toString())){
                 //add comment method here
                 Toast.makeText(this, "Profile has been updated", Toast.LENGTH_LONG).show();
             }

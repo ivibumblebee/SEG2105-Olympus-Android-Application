@@ -20,7 +20,7 @@ public class UserTypeTest {
         UserType user = new HomeOwner("John123", "1234567890", "John", "Doe");
         UserType admin = new Admin();
         UserType serviceprovider = new ServiceProvider( "Jane123", "1234567890", "Jane", "Doe",
-                "testaddress", "8888888888", "companydotcom", true);
+                "testaddress", "8888888888", "companydotcom", true, "I am a walrus");
         boolean userservice = user.equals(serviceprovider);
         boolean useradmin = user.equals(admin);
         boolean serviceadmin = serviceprovider.equals(admin);
