@@ -41,7 +41,8 @@ public class SignUpPart2 extends AppCompatActivity {
                 && address.replaceAll("\\s+","").length()>0) {
 
             ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname,
-                    address, phonenumber, companyname, licensed, description);
+                    address, phonenumber, companyname, licensed);
+            serviceProvider.setDescription(description);
             if(dbHelper.addUser(serviceProvider)){
                 startActivity(intent);
                 finish();
