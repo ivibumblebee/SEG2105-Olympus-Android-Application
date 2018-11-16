@@ -32,6 +32,7 @@ public class SignUpPart2 extends AppCompatActivity {
         String phonenumber = ((EditText) findViewById(R.id.PhoneNumberInput)).getText().toString();
         String address = ((EditText) findViewById(R.id.AddressInput)).getText().toString();
         boolean licensed = ((CheckBox) findViewById(R.id.LicensedInput)).isChecked();
+        String description = ((EditText) findViewById(R.id.DescriptionInput)).getText().toString();
 
         if(companyname.length()>0 && address.length()>0 && phonenumber.length()>0
                 && companyname.matches("^[a-zA-Z0-9_ ]*$") && address.matches("^[a-zA-Z0-9_ ]*$")
@@ -40,7 +41,7 @@ public class SignUpPart2 extends AppCompatActivity {
                 && address.replaceAll("\\s+","").length()>0) {
 
             ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname,
-                    address, phonenumber, companyname, licensed);
+                    address, phonenumber, companyname, licensed, description);
             if(dbHelper.addUser(serviceProvider)){
                 startActivity(intent);
                 finish();

@@ -290,12 +290,13 @@ public class DBHelper extends SQLiteOpenHelper {
             String phonenumber = cursor.getString(6);
             String companyname = cursor.getString(7);
             boolean licensed = Boolean.parseBoolean(cursor.getString(8));
+            String description = cursor.getString(9);
             if (cursor.getString(4)
                     .equals("Admin")){
                 usertype = new Admin();
             } else if (cursor.getString(4)
                     .equals("ServiceProvider")){
-                ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname, address, phonenumber, companyname, licensed);
+                ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname, address, phonenumber, companyname, licensed, description);
                 getAllServicesProvidedByUser(serviceProvider);
                 getAvailabilities(serviceProvider);
                 usertype = serviceProvider;
