@@ -309,10 +309,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 usertype = new Admin();
             } else if (cursor.getString(4)
                     .equals("ServiceProvider")){
-                ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname, address, phonenumber, companyname, licensed);
+                ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname, address, phonenumber, companyname, licensed, description);
                 getAllServicesProvidedByUser(serviceProvider);
                 getAvailabilities(serviceProvider);
-                serviceProvider.setDescription(description);
                 usertype = serviceProvider;
             } else {
                 usertype = new HomeOwner(username, password, firstname, lastname);

@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 
 public class ServiceProviderTest2 {
     ServiceProvider serviceprovider = new ServiceProvider("John123", "1234567890", "John", "Doe",
-            "testaddress", "8888888888", "companydotcom", true);
+            "testaddress", "8888888888", "companydotcom", true, "LOL");
 
 
     /**
@@ -30,7 +30,6 @@ public class ServiceProviderTest2 {
      */
     @Test
     public void testOtherInstances() {
-        serviceprovider.setDescription("LOL");
         assertEquals( "testaddress", serviceprovider.getAddress() );
         assertEquals( "8888888888", serviceprovider.getPhonenumber() );
         assertEquals( "companydotcom", serviceprovider.getCompanyname() );
