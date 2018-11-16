@@ -8,6 +8,7 @@ public class ServiceProviderTest2 {
     ServiceProvider serviceprovider = new ServiceProvider("John123", "1234567890", "John", "Doe",
             "testaddress", "8888888888", "companydotcom", true);
 
+
     /**
      * sets availabilities and tests them.
      */
@@ -29,6 +30,7 @@ public class ServiceProviderTest2 {
      */
     @Test
     public void testOtherInstances() {
+        serviceprovider.setDescription("LOL");
         assertEquals( "testaddress", serviceprovider.getAddress() );
         assertEquals( "8888888888", serviceprovider.getPhonenumber() );
         assertEquals( "companydotcom", serviceprovider.getCompanyname() );
