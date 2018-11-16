@@ -146,7 +146,7 @@ public class ServiceProvider extends UserType {
         return description;
     }
 
-    public void setDescription(String phonenumber) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
