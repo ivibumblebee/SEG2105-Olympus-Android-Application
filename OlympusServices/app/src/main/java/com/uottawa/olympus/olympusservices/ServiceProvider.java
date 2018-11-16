@@ -142,6 +142,7 @@ public class ServiceProvider extends UserType {
         this.licensed = licensed;
     }
 
+<<<<<<< HEAD
     public String getDescription() {
         return description;
     }
@@ -149,4 +150,10 @@ public class ServiceProvider extends UserType {
     public void setDescription(String phonenumber) {
         this.description = description;
     }
+=======
+
+    public String getDescription() {return description; }
+
+    public void setDescription(String description) { this.description = description; }
+>>>>>>> 587e99040b46bc068178844c11165b0730c21628
 }

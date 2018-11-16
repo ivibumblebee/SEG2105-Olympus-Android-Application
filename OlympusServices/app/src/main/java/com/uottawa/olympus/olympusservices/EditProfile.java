@@ -27,6 +27,7 @@ public class EditProfile extends AppCompatActivity {
         TextView companyname = findViewById(R.id.CompanyNameInput);
         TextView address = findViewById(R.id.AddressInput);
         TextView phonenumber = findViewById(R.id.PhoneNumberInput);
+        TextView description = findViewById(R.id.DescriptionInput);
         CheckBox licensed = findViewById(R.id.LicensedInput);
 
 
@@ -36,7 +37,9 @@ public class EditProfile extends AppCompatActivity {
         companyname.setText(user.getCompanyname());
         address.setText(user.getAddress());
         phonenumber.setText(user.getPhonenumber());
+        description.setText(user.getDescription());
         licensed.setChecked(user.isLicensed());
+
 
 
     }
@@ -60,6 +63,7 @@ public class EditProfile extends AppCompatActivity {
         TextView companyname = findViewById(R.id.CompanyNameInput);
         TextView address = findViewById(R.id.AddressInput);
         TextView phonenumber = findViewById(R.id.PhoneNumberInput);
+        TextView description = findViewById(R.id.DescriptionInput);
         CheckBox licensed = findViewById(R.id.LicensedInput);
 
         if(password.getText().toString().length()>=5 && firstname.getText().toString().length()>0
@@ -70,11 +74,13 @@ public class EditProfile extends AppCompatActivity {
             && lastname.getText().toString().matches("[a-zA-Z]*")
             && companyname.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
             && address.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
+            && description.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
             && phonenumber.getText().toString().matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")
             && address.getText().toString().replaceAll("\\s+","").length()>0) {
 
             if(dbHelper.updateUserInfo(username, password.getText().toString(), firstname.getText().toString(), lastname.getText().toString(),
                 address.getText().toString(), phonenumber.getText().toString(), companyname.getText().toString(), licensed.isChecked())){
+                //add comment method here
                 Toast.makeText(this, "Profile has been updated", Toast.LENGTH_LONG).show();
             }
             else{
