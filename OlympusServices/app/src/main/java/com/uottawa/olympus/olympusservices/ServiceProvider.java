@@ -29,6 +29,7 @@ public class ServiceProvider extends UserType {
     private String phonenumber;
     private String companyname;
     private boolean licensed;
+    private String description;
 
 
 
@@ -139,4 +140,9 @@ public class ServiceProvider extends UserType {
     public void setLicensed(boolean licensed) {
         this.licensed = licensed;
     }
+
+
+    public String getDescription() {return description; }
+
+    public void setDescription(String description) { this.description = description; }
 }

@@ -105,6 +105,20 @@
                 android:buttonTint="@color/colorWhite"
                 android:layout_marginBottom="15dp"/>
 
+            //component used from https://github.com/rengwuxian/MaterialEditText
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/DescriptionInput"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/customborder"
+                android:hint="General Description"
+                android:textSize="15sp"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorWhite"
+                app:met_singleLineEllipsis="true"
+                android:textCursorDrawable="@color/colorWhite"/>
+
 
             //component used from https://github.com/rengwuxian/MaterialEditText
             <com.rengwuxian.materialedittext.MaterialEditText
