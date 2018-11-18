@@ -60,7 +60,7 @@ public class ServiceProviderWelcome extends AppCompatActivity {
     }
 
     public void EditProfile(View view){
-        Intent intent = new Intent(getApplicationContext(),EditProfile.class);
+        Intent intent = new Intent(getApplicationContext(),ServiceProviderEditProfile.class);
         intent.putExtra("username", username);
         startActivity(intent);
         finish();
