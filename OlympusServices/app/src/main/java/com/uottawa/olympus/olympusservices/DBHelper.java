@@ -95,6 +95,10 @@ public class DBHelper extends SQLiteOpenHelper {
         writeDB = this.getWritableDatabase();
         //pre-add the admin user
         addUser(new Admin());
+        addUser(new ServiceProvider("testing", "testing", "TestFirst", "TestLast",
+                                    "1234 Test Street, Testinaro, Timor-Teste", "6136136163",
+                                    "Test Company", false,
+                                    "Tested 10 years"));
     }
 
     @Override

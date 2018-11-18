@@ -6,3 +6,8 @@ https://github.com/ebivibe/SEG2105-Olympus
 Admin account is precreated with 
 username = admin, 
 password = admin
+
+
+ServiceProvider account is precreated with 
+username = testing, 
+password = testing
