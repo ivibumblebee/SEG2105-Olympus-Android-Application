@@ -12,6 +12,10 @@ public class EditProfile extends AppCompatActivity {
     String username;
     DBHelper dbHelper;
 
+    /**
+     * Prepoplates the fields with user information when the activity is created
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,11 @@ public class EditProfile extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    /**
+     * Saves updated user information to the database
+     * @param view
+     */
     public void Save(View view){
         TextView firstname = findViewById(R.id.FirstNameInput);
         TextView lastname = findViewById(R.id.LastNameInput);
@@ -66,6 +75,7 @@ public class EditProfile extends AppCompatActivity {
         TextView description = findViewById(R.id.DescriptionInput);
         CheckBox licensed = findViewById(R.id.LicensedInput);
 
+        //Checks for the fields
         if(password.getText().toString().length()>=5 && firstname.getText().toString().length()>0
             && lastname.getText().toString().length()>0 && companyname.getText().toString().length()>0
             && address.getText().toString().length()>0 && phonenumber.getText().toString().length()>0

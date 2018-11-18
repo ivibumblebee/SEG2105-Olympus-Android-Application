@@ -30,6 +30,7 @@ public class ServiceProvider extends UserType {
     private String companyname;
     private boolean licensed;
     private String description;
+    private int rating;
 
 
 
@@ -53,6 +54,7 @@ public class ServiceProvider extends UserType {
         this.companyname = companyname;
         this.licensed = licensed;
         this.description = "";
+        this.rating = 0;
     }
 
     ServiceProvider(String username, String password, String firstname, String lastname, String address,
@@ -160,6 +162,14 @@ public class ServiceProvider extends UserType {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
 }

@@ -39,7 +39,7 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
 
     /**
      * On creation loads up the xml, and generates the services list,
-     * and fillsout the recylerView fields.
+     * and fills out the recylerView fields.
      *
      * @param savedInstanceState Bundle to transfer information.
      */
@@ -82,15 +82,6 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
         }
         spinner.setItems(services);
 
-
-
-
-        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
-            }
-        });
 
     }
 
@@ -207,6 +198,7 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
             return services.length;
         }
 
+        //nested class for the items in the recycler view
         class ServicesHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
             TextView name;
@@ -218,6 +210,11 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
                 rate = row.findViewById(R.id.Rate);
                 row.setOnClickListener(this);
             }
+
+            /**
+             * Onclick function for the items in the recycler view
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 TextView nameview = (TextView)view.findViewById(R.id.Name);

@@ -57,6 +57,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="20dp"
         android:text="Bookings"
+        android:onClick="SeeBookings"
         android:theme="@style/AppTheme.Button" />
     <Button
         android:id="@+id/LogOut"
