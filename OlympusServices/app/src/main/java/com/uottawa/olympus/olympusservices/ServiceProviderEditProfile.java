@@ -8,7 +8,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class EditProfile extends AppCompatActivity {
+public class ServiceProviderEditProfile extends AppCompatActivity {
     String username;
     DBHelper dbHelper;
 
@@ -19,7 +19,7 @@ public class EditProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
+        setContentView(R.layout.activity_service_provider_edit_profile);
         Bundle bundle = getIntent().getExtras();
         username = bundle.getString("username");
         dbHelper = new DBHelper(this);
@@ -100,7 +100,7 @@ public class EditProfile extends AppCompatActivity {
 
         }
         else{
-            Toast.makeText(this, "Fields cannot be empty and must be formatted correctly", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Fields cannot be empty (other than description) and must be formatted correctly", Toast.LENGTH_LONG).show();
         }
     }
 

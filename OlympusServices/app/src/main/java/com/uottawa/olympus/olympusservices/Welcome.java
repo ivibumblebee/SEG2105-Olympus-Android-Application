@@ -32,7 +32,7 @@ public class Welcome extends AppCompatActivity {
         UserType user;
         user = dbHelper.findUserByUsername(username);
         TextView welcome = findViewById(R.id.Welcome);
-        welcome.setText("Welcome "+user.getFirstname()+ " you are logged in as a Service Provider");
+        welcome.setText("Welcome "+user.getFirstname()+ " you are logged in as a Home Owner");
 
 
 
@@ -73,6 +73,11 @@ public class Welcome extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
+    public void EditProfile(View view){
+        Intent intent = new Intent(getApplicationContext(),HomeOwnerEditProfile.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
+        finish();
+    }
 
 }
