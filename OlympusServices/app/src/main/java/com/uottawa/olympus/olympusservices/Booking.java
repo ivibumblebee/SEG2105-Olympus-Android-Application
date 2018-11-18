@@ -13,7 +13,23 @@ public class Booking {
     public enum Status {
         PENDING, CONFIRMED, CANCELLED
     }
+    private Status status;
+
     int rating; //out of 5
+
+    public Booking(int starth, int startmin, int endh, int endmin, int day, int month, int year,
+                   String serviceprovider, String homeowner){
+        this.starth = starth;
+        this.startmin = startmin;
+        this.endh = endh;
+        this.endmin = endmin;
+        this.day = day;
+        this.month = month;
+        this.year = year;
+        this.serviceprovider = serviceprovider;
+        this.homeowner = homeowner;
+        this.status = Status.PENDING;
+    }
 
 
     public int getStarth() {
@@ -86,6 +102,14 @@ public class Booking {
 
     public void setHomeowner(String homeowner) {
         this.homeowner = homeowner;
+    }
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
+
+    public Status getStatus(){
+        return this.status;
     }
 
     public int getRating() {
