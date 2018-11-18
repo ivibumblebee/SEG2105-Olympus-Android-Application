@@ -60,7 +60,7 @@
             android:name=".EditProfile"
             android:label="Edit Profile"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ServiceProviderServicesList"
             android:label="List of Services"
@@ -68,8 +68,11 @@
         <activity
             android:name=".ServiceProviderAvailabilities"
             android:label="Availabilities"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".SignUpPart2"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".SignUpPart2" />
+        <activity android:name=".ServiceProviderBookings" />
+        <activity android:name=".HomeOwnerBookings" />
+        <activity android:name=".FindServiceProvider"></activity>
     </application>
 
 </manifest>

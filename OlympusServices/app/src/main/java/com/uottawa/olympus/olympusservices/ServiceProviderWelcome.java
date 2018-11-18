@@ -32,8 +32,7 @@ public class ServiceProviderWelcome extends AppCompatActivity {
         UserType user;
         user = dbHelper.findUserByUsername(username);
         TextView welcome = findViewById(R.id.Welcome);
-        welcome.setText("Welcome "+user.getFirstname()+ " you are logged in as a Service Provider");
-
+        welcome.setText("Welcome "+user.getFirstname()+ " you are logged in as a Home Owner");
 
 
     }
@@ -75,6 +74,12 @@ public class ServiceProviderWelcome extends AppCompatActivity {
     }
     public void EditAvailabilities(View view){
         Intent intent = new Intent(getApplicationContext(),ServiceProviderAvailabilities.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
+        finish();
+    }
+    public void SeeBookings(View view){
+        Intent intent = new Intent(getApplicationContext(),ServiceProviderBookings.class);
         intent.putExtra("username", username);
         startActivity(intent);
         finish();

@@ -83,15 +83,6 @@ public class ServiceProviderServicesList extends AppCompatActivity implements De
         spinner.setItems(services);
 
 
-
-
-        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
-            }
-        });
-
     }
 
 
