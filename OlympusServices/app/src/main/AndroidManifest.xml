@@ -72,7 +72,8 @@
         <activity android:name=".SignUpPart2" />
         <activity android:name=".ServiceProviderBookings" />
         <activity android:name=".HomeOwnerBookings" />
-        <activity android:name=".FindServiceProvider"></activity>
+        <activity android:name=".FindServiceProvider" />
+        <activity android:name=".MakeBooking"></activity>
     </application>
 
 </manifest>

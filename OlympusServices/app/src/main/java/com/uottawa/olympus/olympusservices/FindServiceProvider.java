@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,13 @@ public class FindServiceProvider extends AppCompatActivity {
     String username;
     DBHelper dbHelper;
 
+    //field for RecyclerView
+    private RecyclerView mRecyclerView;
+    //field for adapter of Recycler view
+    private RecyclerView.Adapter mAdapter;
+    //field for layout manager of Recyler view.
+    private RecyclerView.LayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +45,7 @@ public class FindServiceProvider extends AppCompatActivity {
         username = bundle.getString("username");
 
         MaterialSpinner spinner = findViewById(R.id.RatingInput);
-        spinner.setItems(1, 2, 3, 4, 5);
+        spinner.setItems("",1, 2, 3, 4, 5);
 
         dbHelper = new DBHelper(this);
         MaterialSpinner spinner2 = findViewById(R.id.ServicesInput);
@@ -51,6 +59,21 @@ public class FindServiceProvider extends AppCompatActivity {
         }
         spinner2.setItems(services);
 
+
+        //iffy code
+        ServiceProvider provider = (ServiceProvider)dbHelper.findUserByUsername("testing");
+        ServiceProvider[] providerslist = {provider};
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.ServiceProviders);
+
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new MyAdapter(providerslist, this);
+        mRecyclerView.setAdapter(mAdapter);
+         //
+
     }
 
     @Override
@@ -61,6 +84,54 @@ public class FindServiceProvider extends AppCompatActivity {
         finish();
     }
     public void Search(View view){
+        MaterialSpinner spinner = findViewById(R.id.ServicesInput);
+        Button button = findViewById(R.id.Start);
+        Button button2 = findViewById(R.id.End);
+        Button button3 = findViewById(R.id.Date);
+        MaterialSpinner spinner2 = findViewById(R.id.RatingInput);
+
+        String service = spinner.getText().toString();
+        int start;
+        int end;
+        String date;
+        if(button.getText().toString()!="Start" && button.getText().toString()!="End"
+                && button3.getText().toString()!="Date"){
+            start = Integer.parseInt(button.getText().toString());
+            end = Integer.parseInt(button2.getText().toString());
+            date = button3.getText().toString();
+        }
+        else{
+            //figure out with dbhelper
+        }
+
+        int rating;
+        if(spinner2.getText().toString()!=""){
+            rating = Integer.parseInt(spinner2.getText().toString());
+        }
+        else{
+            //figure out with dbhelper
+        }
+        //do search here
+        //update recylcler view
+
+    }
+
+    public void makeBooking(String serviceprovider){
+        MaterialSpinner spinner = findViewById(R.id.ServicesInput);
+        String service = spinner.getText().toString();
+        Intent intent = new Intent(getApplicationContext(),MakeBooking.class);
+        intent.putExtra("homeowner", username);
+        intent.putExtra("serviceprovider", serviceprovider);
+        intent.putExtra("service", service);
+        startActivity(intent);
+        finish();
+
+
+
+
+
+
+
 
     }
 
@@ -76,7 +147,21 @@ public class FindServiceProvider extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         Calendar newDate = Calendar.getInstance();
                         newDate.set(year, month, day);
-                        button.setText(month + " / " + (day) + " / "
+                        String daystring;
+                        String monthstring;
+                        if((""+day).length()==1){
+                            daystring = "0"+day;
+                        }
+                        else{
+                            daystring = day+"";
+                        }
+                        if((""+month).length()==1){
+                            monthstring = "0"+month;
+                        }
+                        else{
+                            monthstring = ""+month;
+                        }
+                        button.setText(monthstring + " / " + daystring + " / "
                                 + year);
                     }
 
@@ -190,7 +275,8 @@ public class FindServiceProvider extends AppCompatActivity {
         public void onBindViewHolder(ProviderHolder holder, int position) {
             ServiceProvider serviceprovider = serviceProviders[position];
             holder.name.setText(serviceprovider.getFirstname()+" "+serviceprovider.getLastname());
-            holder.rate.setText(String.format("$%,.2f", serviceprovider.getRating()));
+            holder.rate.setText("5");
+                                //serviceprovider.getRating()
 
 
 
@@ -217,6 +303,7 @@ public class FindServiceProvider extends AppCompatActivity {
             public void onClick(View view) {
                 TextView nameview = (TextView)view.findViewById(R.id.Name);
                 String name = nameview.getText().toString();
+                makeBooking(name);
 
             }
 
