@@ -11,3 +11,5 @@ password = admin
 ServiceProvider account is precreated with 
 username = testing, 
 password = testing
+
+APK tested on a Sony Xperia XA2, model H3123
