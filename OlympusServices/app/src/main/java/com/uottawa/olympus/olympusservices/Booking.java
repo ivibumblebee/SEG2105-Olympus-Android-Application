@@ -46,6 +46,7 @@ public class Booking {
         this.year = year;
         this.serviceprovider = serviceprovider;
         this.homeowner = homeowner;
+        this.service = service;
         this.status = Status.PENDING;
     }
 
@@ -118,11 +119,13 @@ public class Booking {
         return homeowner;
     }
 
-    public Service getService(){ return service; }
-
     public void setHomeowner(HomeOwner homeowner) {
         this.homeowner = homeowner;
     }
+
+    public Service getService(){ return service; }
+
+    public void setService(Service service) { this.service = service;}
 
     public void setStatus(Status status){
         this.status = status;
