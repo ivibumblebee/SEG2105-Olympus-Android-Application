@@ -60,9 +60,10 @@ public class FindServiceProvider extends AppCompatActivity {
         spinner2.setItems(services);
 
 
-        //iffy code
+        //iffy code, update once we can pull the actual service providers
         ServiceProvider provider = (ServiceProvider)dbHelper.findUserByUsername("testing");
         ServiceProvider[] providerslist = {provider};
+        //iffy code ends here
 
         mRecyclerView = (RecyclerView) findViewById(R.id.ServiceProviders);
 
