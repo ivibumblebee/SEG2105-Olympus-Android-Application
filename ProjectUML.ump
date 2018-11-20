@@ -47,7 +47,11 @@ class Booking
     int year;
     serviceprovider;
     homeowner;
-  * -- * HomeOwner;
+  status;
+int rating;
+* -- 1 HomeOwner;
+  * -- 1 ServiceProvider;
+  * -- 1 Service;
 }
 
 class UserType
@@ -72,12 +76,14 @@ class Admin
 
 class Service
 {
-  position 854 455 112 75;
+  position 849 456 112 75;
   position.association Service__ServiceProvider 65,0 65,143;
-}//$?[End_of_model]$?
+}
 
 class Booking
 {
-  position 100 434 109 41;
+  position 99 433 178 211;
   position.association Booking__HomeOwner 62,0 54,41;
+  position.association Booking__ServiceProvider 178,50 0,94;
+  position.association Booking__Service 178,120 0,22;
 }
