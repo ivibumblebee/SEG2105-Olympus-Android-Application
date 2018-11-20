@@ -82,7 +82,7 @@ public class HomeOwnerBookings extends AppCompatActivity {
         @Override
         public void onBindViewHolder(BookingHolder holder, int position) {
             Booking booking = bookings[position];
-            holder.name.setText(booking.getServiceprovider());
+            holder.name.setText(booking.getServiceprovider().getFirstname()+" "+booking.getServiceprovider().getLastname());
 
 
 
