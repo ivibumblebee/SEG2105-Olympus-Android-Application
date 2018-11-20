@@ -8,17 +8,35 @@ public class Booking {
     private int day;
     private int month;
     private int year;
-    private String serviceprovider; //username
-    private String homeowner; //username
+    private ServiceProvider serviceprovider; //username
+    private HomeOwner homeowner; //username
+    private Service service;
     public enum Status {
-        PENDING, CONFIRMED, CANCELLED
+        PENDING{
+            @Override
+            public String toString() {
+                return "Pending";
+            }
+        },
+        CONFIRMED{
+            @Override
+            public String toString() {
+                return "Confirmed";
+            }
+        },
+        CANCELLED{
+            @Override
+            public String toString() {
+                return "Cancelled";
+            }
+        }
     }
     private Status status;
 
     int rating; //out of 5
 
     public Booking(int starth, int startmin, int endh, int endmin, int day, int month, int year,
-                   String serviceprovider, String homeowner){
+                   ServiceProvider serviceprovider, HomeOwner homeowner, Service service){
         this.starth = starth;
         this.startmin = startmin;
         this.endh = endh;
@@ -88,19 +106,21 @@ public class Booking {
         this.year = year;
     }
 
-    public String getServiceprovider() {
+    public ServiceProvider getServiceprovider() {
         return serviceprovider;
     }
 
-    public void setServiceprovider(String serviceprovider) {
+    public void setServiceprovider(ServiceProvider serviceprovider) {
         this.serviceprovider = serviceprovider;
     }
 
-    public String getHomeowner() {
+    public HomeOwner getHomeowner() {
         return homeowner;
     }
 
-    public void setHomeowner(String homeowner) {
+    public Service getService(){ return service; }
+
+    public void setHomeowner(HomeOwner homeowner) {
         this.homeowner = homeowner;
     }
 
