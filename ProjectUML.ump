@@ -45,9 +45,7 @@ class Booking
     int day;
     int month;
     int year;
-    serviceprovider;
-    homeowner;
-  status;
+    status;
 int rating;
 * -- 1 HomeOwner;
   * -- 1 ServiceProvider;
