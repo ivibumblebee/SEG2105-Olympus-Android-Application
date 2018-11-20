@@ -36,6 +36,20 @@ double rate;
 
 
 
+class Booking
+{
+    int starth;
+    int startmin;
+    int endh;
+    int endmin;
+    int day;
+    int month;
+    int year;
+    serviceprovider;
+    homeowner;
+  * -- * HomeOwner;
+}
+
 class UserType
 {
   position 475 69 141 109;
@@ -61,3 +75,9 @@ class Service
   position 854 455 112 75;
   position.association Service__ServiceProvider 65,0 65,143;
 }//$?[End_of_model]$?
+
+class Booking
+{
+  position 100 434 109 41;
+  position.association Booking__HomeOwner 62,0 54,41;
+}
