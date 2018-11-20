@@ -25,6 +25,7 @@ isA UserType;
 class Admin
 {
   isA UserType;
+  1 -- * Service;
 }
 
 class Service
@@ -70,6 +71,7 @@ class ServiceProvider
 class Admin
 {
   position 490 236 109 41;
+  position.association Admin__Service 66,41 0,52;
 }
 
 class Service
