@@ -121,7 +121,7 @@ public class DBIntegrationTest {
 
         dbHelper.deleteUser("jbO4aBF4dC");
 
-        List<String[]> providersList = dbHelper.getAllProvidersByService("hitman");
+        List<String> providersList = dbHelper.getAllProvidersByService("hitman");
         assertEquals(0, providersList.size());
         providersList = dbHelper.getAllProvidersByService("hitman");
         assertEquals(0, providersList.size());
@@ -332,11 +332,11 @@ public class DBIntegrationTest {
         dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "exterminating flatworms");
         dbHelper.addServiceProvidedByUser("7MuF1c59XP", "exterminating flatworms");
 
-        List<String[]> providersByService = dbHelper.getAllProvidersByService("exterminating flatworms");
+        List<String> providersByService = dbHelper.getAllProvidersByService("exterminating flatworms");
 
         assertEquals(2, providersByService.size());
-        assertEquals("jbO4aBF4dC", providersByService.get(0)[0]);
-        assertEquals("7MuF1c59XP", providersByService.get(1)[0]);
+        assertEquals("jbO4aBF4dC", providersByService.get(0));
+        assertEquals("7MuF1c59XP", providersByService.get(1));
 
         dbHelper.deleteAll();
     }
