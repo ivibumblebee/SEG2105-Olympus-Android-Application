@@ -238,7 +238,7 @@ public class DBIntegrationTest {
         added = dbHelper.addService(new Service("extermiNating fLatworms", 25.00));
         assertTrue(!added);
 
-        dbHelper.deleteService("Exterminating flatworms");
+        dbHelper.deleteAll();
     }
 
     @Test
@@ -255,7 +255,7 @@ public class DBIntegrationTest {
         assertEquals("exterminating flatworms", service.getName());
         assertEquals(25.00, service.getRate(), 0.001);
 
-        dbHelper.deleteService("Exterminating flatworms");
+        dbHelper.deleteAll();
     }
 
     @Test
@@ -273,7 +273,7 @@ public class DBIntegrationTest {
             assertEquals(dbService.getRate(), Double.parseDouble(service[1]), 0.001);
         }
 
-        dbHelper.deleteService("Exterminating flatworms");
+        dbHelper.deleteAll();
     }
 
     @Test
@@ -285,8 +285,8 @@ public class DBIntegrationTest {
         assertTrue(added);
         boolean deleted = dbHelper.deleteServiceProvidedByUser("jbO4aBF4dC", "Hitman");
         assertTrue(deleted);
-        dbHelper.deleteUser("jbO4aBF4dC");
-        dbHelper.deleteService("hitman");
+
+        dbHelper.deleteAll();
     }
 
     @Test
@@ -318,7 +318,7 @@ public class DBIntegrationTest {
         servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
         assertEquals(0, servicesProvidedByUser.size());
 
-        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteAll();
     }
 
     @Test
@@ -338,9 +338,7 @@ public class DBIntegrationTest {
         assertEquals("jbO4aBF4dC", providersByService.get(0)[0]);
         assertEquals("7MuF1c59XP", providersByService.get(1)[0]);
 
-        dbHelper.deleteService("Exterminating flatworms");
-        dbHelper.deleteUser("jbO4aBF4dC");
-        dbHelper.deleteUser("7MuF1c59XP");
+        dbHelper.deleteAll();
     }
 
 
@@ -369,7 +367,7 @@ public class DBIntegrationTest {
         servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
         assertEquals(0, servicesProvidedByUser.size());
 
-        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteAll();
     }
 
 
@@ -407,7 +405,7 @@ public class DBIntegrationTest {
                 assertEquals(availabilities[i][j], dbAvailabilities[i][j]);
             }
         }
-        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteAll();
     }
 
 
@@ -432,7 +430,37 @@ public class DBIntegrationTest {
                 assertEquals(0, dbAvailabilities[i][j]);
             }
         }
-        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteAll();
+    }
+
+    @Test
+    public void testAddBooking(){
+        ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
+                "testaddress", "8888888888", "companydotcom", true);
+        serviceProvider.setAvailabilities(0, 4, 18, 19, 30);
+        serviceProvider.setAvailabilities(1, 5, 20, 21, 11);
+        serviceProvider.setAvailabilities(3, 7, 12, 15, 14);
+        serviceProvider.setAvailabilities(4, 0, 0, 23, 29);
+
+        dbHelper.addUser(serviceProvider);
+        dbHelper.updateAvailability(serviceProvider);
+
+        dbHelper.addUser(new HomeOwner("7MuF1c59XP", null, null, null));
+
+        dbHelper.addService(new Service("Hitman", 12358));
+        dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "Hitman");
+
+        boolean added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                2018, 11, 20, 8, 12, 10, 0);
+        assertTrue(added);
+        added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                2018, 11, 20, 9, 12, 12, 0);
+        assertTrue(!added);
+        added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                2018, 11, 22, 6, 12, 7, 30);
+        assertTrue(!added);
+
+        dbHelper.deleteAll();
     }
 }
 
