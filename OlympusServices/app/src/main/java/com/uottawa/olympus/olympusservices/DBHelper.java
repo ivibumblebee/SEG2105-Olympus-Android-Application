@@ -400,10 +400,28 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-
+    /**
+     * This method only needs to be called for service providers. Updates user login and
+     * profile information with requested username. Returns true if entry was found and updated.
+     * Returns false if nobody was found with said username.
+     *
+     * @param username username of entry to update
+     * @param password new password
+     * @param firstname new first name
+     * @param lastname new last name
+     * @param address new address
+     * @param phonenumber new phone number
+     * @param companyname new company name
+     * @param licensed licensing status
+     * @param description new description
+     *
+     * @return whether updating user information was successful
+     */
     public boolean updateUserInfo(String username, String password, String firstname, String lastname,
                                   String address, String phonenumber, String companyname, Boolean licensed,
                                   String description){
+        if (username == null) return false;
+
         ContentValues values = new ContentValues();
         if (password != null && !password.equals("")) values.put(COLUMN_PASSWORD, password);
         if (firstname != null && !firstname.equals("")) values.put(COLUMN_FIRSTNAME, firstname);
@@ -477,7 +495,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Returns true if successful in adding service to database.
      *
      * @param service service to be added
-     * @return whether adding service was successful
+     * @return true if adding service was successful
      */
     public boolean addService(Service service){
         if (service == null) return false;
@@ -538,7 +556,7 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @param service service object containing updated values
      *
-     * @return whether updating service information was successful
+     * @return true if updating service information was successful
      */
     public boolean updateService(Service service){
         if (service == null) return false;
@@ -558,7 +576,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param name name of service
      * @param rate rate of service
      *
-     * @return whether updating service information was successful
+     * @return true if updating service information was successful
      */
     public boolean updateService(String name, double rate){
         if (name == null) return false;
@@ -577,7 +595,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * entry. Returns true if a service was deleted, false otherwise.
      *
      * @param service service of entry to delete
-     * @return whether the service was deleted
+     * @return true if the service was deleted
      */
     public boolean deleteService(String service) {
         if (service == null) return false;
@@ -607,16 +625,40 @@ public class DBHelper extends SQLiteOpenHelper {
         return getAll("SELECT * FROM " + TABLE_SERVICES + " ORDER BY " + COLUMN_SERVICE);
     }
 
+    /**
+     * Adds a service to a service provider. The service provider now offers the service.
+     *
+     * @param serviceProvider service provider who offers service
+     * @param service service offered
+     *
+     * @return true if adding service to provider was successful
+     */
     public boolean addServiceProvidedByUser(ServiceProvider serviceProvider, Service service){
         if (serviceProvider == null || service == null) return false;
         return addServiceProvidedByUser(serviceProvider.getUsername(), service.getName());
     }
 
+    /**
+     * Adds a service to a service provider. The service provider now offers the service.
+     *
+     * @param serviceProvider service provider who offers service
+     * @param serviceName service offered
+     *
+     * @return true if adding service to provider was successful
+     */
     public boolean addServiceProvidedByUser(ServiceProvider serviceProvider, String serviceName){
         if (serviceProvider == null || serviceName == null) return false;
         return addServiceProvidedByUser(serviceProvider.getUsername(), serviceName);
     }
 
+    /**
+     * Adds a service to a service provider. The service provider now offers the service.
+     *
+     * @param serviceProviderUsername service provider who offers service
+     * @param serviceName service offered
+     *
+     * @return true if adding service to provider was successful
+     */
     public boolean addServiceProvidedByUser(String serviceProviderUsername, String serviceName){
         if (serviceProviderUsername == null || serviceName == null) return false;
 
@@ -656,6 +698,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Removes service from service provider. Provider no longer offers this service.
+     *
+     * @param serviceProvider service provider who once offered service
+     * @param service service to be removed
+     *
+     * @return true if service provider's status for this service is now inactive
+     */
     public boolean deleteServiceProvidedByUser(ServiceProvider serviceProvider, Service service){
         if (serviceProvider == null || service == null) return false;
         return deleteServiceProvidedByUser(serviceProvider.getUsername(), service.getName());
@@ -1152,9 +1202,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] {serviceProviderName, serviceName},
                 null, null, null, null);
         cursor.moveToFirst();
+        double rating = cursor.getDouble(0);
         cursor.close();
 
-        return cursor.getDouble(0);
+        return rating;
     }
 
     public int getRaters(ServiceProvider serviceProvider, Service service){
@@ -1201,6 +1252,18 @@ public class DBHelper extends SQLiteOpenHelper {
         for (int i = 0; i < providers.size(); i++){
             String username = providers.get(i);
             if (!isProviderAvailable(username, year, month, day, starth, startmin, endh, endmin)){
+                providers.remove(i);
+            }
+        }
+        return providers;
+    }
+
+    public List<String> getProvidersByTimeAndRating(String serviceName, double rating, int year, int month, int day,
+                                                    int starth, int startmin, int endh, int endmin){
+        List<String> providers = getProvidersByTime(serviceName, year, month, day, starth, startmin, endh, endmin);
+        for (int i = 0; i < providers.size(); i++){
+            String provider = providers.get(i);
+            if (getRatings(provider, serviceName)<rating){
                 providers.remove(i);
             }
         }
@@ -1255,6 +1318,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Deletes all data from database. It's used for testing when
+     * DB needs to be cleared. Please don't call this anywhere else.
+     */
     void deleteAll(){
         writeDB.execSQL("DELETE FROM " + TABLE_LOGIN);
         writeDB.execSQL("DELETE FROM " + TABLE_SERVICES);
