@@ -13,3 +13,8 @@ username = testing,
 password = testing
 
 APK tested on a Sony Xperia XA2, model H3123
+
+#Starts Here
+Build Status
+[![BuildStatus](https://circleci.com/gh/ebivibe/SEG2105-Olympus.png?branch=master)](https://circleci.com/gh/ebivibe/SEG2105-Olympus)
+#Ends Here
