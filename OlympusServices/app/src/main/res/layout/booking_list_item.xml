@@ -122,7 +122,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="45dp"
                 android:layout_weight="1"
-                android:text="Date  Start-End"
+                android:text="Date"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/StartTime"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="Start"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/Textfield"
+                android:paddingTop="6dp"
+                android:layout_width="5dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="-"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/EndTime"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="End"
                 android:textColor="@color/colorBlack"
                 android:textSize="15sp"
                 />

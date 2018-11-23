@@ -79,7 +79,7 @@ public class ServiceProviderWelcome extends AppCompatActivity {
         finish();
     }
     public void SeeBookings(View view){
-        Intent intent = new Intent(getApplicationContext(),ServiceProviderBookings.class);
+        Intent intent = new Intent(getApplicationContext(),Bookings.class);
         intent.putExtra("username", username);
         startActivity(intent);
         finish();
