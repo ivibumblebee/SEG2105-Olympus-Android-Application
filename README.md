@@ -14,5 +14,6 @@ password = testing
 
 APK tested on a Sony Xperia XA2, model H3123
 
-Build Status https://circleci.com/gh/ebivibe/SEG2105-Olympus/tree/master.svg?style=svg
+Build Status 
+[![CircleCI](https://circleci.com/gh/ebivibe/SEG2105-Olympus/tree/master.svg?style=svg)](https://circleci.com/gh/ebivibe/SEG2105-Olympus/tree/master)
 
