@@ -884,10 +884,26 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Returns a list of unbooked time slots that are at least 30 minutes
+     * @param serviceProvider
+     * @param year
+     * @param month
+     * @param day
+     * @return list of [start hour, start minute, end hour, end minute] of available timeslots
+     */
     public List<int[]> getAvailabilityByDate(ServiceProvider serviceProvider, int year, int month, int day){
         return getAvailabilityByDate(serviceProvider.getUsername(), year, month, day);
     }
 
+    /**
+     * Returns a list of unbooked time slots that are at least 30 minutes
+     * @param serviceProvider
+     * @param year
+     * @param month
+     * @param day
+     * @return list of [start hour, start minute, end hour, end minute] of available timeslots
+     */
     public List<int[]> getAvailabilityByDate(String serviceProvider, int year, int month, int day){
 
         List<int[]> availabilities = new ArrayList<>();
