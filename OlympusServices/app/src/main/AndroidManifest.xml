@@ -70,8 +70,7 @@
             android:label="Availabilities"
             android:screenOrientation="portrait" />
         <activity android:name=".SignUpPart2" />
-        <activity android:name=".ServiceProviderBookings" />
-        <activity android:name=".HomeOwnerBookings" />
+        <activity android:name=".Bookings" />
         <activity android:name=".FindServiceProvider" />
         <activity android:name=".MakeBooking" />
         <activity android:name=".HomeOwnerEditProfile"></activity>

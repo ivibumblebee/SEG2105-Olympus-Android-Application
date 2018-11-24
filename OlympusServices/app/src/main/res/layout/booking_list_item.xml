@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:background="@drawable/customborder2">
+            <TextView
+                android:id="@+id/ServiceProvider"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="130dp"
+                android:layout_height="45dp"
+                android:text="Service Provider:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/ServiceProviderName"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="Service Provider"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:background="@drawable/customborder2">
+
+            <TextView
+                android:id="@+id/HomeOwner"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="130dp"
+                android:layout_height="45dp"
+                android:text="Home Owner:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/HomeOwnerName"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="Home Owner"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:background="@drawable/customborder2">
+
+            <TextView
+                android:id="@+id/Service"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="130dp"
+                android:layout_height="45dp"
+                android:text="Service:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/ServiceName"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="Service"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:background="@drawable/customborder2">
+
+            <TextView
+                android:id="@+id/Date"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="130dp"
+                android:layout_height="45dp"
+                android:text="Date and Time:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/DateName"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="Date"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/StartTime"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="Start"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/Textfield"
+                android:paddingTop="6dp"
+                android:layout_width="5dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="-"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/EndTime"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="End"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:background="@drawable/customborder2">
+
+            <TextView
+                android:id="@+id/Status"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="130dp"
+                android:layout_height="45dp"
+                android:text="Status:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+            <TextView
+                android:id="@+id/StatusName"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="Status"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -60,9 +60,10 @@ public class FindServiceProvider extends AppCompatActivity {
         spinner2.setItems(services);
 
 
-        //iffy code
+        //iffy code, update once we can pull the actual service providers
         ServiceProvider provider = (ServiceProvider)dbHelper.findUserByUsername("testing");
         ServiceProvider[] providerslist = {provider};
+        //iffy code ends here
 
         mRecyclerView = (RecyclerView) findViewById(R.id.ServiceProviders);
 
@@ -147,6 +148,7 @@ public class FindServiceProvider extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         Calendar newDate = Calendar.getInstance();
                         newDate.set(year, month, day);
+                        month++;
                         String daystring;
                         String monthstring;
                         if((""+day).length()==1){

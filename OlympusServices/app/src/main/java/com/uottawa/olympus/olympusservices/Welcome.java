@@ -61,7 +61,7 @@ public class Welcome extends AppCompatActivity {
     }
 
     public void SeeBookings(View view){
-        Intent intent = new Intent(getApplicationContext(),HomeOwnerBookings.class);
+        Intent intent = new Intent(getApplicationContext(),Bookings.class);
         intent.putExtra("username", username);
         startActivity(intent);
         finish();
