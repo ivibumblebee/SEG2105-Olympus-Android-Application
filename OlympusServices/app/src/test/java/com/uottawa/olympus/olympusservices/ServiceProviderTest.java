@@ -17,15 +17,15 @@ public class ServiceProviderTest {
 
     @Test
     public void testServiceProvider() {
-        assertEquals( "John123", serviceprovider.getUsername() );
-        assertEquals( "1234567890", serviceprovider.getPassword() );
-        assertEquals( "John", serviceprovider.getFirstname() );
-        assertEquals( "Doe", serviceprovider.getLastname() );
-        assertEquals( "ServiceProvider", serviceprovider.getRole() );
-        serviceprovider.setUsername( "username" );
-        serviceprovider.setPassword( "password" );
-        serviceprovider.setFirstname( "firstname" );
-        serviceprovider.setLastname( "lastname" );
+        assertEquals( "John123", serviceprovider.getUsername());
+        assertEquals( "1234567890", serviceprovider.getPassword());
+        assertEquals( "John", serviceprovider.getFirstname());
+        assertEquals( "Doe", serviceprovider.getLastname());
+        assertEquals( "ServiceProvider", serviceprovider.getRole());
+        serviceprovider.setUsername("username");
+        serviceprovider.setPassword("password");
+        serviceprovider.setFirstname("firstname");
+        serviceprovider.setLastname("lastname");
         assertNotEquals("John123", serviceprovider.getUsername());
         assertNotEquals("1234567890", serviceprovider.getPassword());
         assertNotEquals("John", serviceprovider.getFirstname());
