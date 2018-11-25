@@ -46,15 +46,7 @@ public class ServiceProvider extends UserType {
      */
     ServiceProvider(String username, String password, String firstname, String lastname, String address,
                     String phonenumber, String companyname, boolean licensed){
-        super(username, password, firstname, lastname);
-        services = new ArrayList<>();
-        availabilities = new int[7][4];
-        this.address = address;
-        this.phonenumber = phonenumber;
-        this.companyname = companyname;
-        this.licensed = licensed;
-        this.description = "";
-        this.rating = 0;
+        this(username, password, firstname, lastname, address, phonenumber, companyname, licensed, "");
     }
 
     ServiceProvider(String username, String password, String firstname, String lastname, String address,
@@ -67,6 +59,7 @@ public class ServiceProvider extends UserType {
         this.companyname = companyname;
         this.licensed = licensed;
         this.description = description;
+        this.rating = 0;
     }
 
     /**

@@ -7,8 +7,12 @@ import android.database.Cursor;
 import android.content.ContentValues;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.GregorianCalendar;
+
+import com.uottawa.olympus.olympusservices.Booking.Status;
 
 /**
  * The class DBHelper allows the Android application to access and perform
@@ -23,7 +27,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
 
     //version of db used for update method
-    private static final int DB_VERSION = 4;
+    private static final int DB_VERSION = 5;
     //name of db in app data
     private static final String DB_NAME = "UsersDB.db";
 
@@ -59,6 +63,9 @@ public class DBHelper extends SQLiteOpenHelper {
     //columns of TABLE_SERVICEPROVIDERS
     private static final String COLUMN_SERVICEPROVIDERNAME = "username";
     private static final String COLUMN_SERVICEPROVIDERSERVICE = "service";
+    private static final String COLUMN_AVERAGERATING = "averageRating";
+    private static final String COLUMN_RATERS = "raters";
+    private static final String COLUMN_ACTIVE = "active";
 
     //name of table containing service provider availability
     //availability is stored as number of minutes from 00:00
@@ -80,7 +87,19 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COLUMN_SUNSTART = "sundaystart";
     private static final String COLUMN_SUNEND = "sundayend";
 
-
+    //name of table containing booking
+    private static final String TABLE_BOOKINGS = "bookings";
+    //columns of TABLE_BOOKING
+    private static final String COLUMN_BOOKINGSERVICEPROVIDER = "serviceProvider";
+    private static final String COLUMN_BOOKINGHOMEOWNER = "homeOwner";
+    private static final String COLUMN_BOOKINGSERVICE = "service";
+    private static final String COLUMN_BOOKINGYEAR = "year";
+    private static final String COLUMN_BOOKINGMONTH = "month";
+    private static final String COLUMN_BOOKINGDATE = "day";
+    private static final String COLUMN_BOOKINGSTART = "starttime";
+    private static final String COLUMN_BOOKINGEND = "endtime";
+    private static final String COLUMN_BOOKINGSTATUS = "status";
+    private static final String COLUMN_RATING = "rating";
 
     /**
      * Creates an instance of DBHelper to allow activities to access and
@@ -130,6 +149,9 @@ public class DBHelper extends SQLiteOpenHelper {
         String CREATE_SERVICEPROVIDERS_TABLE = "CREATE TABLE "+ TABLE_SERVICEPROVIDERS + "("
                 + COLUMN_SERVICEPROVIDERNAME + " TEXT, "
                 + COLUMN_SERVICEPROVIDERSERVICE + " TEXT, "
+                + COLUMN_AVERAGERATING + " REAL DEFAULT 0, "
+                + COLUMN_RATERS + " REAL DEFAULT 0, "
+                + COLUMN_ACTIVE + " TEXT DEFAULT 'active', "
                 //service provider name is foreign key
                 + " FOREIGN KEY(" + COLUMN_SERVICEPROVIDERNAME
                 + ") REFERENCES " + TABLE_LOGIN + "(" + COLUMN_USERNAME +"), "
@@ -157,6 +179,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 + COLUMN_SUNSTART + " REAL, "
                 + COLUMN_SUNEND + " REAL)";
         db.execSQL(CREATE_AVAILABILITY_TABLE);
+
+        //making the table containing bookings
+        String CREATE_BOOKING_TABLE = "CREATE TABLE "+ TABLE_BOOKINGS + "("
+                + COLUMN_BOOKINGSERVICEPROVIDER + " TEXT,"
+                + COLUMN_BOOKINGHOMEOWNER + " TEXT,"
+                + COLUMN_BOOKINGSERVICE + " TEXT, "
+                + COLUMN_BOOKINGYEAR + " REAL,"
+                + COLUMN_BOOKINGMONTH + " REAL, "
+                + COLUMN_BOOKINGDATE + " REAL, "
+                + COLUMN_BOOKINGSTART + " REAL, "
+                + COLUMN_BOOKINGEND + " REAL, "
+                + COLUMN_BOOKINGSTATUS + " TEXT, "
+                + COLUMN_RATING + " REAL DEFAULT 0 "
+                + ")";
+        db.execSQL(CREATE_BOOKING_TABLE);
     }
 
     @Override
@@ -208,7 +245,22 @@ public class DBHelper extends SQLiteOpenHelper {
             case 3:
                 db.execSQL("ALTER TABLE " + TABLE_LOGIN + " ADD COLUMN " + COLUMN_DESCRIPTION + " TEXT");
                 db.execSQL("ALTER TABLE " + TABLE_LOGIN + " ADD COLUMN " + COLUMN_SALT + " TEXT");
-
+            case 4:
+                db.execSQL("ALTER TABLE " + TABLE_SERVICEPROVIDERS + " ADD COLUMN " + COLUMN_AVERAGERATING + " REAL DEFAULT 0");
+                db.execSQL("ALTER TABLE " + TABLE_SERVICEPROVIDERS + " ADD COLUMN " + COLUMN_RATERS + " REAL DEFAULT 0");
+                db.execSQL("ALTER TABLE " + TABLE_SERVICEPROVIDERS + " ADD COLUMN " + COLUMN_ACTIVE + " TEXT DEFAULT 'active'");
+                db.execSQL("CREATE TABLE IF NOT EXISTS "+ TABLE_BOOKINGS + "("
+                        + COLUMN_BOOKINGSERVICEPROVIDER + " TEXT,"
+                        + COLUMN_BOOKINGHOMEOWNER + " TEXT,"
+                        + COLUMN_BOOKINGSERVICE + " TEXT, "
+                        + COLUMN_BOOKINGYEAR + " REAL,"
+                        + COLUMN_BOOKINGMONTH + " REAL, "
+                        + COLUMN_BOOKINGDATE + " REAL, "
+                        + COLUMN_BOOKINGSTART + " REAL, "
+                        + COLUMN_BOOKINGEND + " REAL, "
+                        + COLUMN_BOOKINGSTATUS + " TEXT, "
+                        + COLUMN_RATING + " REAL DEFAULT 0 "
+                        + ")");
         }
     }
 
@@ -244,12 +296,15 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
 
+        //Put values of UserType into columns
         ContentValues values = new ContentValues();
         values.put(COLUMN_USERNAME, userType.getUsername());
         values.put(COLUMN_PASSWORD, userType.getPassword());
         values.put(COLUMN_FIRSTNAME, userType.getFirstname());
         values.put(COLUMN_LASTNAME, userType.getLastname());
         values.put(COLUMN_USERTYPE, userType.getClass().getSimpleName());
+
+        //special case for ServiceProvider
         if (userType instanceof ServiceProvider){
             ServiceProvider serviceProvider = (ServiceProvider)userType;
 
@@ -345,10 +400,28 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-
+    /**
+     * This method only needs to be called for service providers. Updates user login and
+     * profile information with requested username. Returns true if entry was found and updated.
+     * Returns false if nobody was found with said username.
+     *
+     * @param username username of entry to update
+     * @param password new password
+     * @param firstname new first name
+     * @param lastname new last name
+     * @param address new address
+     * @param phonenumber new phone number
+     * @param companyname new company name
+     * @param licensed licensing status
+     * @param description new description
+     *
+     * @return whether updating user information was successful
+     */
     public boolean updateUserInfo(String username, String password, String firstname, String lastname,
                                   String address, String phonenumber, String companyname, Boolean licensed,
                                   String description){
+        if (username == null) return false;
+
         ContentValues values = new ContentValues();
         if (password != null && !password.equals("")) values.put(COLUMN_PASSWORD, password);
         if (firstname != null && !firstname.equals("")) values.put(COLUMN_FIRSTNAME, firstname);
@@ -422,7 +495,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Returns true if successful in adding service to database.
      *
      * @param service service to be added
-     * @return whether adding service was successful
+     * @return true if adding service was successful
      */
     public boolean addService(Service service){
         if (service == null) return false;
@@ -483,7 +556,7 @@ public class DBHelper extends SQLiteOpenHelper {
      *
      * @param service service object containing updated values
      *
-     * @return whether updating service information was successful
+     * @return true if updating service information was successful
      */
     public boolean updateService(Service service){
         if (service == null) return false;
@@ -503,7 +576,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param name name of service
      * @param rate rate of service
      *
-     * @return whether updating service information was successful
+     * @return true if updating service information was successful
      */
     public boolean updateService(String name, double rate){
         if (name == null) return false;
@@ -522,7 +595,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * entry. Returns true if a service was deleted, false otherwise.
      *
      * @param service service of entry to delete
-     * @return whether the service was deleted
+     * @return true if the service was deleted
      */
     public boolean deleteService(String service) {
         if (service == null) return false;
@@ -552,16 +625,40 @@ public class DBHelper extends SQLiteOpenHelper {
         return getAll("SELECT * FROM " + TABLE_SERVICES + " ORDER BY " + COLUMN_SERVICE);
     }
 
+    /**
+     * Adds a service to a service provider. The service provider now offers the service.
+     *
+     * @param serviceProvider service provider who offers service
+     * @param service service offered
+     *
+     * @return true if adding service to provider was successful
+     */
     public boolean addServiceProvidedByUser(ServiceProvider serviceProvider, Service service){
         if (serviceProvider == null || service == null) return false;
         return addServiceProvidedByUser(serviceProvider.getUsername(), service.getName());
     }
 
+    /**
+     * Adds a service to a service provider. The service provider now offers the service.
+     *
+     * @param serviceProvider service provider who offers service
+     * @param serviceName service offered
+     *
+     * @return true if adding service to provider was successful
+     */
     public boolean addServiceProvidedByUser(ServiceProvider serviceProvider, String serviceName){
         if (serviceProvider == null || serviceName == null) return false;
         return addServiceProvidedByUser(serviceProvider.getUsername(), serviceName);
     }
 
+    /**
+     * Adds a service to a service provider. The service provider now offers the service.
+     *
+     * @param serviceProviderUsername service provider who offers service
+     * @param serviceName service offered
+     *
+     * @return true if adding service to provider was successful
+     */
     public boolean addServiceProvidedByUser(String serviceProviderUsername, String serviceName){
         if (serviceProviderUsername == null || serviceName == null) return false;
 
@@ -571,16 +668,26 @@ public class DBHelper extends SQLiteOpenHelper {
 
         //Check for duplicate username/service combination by querying login table
         Cursor cursor = writeDB.query(TABLE_SERVICEPROVIDERS,
-                new String[] {COLUMN_SERVICEPROVIDERNAME},
+                new String[] {COLUMN_ACTIVE},
                 COLUMN_SERVICEPROVIDERNAME + " = ? AND "
                         + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
                 new String[]{serviceProviderUsername, serviceName},
                 null, null, null,
                 "1");
         //If cursor has 1+ elements in it, username/service combination already exists in table
-        if (cursor != null && cursor.getCount() > 0){
-            cursor.close();
-            return false;
+        if (cursor.moveToFirst()){
+            if (cursor.getString(0).equals("active")){
+                cursor.close();
+                return false;
+            } else {
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_ACTIVE, "active");
+                return writeDB.update(TABLE_SERVICEPROVIDERS, values,
+                        COLUMN_SERVICEPROVIDERNAME + " = ? AND "
+                                + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
+                        new String[]{serviceProviderUsername, serviceName})>0;
+            }
+
         }
         cursor.close();
 
@@ -591,60 +698,125 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Removes service from service provider. Provider no longer offers this service.
+     *
+     * @param serviceProvider service provider who once offered service
+     * @param service service to be removed
+     *
+     * @return true if service provider's status for this service is now inactive
+     */
     public boolean deleteServiceProvidedByUser(ServiceProvider serviceProvider, Service service){
         if (serviceProvider == null || service == null) return false;
         return deleteServiceProvidedByUser(serviceProvider.getUsername(), service.getName());
     }
 
+    /**
+     * Removes service from service provider. Provider no longer offers this service.
+     *
+     * @param serviceProvider service provider who once offered service
+     * @param serviceName service to be removed
+     *
+     * @return true if service provider's status for this service is now inactive
+     */
     public boolean deleteServiceProvidedByUser(ServiceProvider serviceProvider, String serviceName){
         if (serviceProvider == null || serviceName == null) return false;
         return deleteServiceProvidedByUser(serviceProvider.getUsername(), serviceName);
     }
 
+    /**
+     * Removes service from service provider. Provider no longer offers this service.
+     *
+     * @param serviceProviderUsername service provider who once offered service
+     * @param serviceName service to be removed
+     *
+     * @return true if service provider's status for this service is now inactive
+     */
     public boolean deleteServiceProvidedByUser(String serviceProviderUsername, String serviceName){
         if (serviceProviderUsername == null || serviceName == null) return false;
         serviceName = serviceName.toLowerCase().trim();
-        return writeDB.delete(TABLE_SERVICEPROVIDERS,
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ACTIVE, "inactive");
+
+        return writeDB.update(TABLE_SERVICEPROVIDERS, values,
                 COLUMN_SERVICEPROVIDERNAME + " = ? AND "
                         + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
                 new String[]{serviceProviderUsername, serviceName}) > 0;
     }
 
+    /**
+     * Fetches all services provided by a service provider
+     *
+     * @param serviceProvider
+     * @return a list of [service, rate]
+     */
     public List<String[]> getAllServicesProvidedByUser(ServiceProvider serviceProvider){
         if (serviceProvider == null) return new ArrayList<>();
 
         return getAllServicesProvidedByUser(serviceProvider.getUsername());
     }
 
+    /**
+     * Fetches all services provided by a service provider
+     *
+     * @param serviceProviderName
+     * @return a list of [service, rate]
+     */
     public List<String[]> getAllServicesProvidedByUser(String serviceProviderName){
         if (serviceProviderName == null) return new ArrayList<>();
 
         return getAll("SELECT " + TABLE_SERVICES + "." + COLUMN_SERVICE + ", "
                 + TABLE_SERVICES + "." + COLUMN_RATE
-                + " FROM " + TABLE_SERVICES
-                + " JOIN " + TABLE_SERVICEPROVIDERS
+                + " FROM " + TABLE_SERVICES + " JOIN " + TABLE_SERVICEPROVIDERS
                 + " ON " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERSERVICE + " = "
                 + TABLE_SERVICES + "." + COLUMN_SERVICE
                 + " AND " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERNAME
-                + "= '" + serviceProviderName + "'");
+                + "= '" + serviceProviderName + "'"
+                + " AND " + TABLE_SERVICEPROVIDERS + "." + COLUMN_ACTIVE  + " = 'active'");
     }
 
+    /**
+     * Fetches all service providers who provide a specified service
+     *
+     * @param service name of service
+     * @return a list of [username, first name, last name, average rating] sorted by rating
+     */
     public List<String[]> getAllProvidersByService(Service service){
         if (service == null) return new ArrayList<>();
 
         return getAllProvidersByService(service.getName());
     }
 
+    /**
+     * Fetches all service providers who provide a specified service
+     *
+     * @param serviceName name of service
+     * @return a list of [username, first name, last name, average rating] sorted by rating
+     */
     public List<String[]> getAllProvidersByService(String serviceName){
         if (serviceName == null) return new ArrayList<>();
 
         serviceName = serviceName.toLowerCase().trim();
-        return getAll("SELECT " + COLUMN_SERVICEPROVIDERNAME
-                + " FROM " + TABLE_SERVICEPROVIDERS
-                + " WHERE " + COLUMN_SERVICEPROVIDERSERVICE + " = '"
-                + serviceName + "'");
+        return getAll(
+                "SELECT " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERNAME + ", "
+                + TABLE_LOGIN + "." + COLUMN_FIRSTNAME + ", "
+                + TABLE_LOGIN + "." + COLUMN_LASTNAME + ", "
+                + TABLE_SERVICEPROVIDERS + "." + COLUMN_AVERAGERATING
+                + " FROM " + TABLE_SERVICEPROVIDERS + " JOIN " + TABLE_LOGIN
+                + " ON " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERNAME + " = "
+                + TABLE_LOGIN + "." + COLUMN_USERNAME
+                + " AND " + COLUMN_SERVICEPROVIDERSERVICE + " = '" + serviceName + "'"
+                + " AND " + TABLE_SERVICEPROVIDERS + "." + COLUMN_ACTIVE  + " = 'active'"
+                + " ORDER BY " + TABLE_SERVICEPROVIDERS + "." + COLUMN_AVERAGERATING + " DESC");
     }
 
+    /**
+     * Updates a service provider's availabilities based on ServiceProvider object provided
+     *
+     * @param serviceProvider
+     * @return true if availability was updated successfully
+     */
     public boolean updateAvailability(ServiceProvider serviceProvider){
         //availability is stored as number of minutes from 00:00
         if (serviceProvider == null) return false;
@@ -672,27 +844,6 @@ public class DBHelper extends SQLiteOpenHelper {
                     COLUMN_AVAILABILITYNAME + " = ?", new String[]{serviceProvider.getUsername()});
         }
         return true;
-    }
-
-    private void addAvailabilityToContentValues(ContentValues contentValues,
-                                                String startColumn, String endColumn,
-                                                int[] startAndEndTimes){
-        if (startAndEndTimes == null){
-            contentValues.put(startColumn, 0);
-            contentValues.put(endColumn, 0);
-        } else {
-            int startTime = startAndEndTimes[0]*60+startAndEndTimes[1];
-            int endTime = startAndEndTimes[2]*60+startAndEndTimes[3];
-            if (endTime - startTime <=0 || startTime > 1439 || startTime < 0
-                    || endTime > 1439 || endTime <= 0) {
-                contentValues.put(startColumn, 0);
-                contentValues.put(endColumn, 0);
-            } else {
-                contentValues.put(startColumn, startTime);
-                contentValues.put(endColumn, endTime);
-            }
-        }
-
     }
 
 
@@ -732,6 +883,501 @@ public class DBHelper extends SQLiteOpenHelper {
         return availabilities;
     }
 
+
+    /**
+     * Returns a list of unbooked time slots that are at least 30 minutes
+     * @param serviceProvider
+     * @param year
+     * @param month
+     * @param day
+     * @return list of [start hour, start minute, end hour, end minute] of available timeslots
+     */
+    public List<int[]> getAvailabilityByDate(ServiceProvider serviceProvider, int year, int month, int day){
+        return getAvailabilityByDate(serviceProvider.getUsername(), year, month, day);
+    }
+
+    /**
+     * Returns a list of unbooked time slots that are at least 30 minutes
+     * @param serviceProvider
+     * @param year
+     * @param month
+     * @param day
+     * @return list of [start hour, start minute, end hour, end minute] of available timeslots
+     */
+    public List<int[]> getAvailabilityByDate(String serviceProvider, int year, int month, int day){
+
+        List<int[]> availabilities = new ArrayList<>();
+
+        Cursor bookings = writeDB.query(TABLE_BOOKINGS, new String[] {COLUMN_BOOKINGSTART, COLUMN_BOOKINGEND},
+                COLUMN_BOOKINGSERVICEPROVIDER+ " = ?"
+                        + " AND " + COLUMN_BOOKINGYEAR + " = ?"
+                        + " AND " + COLUMN_BOOKINGMONTH + " = ?"
+                        + " AND " + COLUMN_BOOKINGDATE + " = ?",
+                new String[]{serviceProvider, String.valueOf(year),
+                        String.valueOf(month),String.valueOf(day)},
+                null, null, COLUMN_BOOKINGSTART, null);
+
+        Cursor availability = getAvailabilityByDayOfWeek(serviceProvider, year, month, day);
+        if (availability.moveToFirst()) {
+            int previousEnd = availability.getInt(0);
+            int currentStart;
+            int currentEnd;
+            if (bookings.moveToFirst()) {
+                for (int i = 0; i < bookings.getCount(); i++) {
+                    currentStart = bookings.getInt(0);
+                    if (currentStart - previousEnd >= 30){
+                        availabilities.add(new int[]{previousEnd/60, previousEnd%60,
+                                currentStart/60, currentStart%60});
+                    }
+                    previousEnd = bookings.getInt(1);
+                    bookings.moveToNext();
+                }
+                currentStart = availability.getInt(1);
+                if (currentStart - previousEnd >= 30){
+                    availabilities.add(new int[]{previousEnd/60, previousEnd%60,
+                            currentStart/60, currentStart%60});
+                }
+            } else {
+                currentStart = availability.getInt(0);
+                currentEnd = availability.getInt(1);
+                availabilities.add(new int[]{currentStart/60, currentStart%60,
+                            currentEnd/60, currentEnd%60});
+            }
+        }
+        return availabilities;
+    }
+
+    public boolean addBooking(Booking booking){
+        if (booking == null) return false;
+
+        return addBooking(booking.getServiceprovider().getUsername(),
+                booking.getHomeowner().getUsername(), booking.getService().getName(),
+                booking.getYear(), booking.getMonth(), booking.getDay(),
+                booking.getStarth(), booking.getStartmin(),
+                booking.getEndh(), booking.getEndmin());
+    }
+
+    public boolean addBooking(String serviceProvider, String homeOwner, String service,
+                              String monthDayYear, int starth, int startmin, int endh, int endmin){
+        String[] date = monthDayYear.split("/");
+
+        return addBooking(serviceProvider, homeOwner, service,
+                Integer.parseInt(date[2]), Integer.parseInt(date[0]), Integer.parseInt(date[1]),
+                starth, startmin, endh, endmin);
+    }
+
+    /**
+     *
+     * @param serviceProvider
+     * @param homeOwner
+     * @param service
+     * @param year
+     * @param month
+     * @param day
+     * @param starth
+     * @param startmin
+     * @param endh
+     * @param endmin
+     * @return true if booking was successfully added
+     */
+    public boolean addBooking(String serviceProvider, String homeOwner, String service,
+                              int year, int month, int day,
+                              int starth, int startmin, int endh, int endmin){
+
+        GregorianCalendar current = new GregorianCalendar();
+        current.setTimeInMillis(System.currentTimeMillis());
+        GregorianCalendar bookDate = new GregorianCalendar(year, month-1, day, starth, startmin);
+
+        //check if time of booking is after this time
+        if (current.compareTo(bookDate) > 0) return false;
+
+        service = service.trim().toLowerCase();
+
+        Cursor cursor = writeDB.query(TABLE_SERVICEPROVIDERS, new String[]{COLUMN_SERVICEPROVIDERNAME},
+                COLUMN_SERVICEPROVIDERNAME + " = ? AND "
+                        + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
+                        new String[] {serviceProvider, service},
+                null, null, null,  "1");
+        if (!cursor.moveToFirst()) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+
+        if (isProviderAvailable(serviceProvider, year, month, day, starth, startmin,
+                endh, endmin)){
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_BOOKINGSTART, starth * 60 + startmin);
+            contentValues.put(COLUMN_BOOKINGEND, endh * 60 + endmin);
+            contentValues.put(COLUMN_BOOKINGDATE, day);
+            contentValues.put(COLUMN_BOOKINGMONTH, month);
+            contentValues.put(COLUMN_BOOKINGYEAR, year);
+            contentValues.put(COLUMN_BOOKINGSERVICEPROVIDER, serviceProvider);
+            contentValues.put(COLUMN_BOOKINGHOMEOWNER, homeOwner);
+            contentValues.put(COLUMN_BOOKINGSERVICE, service);
+            contentValues.put(COLUMN_BOOKINGSTATUS, Status.PENDING.toString());
+            contentValues.put(COLUMN_RATING, 0);
+
+            writeDB.insert(TABLE_BOOKINGS, null, contentValues);
+
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param username
+     * @return list of booking objects related to specified user
+     */
+    public List<Booking> findBookings(String username){
+        List<Booking> bookingList = new ArrayList<>();
+        ServiceProvider serviceProvider = null;
+        HomeOwner homeOwner = null;
+        Cursor cursor = writeDB.rawQuery("SELECT * FROM " + TABLE_LOGIN + " WHERE "
+                        + COLUMN_BOOKINGSERVICEPROVIDER + " = ?",
+                        new String[] {username});
+        if (!cursor.moveToFirst() || cursor.getString(5).equals("Admin")) return bookingList;
+
+        if (cursor.getString(5).equals("ServiceProvider")) {
+            serviceProvider = (ServiceProvider)findUserByUsername(username);
+            cursor = writeDB.rawQuery("SELECT * FROM " + TABLE_BOOKINGS + " WHERE "
+                    + COLUMN_BOOKINGSERVICEPROVIDER + " = ?",
+                    new String[]{username});
+        } else {
+            homeOwner = (HomeOwner)findUserByUsername(username);
+            cursor = writeDB.rawQuery("SELECT * FROM " + TABLE_BOOKINGS + " WHERE "
+                    + COLUMN_BOOKINGHOMEOWNER + " = ?",
+                    new String[]{username});
+        }
+
+        if (cursor.moveToFirst()){
+            for (int i=0; i<cursor.getCount(); i++){
+                int startTime = cursor.getInt(6);
+                int endTime = cursor.getInt(7);
+                int starth = startTime / 60;
+                int startmin = startTime % 60;
+                int endh = endTime / 60;
+                int endmin = endTime % 60;
+                int day = cursor.getInt(5);
+                int month = cursor.getInt(4);
+                int year = cursor.getInt(3);
+                String stat = cursor.getString(8);
+                Status status = (stat.equals("Pending")? Status.PENDING :
+                        stat.equals("Confirmed")? Status.CONFIRMED : Status.CANCELLED);
+                ServiceProvider serviceprovider = (serviceProvider == null?
+                        (ServiceProvider)findUserByUsername(cursor.getString(0)):serviceProvider);
+                HomeOwner homeowner = (homeOwner == null?
+                        (HomeOwner) findUserByUsername(cursor.getString(1)):homeOwner);
+                Service service = findService(cursor.getString(3));
+                Booking booking = new Booking(starth, startmin, endh, endmin, day, month, year,
+                        serviceprovider, homeowner, service);
+                booking.setStatus(status);
+                bookingList.add(booking);
+
+                cursor.moveToNext();
+            }
+        }
+        return bookingList;
+    }
+
+
+    /**
+     * Sets status of specified booking to cancelled. Returns false if booking
+     * does not exist in database, or date of booking has already passed.
+     *
+     * @param booking
+     * @return true if booking was successfully cancelled
+     */
+    public boolean confirmBooking(Booking booking){
+        return modifyBookingStatus(booking, Status.CONFIRMED);
+    }
+
+    /**
+     * Sets status of specified booking to cancelled. Returns false if booking was already cancelled,
+     * booking does not exist in database, or date of booking has already passed.
+     *
+     * @param booking
+     * @return true if booking was successfully cancelled
+     */
+    public boolean cancelBooking(Booking booking){
+        return modifyBookingStatus(booking, Status.CANCELLED);
+    }
+
+
+    /**
+     * Add a rating for a specific booking, and updates the average rating for the service provider
+     * and service combination. The booking must have passed before a rating can be added.
+     * Note that the rating is final.
+     *
+     * @param booking
+     * @param rating
+     * @return true if adding the rating was successful
+     */
+    public boolean addRating(Booking booking, double rating){
+        if (booking == null) return false;
+
+        GregorianCalendar current = new GregorianCalendar();
+        current.setTimeInMillis(System.currentTimeMillis());
+        GregorianCalendar bookDate = new GregorianCalendar(booking.getYear(), booking.getMonth()-1,
+                booking.getDay(), booking.getEndh(), booking.getEndmin());
+
+        //check if time of booking is before this time
+        if (current.compareTo(bookDate) < 0) return false;
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_RATING, rating);
+
+
+        boolean updated =  writeDB.update(TABLE_BOOKINGS, contentValues,
+                COLUMN_BOOKINGSERVICEPROVIDER + " = ? AND "
+                        + COLUMN_BOOKINGHOMEOWNER + " = ? AND "
+                        + COLUMN_BOOKINGYEAR + " = ? AND "
+                        + COLUMN_BOOKINGMONTH + " = ? AND "
+                        + COLUMN_BOOKINGDATE + " = ? AND "
+                        + COLUMN_BOOKINGSTART + " = ?)",
+                new String[] {booking.getServiceprovider().getUsername(),
+                        booking.getHomeowner().getUsername(),
+                        String.valueOf(booking.getYear()),
+                        String.valueOf(booking.getMonth()),
+                        String.valueOf(booking.getDay()),
+                        String.valueOf(booking.getStarth()*60 + booking.getStartmin())}) > 0;
+
+        if (updated) {
+            Cursor cursor = writeDB.query(TABLE_SERVICEPROVIDERS, new String[]{COLUMN_AVERAGERATING, COLUMN_RATERS},
+                    COLUMN_SERVICEPROVIDERNAME + " = ? AND "
+                            + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
+                    new String[] {booking.getServiceprovider().getUsername(), booking.getService().getName()},
+                    null, null, null, null);
+            cursor.moveToFirst();
+
+            int currentRaters = cursor.getInt(1) + 1;
+            double currentAverageRatings = cursor.getDouble(0) + rating;
+            cursor.close();
+
+            contentValues = new ContentValues();
+            contentValues.put(COLUMN_AVERAGERATING, currentAverageRatings/(double)currentRaters);
+            contentValues.put(COLUMN_RATERS, currentRaters);
+
+            writeDB.update(TABLE_BOOKINGS, contentValues,
+                    COLUMN_SERVICEPROVIDERNAME + " = ? AND "
+                    + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
+                    new String[] {booking.getServiceprovider().getUsername(),
+                            booking.getService().getName()});
+        }
+        return updated;
+
+    }
+
+    /**
+     * Returns the average rating for a service provider's service
+     *
+     * @param serviceProvider
+     * @param service
+     * @return average rating of specified service provider and service combination
+     */
+    public double getRatings(ServiceProvider serviceProvider, Service service){
+        return getRatings(serviceProvider.getUsername(), service.getName());
+    }
+
+    /**
+     * Returns the average rating for a service provider's service
+     *
+     * @param serviceProviderName name of service provider
+     * @param serviceName name of service
+     * @return average rating of specified service provider and service combination
+     */
+    public double getRatings(String serviceProviderName, String serviceName){
+        serviceName = serviceName.trim().toLowerCase();
+        Cursor cursor = writeDB.query(TABLE_SERVICEPROVIDERS, new String[]{COLUMN_AVERAGERATING},
+                COLUMN_SERVICEPROVIDERNAME + " = ? AND "
+                        + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
+                new String[] {serviceProviderName, serviceName},
+                null, null, null, null);
+        cursor.moveToFirst();
+        double rating = cursor.getDouble(0);
+        cursor.close();
+
+        return rating;
+    }
+
+    /**
+     * Returns the number of people who rated a service provider's service
+     *
+     * @param serviceProvider name of service provider
+     * @param service name of service
+     * @return number of raters for specified service provider and service combination
+     */
+    public int getRaters(ServiceProvider serviceProvider, Service service){
+        return getRaters(serviceProvider.getUsername(), service.getName());
+
+    }
+
+    /**
+     * Returns the number of people who rated a service provider's service
+     *
+     * @param serviceProviderName name of service provider
+     * @param serviceName name of service
+     * @return number of raters for specified service provider and service combination
+     */
+    public int getRaters(String serviceProviderName, String serviceName){
+        serviceName = serviceName.trim().toLowerCase();
+        Cursor cursor = writeDB.query(TABLE_SERVICEPROVIDERS, new String[]{COLUMN_RATERS},
+                COLUMN_SERVICEPROVIDERNAME + " = ? AND "
+                        + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
+                new String[] {serviceProviderName, serviceName},
+                null, null, null, null);
+        cursor.moveToFirst();
+        cursor.close();
+
+        return cursor.getInt(0);
+    }
+
+    /**
+     * Returns list of [username, first name, last name, rating] of service providers that
+     * have a rating equal to or above the specified rating
+     *
+     * @param service
+     * @param rating minimum rating
+     * @return a List of [username, first name, last name, rating] of service providers
+     */
+    public List<String[]> getProvidersAboveRating(Service service, double rating){
+        return getProvidersAboveRating(service.getName(), rating);
+    }
+
+    /**
+     * Returns list of [username, first name, last name, rating] of service providers that
+     * have a rating equal to or above the specified rating
+     *
+     * @param serviceName name of service
+     * @param rating minimum rating
+     * @return a List of [username, first name, last name, rating] of service providers
+     */
+    public List<String[]> getProvidersAboveRating(String serviceName, double rating){
+        serviceName = serviceName.trim().toLowerCase();
+        return getAll("SELECT " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERNAME + ", "
+                + TABLE_LOGIN + "." + COLUMN_FIRSTNAME + ", "
+                + TABLE_LOGIN + "." + COLUMN_LASTNAME + ", "
+                + TABLE_SERVICEPROVIDERS + "." + COLUMN_AVERAGERATING
+                + " FROM " + TABLE_SERVICEPROVIDERS + " JOIN " + TABLE_LOGIN
+                + " ON " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERNAME + " = "
+                + TABLE_LOGIN + "." + COLUMN_USERNAME
+                + " AND " + COLUMN_SERVICEPROVIDERSERVICE + " = '" + serviceName + "'"
+                + " AND " + TABLE_SERVICEPROVIDERS + "." + COLUMN_ACTIVE  + " = 'active'"
+                + " AND " + TABLE_SERVICEPROVIDERS + "." + COLUMN_AVERAGERATING + " >= " + rating
+                + " ORDER BY " + TABLE_SERVICEPROVIDERS + "." + COLUMN_AVERAGERATING + " DESC");
+    }
+
+    /**
+     * Returns list of [username, first name, last name, rating] of service providers
+     * available at the specified time
+     *
+     * @param service
+     * @param year
+     * @param month
+     * @param day
+     * @param starth starting hour
+     * @param startmin starting minute
+     * @param endh ending hour
+     * @param endmin ending minute
+     * @return a List of [username, first name, last name, rating] of service providers
+     */
+    public List<String[]> getProvidersByTime(Service service, int year, int month, int day,
+                                             int starth, int startmin, int endh, int endmin){
+        return getProvidersByTime(service.getName(), year, month, day, starth, startmin, endh, endmin);
+    }
+
+    /**
+     * Returns list of [username, first name, last name, rating] of service providers
+     * available at the specified time
+     *
+     * @param serviceName name of service
+     * @param year
+     * @param month
+     * @param day
+     * @param starth starting hour
+     * @param startmin starting minute
+     * @param endh ending hour
+     * @param endmin ending minute
+     * @return a List of [username, first name, last name, rating] of service providers
+     */
+    public List<String[]> getProvidersByTime(String serviceName, int year, int month, int day,
+                                             int starth, int startmin, int endh, int endmin){
+        serviceName = serviceName.trim().toLowerCase();
+        List<String[]> providers = getAll("SELECT " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERNAME + ", "
+                + TABLE_LOGIN + "." + COLUMN_FIRSTNAME + ", "
+                + TABLE_LOGIN + "." + COLUMN_LASTNAME + ", "
+                + TABLE_SERVICEPROVIDERS + "." + COLUMN_AVERAGERATING + ", "
+                + " FROM " + TABLE_SERVICEPROVIDERS + " JOIN " + TABLE_LOGIN
+                + " ON " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERNAME + " = "
+                + TABLE_LOGIN + "." + COLUMN_USERNAME
+                + " AND " + COLUMN_SERVICEPROVIDERSERVICE + " = '" + serviceName + "'"
+                + " AND " + TABLE_SERVICEPROVIDERS + "." + COLUMN_ACTIVE  + " = 'active'"
+                + " ORDER BY " + TABLE_SERVICEPROVIDERS + "." + COLUMN_AVERAGERATING + " DESC");
+        for (int i = 0; i < providers.size(); i++){
+            if (!isProviderAvailable(providers.get(i)[0], year, month, day,
+                    starth, startmin, endh, endmin)){
+                providers.remove(i);
+            }
+        }
+        return providers;
+    }
+
+    /**
+     * Returns list of [username, first name, last name, rating] of service providers
+     * available at the specified time and have a rating equal to or above the specified rating
+     *
+     * @param service
+     * @param rating minimum rating of filter
+     * @param year
+     * @param month
+     * @param day
+     * @param starth starting hour
+     * @param startmin starting minute
+     * @param endh ending hour
+     * @param endmin ending minute
+     * @return List of [username, first name, last name, rating] of service providers
+     */
+    public List<String[]> getProvidersByTimeAndRating(Service service, double rating, int year, int month, int day,
+                                                      int starth, int startmin, int endh, int endmin){
+        return getProvidersByTimeAndRating(service.getName(), rating, year, month, day,
+                starth, startmin, endh, endmin);
+    }
+
+    /**
+     * Returns list of [username, first name, last name, rating] of service providers
+     * available at the specified time and have a rating equal to or above the specified rating
+     *
+     * @param serviceName name of service
+     * @param rating minimum rating of filter
+     * @param year
+     * @param month
+     * @param day
+     * @param starth starting hour
+     * @param startmin starting minute
+     * @param endh ending hour
+     * @param endmin ending minute
+     * @return List of [username, first name, last name, rating] of service providers
+     */
+    public List<String[]> getProvidersByTimeAndRating(String serviceName, double rating, int year, int month, int day,
+                                                    int starth, int startmin, int endh, int endmin){
+        serviceName = serviceName.trim().toLowerCase();
+        List<String[]> providers = getProvidersByTime(serviceName, year, month, day, starth, startmin, endh, endmin);
+
+        int i = providers.size()-1;
+        boolean allLowRatingsRemoved = false;
+        while (i>-1 && !allLowRatingsRemoved){
+            if (getRatings(providers.get(i)[0], serviceName)>=rating){
+                allLowRatingsRemoved = true;
+            } else {
+                providers.remove(i--);
+            }
+        }
+        return providers;
+    }
+
+
     /**
      * Prints all entries of table. One row is printed per line. Columns are
      * separated by spaces.
@@ -752,6 +1398,17 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
+    /**
+     * Deletes all data from database. It's used for testing when
+     * DB needs to be cleared. Please don't call this anywhere else.
+     */
+    void deleteAll(){
+        writeDB.execSQL("DELETE FROM " + TABLE_LOGIN);
+        writeDB.execSQL("DELETE FROM " + TABLE_SERVICES);
+        writeDB.execSQL("DELETE FROM " + TABLE_SERVICEPROVIDERS);
+        writeDB.execSQL("DELETE FROM " + TABLE_AVAILABILITY);
+        writeDB.execSQL("DELETE FROM " + TABLE_BOOKINGS);
+    }
 
     /**
      * Gets all items in a table
@@ -775,6 +1432,190 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return list;
+    }
+
+    /**
+     * Adds a service provider's availabilities for a specific day to content values
+     * @param contentValues
+     * @param startColumn
+     * @param endColumn
+     * @param startAndEndTimes
+     */
+    private void addAvailabilityToContentValues(ContentValues contentValues,
+                                                String startColumn, String endColumn,
+                                                int[] startAndEndTimes){
+        if (startAndEndTimes == null){
+            contentValues.put(startColumn, 0);
+            contentValues.put(endColumn, 0);
+        } else {
+            int startTime = startAndEndTimes[0]*60+startAndEndTimes[1];
+            int endTime = startAndEndTimes[2]*60+startAndEndTimes[3];
+            if (endTime - startTime <=0 || startTime > 1439 || startTime < 0
+                    || endTime > 1439 || endTime <= 0) {
+                contentValues.put(startColumn, 0);
+                contentValues.put(endColumn, 0);
+            } else {
+                contentValues.put(startColumn, startTime);
+                contentValues.put(endColumn, endTime);
+            }
+        }
+
+    }
+
+    /**
+     * Helper method to get a service provider's availability by day of week
+     *
+     * @param serviceProvider username of service provider
+     * @param year
+     * @param month
+     * @param day
+     * @return Cursor containing the start and end of the service provider's availabilities
+     *          on selected day of the week
+     */
+    private Cursor getAvailabilityByDayOfWeek(String serviceProvider, int year, int month, int day){
+        GregorianCalendar start = new GregorianCalendar(year, month-1, day);
+        //Calendar.DAY_OF_WEEK starts with 1 for Sunday, and onwards
+        int dayOfWeek = start.get(Calendar.DAY_OF_WEEK);
+        Cursor cursor = null;
+
+        //Check availabilities on day of week
+        switch (dayOfWeek){
+            case 1: //Sunday
+                cursor = writeDB.query(TABLE_AVAILABILITY, new String[] {COLUMN_SUNSTART, COLUMN_SUNEND},
+                        COLUMN_AVAILABILITYNAME + " = ?", new String[] {serviceProvider}, null,
+                        null, null, null);
+                break;
+            case 2: //Monday
+                cursor = writeDB.query(TABLE_AVAILABILITY, new String[] {COLUMN_MONSTART, COLUMN_MONEND},
+                        COLUMN_AVAILABILITYNAME + " = ?", new String[] {serviceProvider}, null,
+                        null, null, null);
+                break;
+            case 3: //Tuesday
+                cursor = writeDB.query(TABLE_AVAILABILITY, new String[] {COLUMN_TUESTART, COLUMN_TUEEND},
+                        COLUMN_AVAILABILITYNAME + " = ?", new String[] {serviceProvider}, null,
+                        null, null, null);
+                break;
+            case 4: //Wednesday
+                cursor = writeDB.query(TABLE_AVAILABILITY, new String[] {COLUMN_WEDSTART, COLUMN_WEDEND},
+                        COLUMN_AVAILABILITYNAME + " = ?", new String[] {serviceProvider}, null,
+                        null, null, null);
+                break;
+            case 5: //Thursday
+                cursor = writeDB.query(TABLE_AVAILABILITY, new String[] {COLUMN_THUSTART, COLUMN_THUEND},
+                        COLUMN_AVAILABILITYNAME + " = ?", new String[] {serviceProvider}, null,
+                        null, null, null);
+                break;
+            case 6: //Friday
+                cursor = writeDB.query(TABLE_AVAILABILITY, new String[] {COLUMN_FRISTART, COLUMN_FRIEND},
+                        COLUMN_AVAILABILITYNAME + " = ?", new String[] {serviceProvider}, null,
+                        null, null, null);
+                break;
+            case 7: //Saturday
+                cursor = writeDB.query(TABLE_AVAILABILITY, new String[] {COLUMN_SATSTART, COLUMN_SATEND},
+                        COLUMN_AVAILABILITYNAME + " = ?", new String[] {serviceProvider}, null,
+                        null, null, null);
+                break;
+        }
+
+        return cursor;
+    }
+
+    /**
+     * Helper method to change booking status
+     * @param booking
+     * @param status status to update
+     * @return true if modification was successful
+     */
+    private boolean modifyBookingStatus(Booking booking, Status status){
+        if (booking == null) return false;
+
+        GregorianCalendar current = new GregorianCalendar();
+        current.setTimeInMillis(System.currentTimeMillis());
+        GregorianCalendar bookDate = new GregorianCalendar(booking.getYear(), booking.getMonth()-1,
+                booking.getDay(), booking.getStarth(), booking.getStartmin());
+
+        //check if time of booking has passed
+        if (current.compareTo(bookDate) > 0) return false;
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_BOOKINGSTATUS, status.toString());
+
+        return writeDB.update(TABLE_BOOKINGS, contentValues,
+                COLUMN_BOOKINGSERVICEPROVIDER + " = ? AND "
+                        + COLUMN_BOOKINGHOMEOWNER + " = ? AND "
+                        + COLUMN_BOOKINGYEAR + " = ? AND "
+                        + COLUMN_BOOKINGMONTH + " = ? AND "
+                        + COLUMN_BOOKINGDATE + " = ? AND "
+                        + COLUMN_BOOKINGSTART + " = ? AND "
+                        + COLUMN_BOOKINGSTATUS + " != " + Status.CANCELLED.toString() + ")",
+                new String[] {booking.getServiceprovider().getUsername(),
+                        booking.getHomeowner().getUsername(),
+                        String.valueOf(booking.getYear()),
+                        String.valueOf(booking.getMonth()),
+                        String.valueOf(booking.getDay()),
+                        String.valueOf(booking.getStarth()*60 + booking.getStartmin())}) > 0;
+    }
+
+    /**
+     * Helper method to determine whether service provider is available at specified date and time.
+     * Returns false if end time before start time, or service provider not available
+     *
+     * @param serviceProvider
+     * @param year
+     * @param month
+     * @param day
+     * @param starth
+     * @param startmin
+     * @param endh
+     * @param endmin
+     * @return true if service provider is available for specified time slot
+     */
+    private boolean isProviderAvailable(String serviceProvider, int year, int month, int day,
+                                        int starth, int startmin, int endh, int endmin){
+
+        int bookingStart = starth*60 + startmin;
+        int bookingEnd = endh*60 + endmin;
+        int availabilityStart, availabilityEnd;
+
+        if (bookingEnd < bookingStart) return false;
+
+        Cursor cursor = getAvailabilityByDayOfWeek(serviceProvider, year, month, day);
+
+        cursor.moveToFirst();
+        availabilityStart = cursor.getInt(0);
+        availabilityEnd = cursor.getInt(1);
+
+        //service provider not available if availability end is 0, if availability starts after booking start,
+        // or if availability ends before booking end
+        if (availabilityEnd == 0 || availabilityStart > bookingStart || availabilityEnd < bookingEnd) {
+            return false;
+        }
+
+
+        //now we know for sure that the service provider is available on said day of the week
+        //we check to see if any of the bookings overlap on this time slot
+        cursor = writeDB.query(TABLE_BOOKINGS, new String[] {COLUMN_BOOKINGSTART, COLUMN_BOOKINGEND},
+                COLUMN_BOOKINGSERVICEPROVIDER + " = ? AND "
+                        + COLUMN_BOOKINGYEAR + " = ? AND "
+                        + COLUMN_BOOKINGMONTH + " = ? AND "
+                        + COLUMN_BOOKINGDATE + " = ? AND "
+                        + COLUMN_BOOKINGSTATUS + " != ?",
+                new String[] {serviceProvider, String.valueOf(year),
+                        String.valueOf(month), String.valueOf(day), Status.CANCELLED.toString()},
+                null, null, COLUMN_BOOKINGSTART, null);
+        if (cursor.moveToFirst()){
+            for (int i = 0; i<cursor.getCount(); i++){
+                availabilityStart = cursor.getInt(0);
+                availabilityEnd = cursor.getInt(1);
+
+                if ((availabilityStart < bookingStart && availabilityEnd > bookingStart)||
+                        (availabilityStart < bookingEnd && availabilityEnd > bookingEnd) ||
+                        (availabilityStart > bookingStart && availabilityEnd < bookingEnd)) return false;
+
+                cursor.moveToNext();
+            }
+        }
+        return true;
     }
 
 }

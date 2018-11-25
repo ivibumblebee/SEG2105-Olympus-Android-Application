@@ -18,6 +18,15 @@ import static org.junit.Assert.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(packageName = "com.uottawa.olympus.olympusservices")
 public class DBIntegrationTest {
+
+    /**
+     * Enum for setting up before a test
+     */
+    private enum TestAfter{
+        USER, SERVICE, LINK, AVAILABILITY, BOOKING, RATING;
+    }
+
+
     private DBHelper dbHelper = new DBHelper(RuntimeEnvironment.application);
 
     //testing user login table
@@ -174,9 +183,10 @@ public class DBIntegrationTest {
 
     @Test
     public void testGetAllUsers(){
-        dbHelper.addUser(new HomeOwner("jbO4aBF4dC", "soccer", "Miguel", "Garzon"));
+        setUp(TestAfter.USER);
 
         List<String[]> allUsers = dbHelper.getAllUsers();
+        assertEquals(allUsers.size(), 5);
 
         for (String[] user : allUsers){
 /*            for (String s : user){
@@ -238,7 +248,7 @@ public class DBIntegrationTest {
         added = dbHelper.addService(new Service("extermiNating fLatworms", 25.00));
         assertTrue(!added);
 
-        dbHelper.deleteService("Exterminating flatworms");
+        dbHelper.deleteAll();
     }
 
     @Test
@@ -255,55 +265,41 @@ public class DBIntegrationTest {
         assertEquals("exterminating flatworms", service.getName());
         assertEquals(25.00, service.getRate(), 0.001);
 
-        dbHelper.deleteService("Exterminating flatworms");
+        dbHelper.deleteAll();
     }
 
     @Test
     public void testGetAllServices(){
-        dbHelper.addService(new Service("Exterminating flatworms", 20.00));
+        setUp(TestAfter.SERVICE);
 
         List<String[]> allServices = dbHelper.getAllServices();
+        assertTrue(allServices.size() == 3);
 
         for (String[] service : allServices){
-/*            for (String s : user){
-                System.out.print(s + " ");
-            }
-            System.out.println();*/
             Service dbService = dbHelper.findService(service[0]);
             assertEquals(dbService.getRate(), Double.parseDouble(service[1]), 0.001);
         }
 
-        dbHelper.deleteService("Exterminating flatworms");
+        dbHelper.deleteAll();
     }
 
     @Test
     public void testAddAndDeleteServiceProvidedByUser(){
-        dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true));
-        dbHelper.addService(new Service("Hitman", 12358));
+        setUp(TestAfter.SERVICE);
+
         boolean added = dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "hitman");
         assertTrue(added);
         boolean deleted = dbHelper.deleteServiceProvidedByUser("jbO4aBF4dC", "Hitman");
         assertTrue(deleted);
-        dbHelper.deleteUser("jbO4aBF4dC");
-        dbHelper.deleteService("hitman");
+
+        dbHelper.deleteAll();
     }
 
     @Test
     public void testGetAllServicesProvidedByUserAndDeleteService(){
-        ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true);
-        dbHelper.addUser(serviceProvider);
+        setUp(TestAfter.LINK);
 
-        Service service1 = new Service("Hitman", 12358);
-        Service service2 = new Service("Exterminating flatworms", 392.457);
-        dbHelper.addService(service1);
-        dbHelper.addService(service2);
-
-        dbHelper.addServiceProvidedByUser(serviceProvider, service1);
-        dbHelper.addServiceProvidedByUser(serviceProvider, service2);
-
-        List<String[]> servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser(serviceProvider);
+        List<String[]> servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
         assertEquals(2, servicesProvidedByUser.size());
         assertEquals("hitman", servicesProvidedByUser.get(0)[0]);
         assertEquals(12358, Double.parseDouble(servicesProvidedByUser.get(0)[1]), 0.00001);
@@ -318,47 +314,28 @@ public class DBIntegrationTest {
         servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
         assertEquals(0, servicesProvidedByUser.size());
 
-        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteAll();
     }
 
     @Test
     public void testGetAllProvidersByService(){
-        dbHelper.addService(new Service("Exterminating flatworms", 392.457));
-        dbHelper.addUser(new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true));
-        dbHelper.addUser(new ServiceProvider("7MuF1c59XP", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true));
-
-        dbHelper.addServiceProvidedByUser("jbO4aBF4dC", "exterminating flatworms");
-        dbHelper.addServiceProvidedByUser("7MuF1c59XP", "exterminating flatworms");
+        setUp(TestAfter.LINK);
 
         List<String[]> providersByService = dbHelper.getAllProvidersByService("exterminating flatworms");
 
         assertEquals(2, providersByService.size());
         assertEquals("jbO4aBF4dC", providersByService.get(0)[0]);
-        assertEquals("7MuF1c59XP", providersByService.get(1)[0]);
+        assertEquals("DW44FkUsX7", providersByService.get(1)[0]);
 
-        dbHelper.deleteService("Exterminating flatworms");
-        dbHelper.deleteUser("jbO4aBF4dC");
-        dbHelper.deleteUser("7MuF1c59XP");
+        dbHelper.deleteAll();
     }
 
 
     @Test
     public void testDeleteServiceProvidedByUser(){
-        ServiceProvider serviceProvider = new ServiceProvider("jbO4aBF4dC", null, null, null,
-                "testaddress", "8888888888", "companydotcom", true);
-        dbHelper.addUser(serviceProvider);
+        setUp(TestAfter.LINK);
 
-        Service service1 = new Service("Hitman", 12358);
-        Service service2 = new Service("Exterminating flatworms", 392.457);
-        dbHelper.addService(service1);
-        dbHelper.addService(service2);
-
-        dbHelper.addServiceProvidedByUser(serviceProvider, service1);
-        dbHelper.addServiceProvidedByUser(serviceProvider, service2);
-
-        List<String[]> servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser(serviceProvider);
+        List<String[]> servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
         assertEquals(2, servicesProvidedByUser.size());
 
         dbHelper.deleteServiceProvidedByUser("jbO4aBF4dC","hitman");
@@ -369,7 +346,7 @@ public class DBIntegrationTest {
         servicesProvidedByUser = dbHelper.getAllServicesProvidedByUser("jbO4aBF4dC");
         assertEquals(0, servicesProvidedByUser.size());
 
-        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteAll();
     }
 
 
@@ -407,7 +384,7 @@ public class DBIntegrationTest {
                 assertEquals(availabilities[i][j], dbAvailabilities[i][j]);
             }
         }
-        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteAll();
     }
 
 
@@ -432,7 +409,95 @@ public class DBIntegrationTest {
                 assertEquals(0, dbAvailabilities[i][j]);
             }
         }
-        dbHelper.deleteUser("jbO4aBF4dC");
+        dbHelper.deleteAll();
     }
+
+    @Test
+    public void testAddBooking(){
+        setUp(TestAfter.BOOKING);
+
+        //December 1, 2020 is a Tuesday. Provider is available from 5:20 to 21:11
+        boolean added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                2020, 12, 1, 8, 12, 10, 0);
+        assertTrue(added);
+        //Provider is available from 5:20 to 21:11, but has a booking from 8:12 to 10:00
+        added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                2020, 12, 1, 9, 12, 12, 0);
+        assertTrue(!added);
+
+        //December 3, 2020 is was a Thursday. Provider is available from 7:12 to 15:14
+        added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                2020, 12, 3, 6, 12, 7, 30);
+        assertTrue(!added);
+
+        //November 20, 2018 is in the past. Should not be able to add booking
+        added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                2018, 11, 20, 8, 12, 10, 0);
+        assertTrue(!added);
+
+        dbHelper.deleteAll();
+    }
+
+//    @Test
+//    public void testConfirmBooking(){
+//        setUp(TestAfter.RATING);
+//
+//    }
+
+    // Ever gotten tired of adding things at the start of a test just to delete it all again?
+    // I have.
+    // This is a work in progress
+    private void setUp(TestAfter testAfter){
+        dbHelper.deleteAll();
+
+        dbHelper.addUser(new Admin());
+
+        ServiceProvider serviceProvider1 = new ServiceProvider("jbO4aBF4dC", null, "Jack", "Black",
+                "testaddress", "8888888888", "companydotcom", true);
+        dbHelper.addUser(serviceProvider1);
+
+        ServiceProvider serviceProvider2 = new ServiceProvider("DW44FkUsX7", null, "Dwayne", "Johnson",
+                "testaddress", "1248921742", "companydotcom", false);
+        dbHelper.addUser(serviceProvider2);
+
+        HomeOwner homeOwner1 = new HomeOwner("7MuF1c59XP", null, "Mufasa", "Died");
+        dbHelper.addUser(homeOwner1);
+
+        HomeOwner homeOwner2 = new HomeOwner("wRV3phzpl5", null, "Wren", "Phillips");
+        dbHelper.addUser(homeOwner2);
+
+        Service service1 = new Service("Hitman", 12358);
+        dbHelper.addService(service1);
+
+        Service service2 = new Service("Exterminating flatworms", 392.457);
+        dbHelper.addService(service2);
+
+        Service service3 = new Service("Petting cats", 0);
+        dbHelper.addService(service3);
+
+        if (!(testAfter.equals(TestAfter.USER) || testAfter.equals(TestAfter.SERVICE))){
+            dbHelper.addServiceProvidedByUser(serviceProvider1, service1);
+            dbHelper.addServiceProvidedByUser(serviceProvider1, service2);
+
+            dbHelper.addServiceProvidedByUser(serviceProvider2, service3);
+            dbHelper.addServiceProvidedByUser(serviceProvider2, service2);
+
+            if (!testAfter.equals(TestAfter.LINK)){
+                serviceProvider1.setAvailabilities(0, 4, 18, 19, 30);
+                serviceProvider1.setAvailabilities(1, 5, 20, 21, 11);
+                serviceProvider1.setAvailabilities(3, 7, 12, 15, 14);
+                serviceProvider1.setAvailabilities(4, 0, 0, 23, 29);
+
+                dbHelper.updateAvailability(serviceProvider1);
+
+                if (!testAfter.equals(TestAfter.AVAILABILITY)){
+                    Booking booking1 = new Booking(8, 12, 10, 0,1,
+                            12, 2020, serviceProvider1, homeOwner1, service1);
+                    dbHelper.addBooking(booking1);
+                }
+            }
+        }
+    }
+
 }
 
