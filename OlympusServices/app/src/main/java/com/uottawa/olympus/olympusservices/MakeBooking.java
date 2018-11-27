@@ -10,8 +10,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class MakeBooking extends AppCompatActivity {
     String homeowner;
@@ -49,7 +52,63 @@ public class MakeBooking extends AppCompatActivity {
     }
 
     public void Book(View view){
-        //
+        Button button = findViewById(R.id.Start);
+        Button button2 = findViewById(R.id.End);
+        Button button3 = findViewById(R.id.Date);
+
+        if(!button.getText().toString().equals("Start") && !button2.getText().toString().equals("End")
+                && !button3.getText().toString().equals("Date")){
+            String[] dates = button3.getText().toString().split("/");
+            int month = Integer.parseInt(dates[0].replaceAll("\\s+",""));
+            int day = Integer.parseInt(dates[1].replaceAll("\\s+",""));
+            int year = Integer.parseInt(dates[2].replaceAll("\\s+",""));
+
+            String[] starttimes = button.getText().toString().split(":");
+            int starth = Integer.parseInt(starttimes[0].replaceAll("\\s+",""));
+            int startmin = Integer.parseInt(starttimes[1].replaceAll("\\s+",""));
+
+            String[] endtimes = button2.getText().toString().split(":");
+            int endh = Integer.parseInt(endtimes[0].replaceAll("\\s+",""));
+            int endmin = Integer.parseInt(endtimes[1].replaceAll("\\s+",""));
+
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date selecteddate = sdf.parse(dates[2].replaceAll("\\s+","") + "-" + dates[0].replaceAll("\\s+","") + "-" + dates[1].replaceAll("\\s+",""));
+                if(selecteddate.compareTo(date)<0){
+                    Toast.makeText(this, "Date must be a future date", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    if (starth<endh || (starth==endh && startmin<endmin)){
+                        DBHelper dbHelper = new DBHelper(this);
+                        if(dbHelper.addBooking(serviceprovider, homeowner, service, year, month, day,
+                                starth, startmin, endh, endmin)){
+                            Toast.makeText(this, "Booking Made", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(),Welcome.class);
+                            intent.putExtra("username", homeowner);
+                            startActivity(intent);
+                            finish();
+
+                        }
+                        else{
+                            Toast.makeText(this, "Booking could not be made", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                    else{
+                        Toast.makeText(this, "Time is invalid", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            catch(Exception e){
+                Toast.makeText(this, "Date is invalid", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else{
+            Toast.makeText(this, "Date and times must be selected", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onClickDate(View view){

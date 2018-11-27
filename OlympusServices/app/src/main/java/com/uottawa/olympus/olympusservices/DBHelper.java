@@ -1308,7 +1308,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<String[]> providers = getAll("SELECT " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERNAME + ", "
                 + TABLE_LOGIN + "." + COLUMN_FIRSTNAME + ", "
                 + TABLE_LOGIN + "." + COLUMN_LASTNAME + ", "
-                + TABLE_SERVICEPROVIDERS + "." + COLUMN_AVERAGERATING + ", "
+                + TABLE_SERVICEPROVIDERS + "." + COLUMN_AVERAGERATING + " "
                 + " FROM " + TABLE_SERVICEPROVIDERS + " JOIN " + TABLE_LOGIN
                 + " ON " + TABLE_SERVICEPROVIDERS + "." + COLUMN_SERVICEPROVIDERNAME + " = "
                 + TABLE_LOGIN + "." + COLUMN_USERNAME

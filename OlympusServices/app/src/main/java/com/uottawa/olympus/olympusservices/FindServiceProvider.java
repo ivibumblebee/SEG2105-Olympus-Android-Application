@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -44,8 +46,6 @@ public class FindServiceProvider extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         username = bundle.getString("username");
 
-        MaterialSpinner spinner = findViewById(R.id.RatingInput);
-        spinner.setItems("",1, 2, 3, 4, 5);
 
         dbHelper = new DBHelper(this);
         MaterialSpinner spinner2 = findViewById(R.id.ServicesInput);
@@ -60,19 +60,13 @@ public class FindServiceProvider extends AppCompatActivity {
         spinner2.setItems(services);
 
 
-        //iffy code, update once we can pull the actual service providers
-        ServiceProvider provider = (ServiceProvider)dbHelper.findUserByUsername("testing");
-        ServiceProvider[] providerslist = {provider};
-        //iffy code ends here
-
         mRecyclerView = (RecyclerView) findViewById(R.id.ServiceProviders);
 
 
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapter(providerslist, this);
-        mRecyclerView.setAdapter(mAdapter);
+
          //
 
     }
@@ -89,31 +83,81 @@ public class FindServiceProvider extends AppCompatActivity {
         Button button = findViewById(R.id.Start);
         Button button2 = findViewById(R.id.End);
         Button button3 = findViewById(R.id.Date);
-        MaterialSpinner spinner2 = findViewById(R.id.RatingInput);
+        RadioGroup ratingselect = findViewById(R.id.RatingSelect);
+        int selectedId = ratingselect.getCheckedRadioButtonId();
+        RadioButton ratingpicked;
 
         String service = spinner.getText().toString();
-        int start;
-        int end;
+        String start;
+        String end;
         String date;
-        if(button.getText().toString()!="Start" && button.getText().toString()!="End"
-                && button3.getText().toString()!="Date"){
-            start = Integer.parseInt(button.getText().toString());
-            end = Integer.parseInt(button2.getText().toString());
+        double rating;
+        List<String[]> providers;
+        if(!button.getText().toString().equals("Start") && !button2.getText().toString().equals("End")
+                && !button3.getText().toString().equals("Date")){
+            System.out.println(button.getText().toString()+":"+button2.getText().toString()+":"+button3.getText().toString());
+            start = button.getText().toString();
+            end = button2.getText().toString();
             date = button3.getText().toString();
+
+            String[] dates = date.split("/");
+            int month = Integer.parseInt(dates[0].replaceAll("\\s+",""));
+            int day = Integer.parseInt(dates[1].replaceAll("\\s+",""));
+            int year = Integer.parseInt(dates[2].replaceAll("\\s+",""));
+
+            String[] starttimes = start.split(":");
+            int starth = Integer.parseInt(starttimes[0].replaceAll("\\s+",""));
+            int startmin = Integer.parseInt(starttimes[1].replaceAll("\\s+",""));
+
+            String[] endtimes = end.split(":");
+            int endh = Integer.parseInt(endtimes[0].replaceAll("\\s+",""));
+            int endmin = Integer.parseInt(endtimes[1].replaceAll("\\s+",""));
+
+            int[] times = {starth, startmin, endh, endmin};
+            if(selectedId!=-1 && validateTime(times)){
+                ratingpicked = (RadioButton) findViewById(selectedId);
+                rating = Double.parseDouble(ratingpicked.getText().toString());
+                providers = dbHelper.getProvidersByTimeAndRating(service, rating, year, month, day,
+                        starth, startmin, endh, endmin);
+            }
+            else if(validateTime(times)){
+                providers = dbHelper.getProvidersByTime(service, year, month, day,
+                        starth, startmin, endh, endmin);
+            }
+            else if(selectedId!=-1){
+                Toast.makeText(this, "Times are invalid, only searching by service and rating"+starth+";"+startmin+","+endh+";"+endmin, Toast.LENGTH_SHORT).show();
+                ratingpicked = (RadioButton) findViewById(selectedId);
+                rating = Double.parseDouble(ratingpicked.getText().toString());
+                providers = dbHelper.getProvidersAboveRating(service, rating);
+
+            }
+            else{
+                Toast.makeText(this, "Times are invalid, only searching by service", Toast.LENGTH_SHORT).show();
+                providers = dbHelper.getAllProvidersByService(service);
+
+            }
         }
         else{
-            //figure out with dbhelper
+            if(selectedId!=-1){
+                ratingpicked = (RadioButton) findViewById(selectedId);
+                rating = Double.parseDouble(ratingpicked.getText().toString());
+                providers = dbHelper.getProvidersAboveRating(service, rating);
+            }
+            else{
+                providers = dbHelper.getAllProvidersByService(service);
+            }
         }
 
-        int rating;
-        if(spinner2.getText().toString()!=""){
-            rating = Integer.parseInt(spinner2.getText().toString());
+        //update recycler view
+        String[][] providerslist = new String[providers.size()][];
+        for(int i=0; i<providers.size(); i++){
+            providerslist[i] = providers.get(i);
         }
-        else{
-            //figure out with dbhelper
-        }
-        //do search here
-        //update recylcler view
+
+        mAdapter = new MyAdapter(providerslist, this);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
 
     }
 
@@ -126,11 +170,6 @@ public class FindServiceProvider extends AppCompatActivity {
         intent.putExtra("service", service);
         startActivity(intent);
         finish();
-
-
-
-
-
 
 
 
@@ -165,6 +204,8 @@ public class FindServiceProvider extends AppCompatActivity {
                         }
                         button.setText(monthstring + " / " + daystring + " / "
                                 + year);
+
+                        button.setTextSize(9);
                     }
 
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -189,6 +230,7 @@ public class FindServiceProvider extends AppCompatActivity {
                         String time = "";
 
                         button.setText(formatTime(hourOfDay,minute));
+
                         //set availibility for service provider and check start time is less than finish
                     }
 
@@ -250,7 +292,7 @@ public class FindServiceProvider extends AppCompatActivity {
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ProviderHolder> {
 
-        private ServiceProvider[] serviceProviders;
+        private String[][] serviceProviders;
         private Context context;
 
         // Provide a reference to the views for each data item
@@ -258,7 +300,7 @@ public class FindServiceProvider extends AppCompatActivity {
         // you provide access to all the views for a data item in a view holder
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public MyAdapter(ServiceProvider[] serviceProviders, Context context) {
+        public MyAdapter(String[][] serviceProviders, Context context) {
             this.serviceProviders = serviceProviders;
         }
 
@@ -275,10 +317,10 @@ public class FindServiceProvider extends AppCompatActivity {
         // Replace the contents of a view (invoked by the layout manager)
         @Override
         public void onBindViewHolder(ProviderHolder holder, int position) {
-            ServiceProvider serviceprovider = serviceProviders[position];
-            holder.name.setText(serviceprovider.getFirstname()+" "+serviceprovider.getLastname());
-            holder.rate.setText("5");
-                                //serviceprovider.getRating()
+            String[] serviceprovider = serviceProviders[position];
+            holder.name.setText(serviceprovider[1]+" "+serviceprovider[2]);
+            holder.rate.setText(""+serviceprovider[3]);
+
 
 
 

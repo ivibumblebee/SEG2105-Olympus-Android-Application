@@ -32,7 +32,7 @@ public class ServiceProviderWelcome extends AppCompatActivity {
         UserType user;
         user = dbHelper.findUserByUsername(username);
         TextView welcome = findViewById(R.id.Welcome);
-        welcome.setText("Welcome "+user.getFirstname()+ " you are logged in as a Home Owner");
+        welcome.setText("Welcome "+user.getFirstname()+ " you are logged in as a Service Provider");
 
 
     }

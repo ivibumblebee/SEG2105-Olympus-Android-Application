@@ -39,7 +39,7 @@ public class HomeOwnerEditProfile extends AppCompatActivity {
      */
     @Override
     public void onBackPressed(){
-        Intent intent = new Intent(getApplicationContext(),ServiceProviderWelcome.class);
+        Intent intent = new Intent(getApplicationContext(),Welcome.class);
         intent.putExtra("username", username);
         startActivity(intent);
         finish();
