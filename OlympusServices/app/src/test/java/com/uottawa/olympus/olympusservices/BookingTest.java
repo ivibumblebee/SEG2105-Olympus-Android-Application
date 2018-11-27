@@ -11,6 +11,9 @@ public class BookingTest {
     Booking book = new Booking(13, 30, 16, 0, 0, 0, 2019,
     serviceprovider, user, service);
 
+    /**
+     * tests starth input and its functions.
+     */
     @Test
     public void testStarth() {
         assertEquals(13, book.getStarth());
@@ -18,6 +21,9 @@ public class BookingTest {
         assertNotEquals(13, book.getStarth());
     }
 
+    /**
+     * tests startmin input and its functions.
+     */
     @Test
     public void testStartmin() {
         assertEquals(30, book.getStartmin());
@@ -25,6 +31,9 @@ public class BookingTest {
         assertNotEquals(30, book.getStartmin());
     }
 
+    /**
+     * tests Endh input and its functions.
+     */
     @Test
     public void testEndh() {
         assertEquals(16, book.getEndh());
@@ -32,6 +41,9 @@ public class BookingTest {
         assertNotEquals(16, book.getEndh());
     }
 
+    /**
+     * tests Endmin input and its functions.
+     */
     @Test
     public void testEndmin() {
         assertEquals(0, book.getEndmin());
@@ -39,6 +51,9 @@ public class BookingTest {
         assertNotEquals(0, book.getEndmin());
     }
 
+    /**
+     * tests Day input and its functions.
+     */
     @Test
     public void testDay() {
         assertEquals(0, book.getDay());
@@ -46,6 +61,9 @@ public class BookingTest {
         assertNotEquals(0, book.getDay());
     }
 
+    /**
+     * tests Month input and its functions.
+     */
     @Test
     public void testMonth() {
         assertEquals(0, book.getMonth());
@@ -53,6 +71,9 @@ public class BookingTest {
         assertNotEquals(0, book.getMonth());
     }
 
+    /**
+     * tests Year input and its functions.
+     */
     @Test
     public void testYear() {
         assertEquals(2019, book.getYear());
@@ -60,6 +81,9 @@ public class BookingTest {
         assertNotEquals(2019, book.getYear());
     }
 
+    /**
+     * tests ServiceProvider in booking class and its functions.
+     */
     @Test
     public void testServiceprovider() {
         assertEquals(serviceprovider, book.getServiceprovider() );
@@ -68,6 +92,9 @@ public class BookingTest {
         assertNotEquals(serviceprovider, book.getServiceprovider());
     }
 
+    /**
+     * tests HomeOwner in booking class and its functions.
+     */
     @Test
     public void testHomeowner() {
         assertEquals(user, book.getHomeowner() );
@@ -76,6 +103,9 @@ public class BookingTest {
         assertNotEquals(user, book.getHomeowner());
     }
 
+    /**
+     * tests Service in booking class and its functions.
+     */
     @Test
     public void testService() {
         assertEquals(service, book.getService() );
@@ -84,12 +114,18 @@ public class BookingTest {
         assertNotEquals(service, book.getService());
     }
 
+    /**
+     * tests Status and its functions by setting it up.
+     */
     @Test
     public void testStatus() {
         book.setStatus(Booking.Status.CONFIRMED);
         assertEquals(Booking.Status.CONFIRMED, book.getStatus());
     }
 
+    /**
+     * tests Rating and its functions by setting it up.
+     */
     @Test
     public void testRating() {
         book.setRating(5);
