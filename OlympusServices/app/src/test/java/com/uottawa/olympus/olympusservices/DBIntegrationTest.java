@@ -12,6 +12,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.List;
+import com.uottawa.olympus.olympusservices.Booking.Status;
 
 import static org.junit.Assert.*;
 
@@ -413,8 +414,34 @@ public class DBIntegrationTest {
     }
 
     @Test
+    public void testGetByTime(){
+        setUp(TestAfter.AVAILABILITY);
+
+        //December 3 2020 is a Thursday
+        List<String[]> providers = dbHelper.getProvidersByTime("Exterminating flatworms", 2020,
+                12, 3, 6, 12, 10, 0);
+        assertEquals(0, providers.size());
+
+        providers = dbHelper.getProvidersByTime("Exterminating flatworms", 2020,
+                12, 3, 7, 12, 10, 0);
+        assertEquals(1, providers.size());
+        String[] firstProvider = providers.get(0);
+        assertEquals("jbO4aBF4dC", firstProvider[0]);
+        assertEquals("Jack", firstProvider[1]);
+        assertEquals("Black", firstProvider[2]);
+        assertEquals(0, Double.parseDouble(firstProvider[3]), 0.0001);
+
+        //December 4 2020 is a Friday
+        providers = dbHelper.getProvidersByTime("Exterminating flatworms", 2020,
+                12, 4, 10, 0, 13, 0);
+        assertEquals(2, providers.size());
+    }
+
+
+
+    @Test
     public void testAddBooking(){
-        setUp(TestAfter.BOOKING);
+        setUp(TestAfter.AVAILABILITY);
 
         //December 1, 2020 is a Tuesday. Provider is available from 5:20 to 21:11
         boolean added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
@@ -425,7 +452,7 @@ public class DBIntegrationTest {
                 2020, 12, 1, 9, 12, 12, 0);
         assertTrue(!added);
 
-        //December 3, 2020 is was a Thursday. Provider is available from 7:12 to 15:14
+        //December 3, 2020 is a Thursday. Provider is available from 7:12 to 15:14
         added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
                 2020, 12, 3, 6, 12, 7, 30);
         assertTrue(!added);
@@ -438,9 +465,65 @@ public class DBIntegrationTest {
         dbHelper.deleteAll();
     }
 
+    @Test
+    public void testViewListOfBookings(){
+        setUp(TestAfter.AVAILABILITY);
+
+        List<Booking> bookings = dbHelper.findBookings("jbO4aBF4dC");
+        assertEquals(0, bookings.size());
+        bookings = dbHelper.findBookings("7MuF1c59XP");
+        assertEquals(0, bookings.size());
+        bookings = dbHelper.findBookings("DW44FkUsX7");
+        assertEquals(0, bookings.size());
+
+        dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                2020, 12, 1, 8, 12, 10, 0);
+        bookings = dbHelper.findBookings("jbO4aBF4dC");
+        assertEquals(1, bookings.size());
+        bookings = dbHelper.findBookings("7MuF1c59XP");
+        assertEquals(1, bookings.size());
+        bookings = dbHelper.findBookings("DW44FkUsX7");
+        assertEquals(0, bookings.size());
+
+        dbHelper.addBooking("DW44FkUsX7", "7MuF1c59XP", "petting cats",
+                2020, 12, 4, 10, 0, 10, 30);
+        bookings = dbHelper.findBookings("jbO4aBF4dC");
+        assertEquals(1, bookings.size());
+        bookings = dbHelper.findBookings("7MuF1c59XP");
+        assertEquals(2, bookings.size());
+        bookings = dbHelper.findBookings("DW44FkUsX7");
+        assertEquals(1, bookings.size());
+
+        dbHelper.deleteAll();
+    }
+
+    @Test
+    public void testConfirmAndCancelBooking(){
+        setUp(TestAfter.AVAILABILITY);
+
+        Booking booking = new Booking(8, 12, 10, 0,1,
+                12, 2020, (ServiceProvider)dbHelper.findUserByUsername("jbO4aBF4dC"),
+                (HomeOwner)dbHelper.findUserByUsername("7MuF1c59XP"), dbHelper.findService("Hitman"));
+        dbHelper.addBooking(booking);
+
+        assertTrue(dbHelper.confirmBooking(booking));
+        List<Booking> bookings = dbHelper.findBookings("jbO4aBF4dC");
+        Booking dbBooking = bookings.get(0);
+        assertEquals(Status.CONFIRMED, dbBooking.getStatus());
+
+        assertTrue(dbHelper.cancelBooking(booking));
+        bookings = dbHelper.findBookings("jbO4aBF4dC");
+        dbBooking = bookings.get(0);
+        assertEquals(Status.CANCELLED, dbBooking.getStatus());
+
+        bookings = dbHelper.findNonCancelledBookings("jbO4aBF4dC");
+        assertEquals(0, bookings.size());
+
+        dbHelper.deleteAll();
+    }
+
 //    @Test
-//    public void testConfirmBooking(){
-//        setUp(TestAfter.RATING);
+//    public void testRating(){
 //
 //    }
 
@@ -483,12 +566,18 @@ public class DBIntegrationTest {
             dbHelper.addServiceProvidedByUser(serviceProvider2, service2);
 
             if (!testAfter.equals(TestAfter.LINK)){
+                //serviceProvider1 is available on Monday, Tuesday, Thursday, and Friday
                 serviceProvider1.setAvailabilities(0, 4, 18, 19, 30);
                 serviceProvider1.setAvailabilities(1, 5, 20, 21, 11);
                 serviceProvider1.setAvailabilities(3, 7, 12, 15, 14);
                 serviceProvider1.setAvailabilities(4, 0, 0, 23, 29);
 
                 dbHelper.updateAvailability(serviceProvider1);
+
+                //serviceProvider2 is only available on Friday
+                serviceProvider2.setAvailabilities(4, 10, 0, 23, 29);
+
+                dbHelper.updateAvailability(serviceProvider2);
 
                 if (!testAfter.equals(TestAfter.AVAILABILITY)){
                     Booking booking1 = new Booking(8, 12, 10, 0,1,
@@ -498,6 +587,5 @@ public class DBIntegrationTest {
             }
         }
     }
-
 }
 

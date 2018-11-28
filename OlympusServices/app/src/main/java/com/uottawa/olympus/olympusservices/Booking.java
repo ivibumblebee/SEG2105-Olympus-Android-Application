@@ -33,7 +33,8 @@ public class Booking {
     }
     private Status status;
 
-    int rating; //out of 5
+    private int rating; //out of 5
+    private String comment;
 
     public Booking(int starth, int startmin, int endh, int endmin, int day, int month, int year,
                    ServiceProvider serviceprovider, HomeOwner homeowner, Service service){
@@ -143,5 +144,11 @@ public class Booking {
         this.rating = rating;
     }
 
+    public String getComment() {
+        return comment;
+    }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }
