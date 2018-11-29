@@ -447,6 +447,12 @@ public class DBIntegrationTest {
         boolean added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
                 2020, 12, 1, 8, 12, 10, 0);
         assertTrue(added);
+
+        //This booking has already been done so cannot be booked anymore
+        added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                2020, 12, 1, 8, 12, 10, 0);
+        assertTrue(!added);
+
         //Provider is available from 5:20 to 21:11, but has a booking from 8:12 to 10:00
         added = dbHelper.addBooking("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
                 2020, 12, 1, 9, 12, 12, 0);
@@ -522,10 +528,38 @@ public class DBIntegrationTest {
         dbHelper.deleteAll();
     }
 
-//    @Test
-//    public void testRating(){
-//
-//    }
+    @Test
+    public void testRating(){
+        setUp(TestAfter.BOOKING);
+
+        ServiceProvider serviceProvider = (ServiceProvider)dbHelper.findUserByUsername("jbO4aBF4dC");
+        HomeOwner homeOwner = (HomeOwner)dbHelper.findUserByUsername("7MuF1c59XP");
+        Service service = dbHelper.findService("Hitman");
+
+        Booking booking = new Booking(8, 12, 10, 0,
+                2, 10, 2018,
+                serviceProvider, homeOwner, service);
+        boolean added = dbHelper.addRating(booking, 5, "100%");
+        assertTrue(added);
+
+        double rating = dbHelper.getAverageRating("jbO4aBF4dC","Hitman");
+        assertEquals(5, rating, 0.0001);
+
+        booking = new Booking(10, 01, 11, 0,
+                2, 10, 2018,
+                serviceProvider, homeOwner, service);
+        added = dbHelper.addRating(booking, 1, "Wrong target");
+        assertTrue(added);
+
+        rating = dbHelper.getAverageRating("jbO4aBF4dC","Hitman");
+        assertEquals(3, rating, 0.0001);
+
+        rating = dbHelper.getAverageRating("jbO4aBF4dC","exterminating flatworms");
+        assertEquals(0, rating, 0.0001);
+
+        dbHelper.deleteAll();
+
+    }
 
     // Ever gotten tired of adding things at the start of a test just to delete it all again?
     // I have.
@@ -583,6 +617,14 @@ public class DBIntegrationTest {
                     Booking booking1 = new Booking(8, 12, 10, 0,1,
                             12, 2020, serviceProvider1, homeOwner1, service1);
                     dbHelper.addBooking(booking1);
+                }
+
+                if (testAfter.equals(TestAfter.BOOKING)){
+                    //October 2 2018 is a Tuesday
+                    dbHelper.forceAddBookingDONTTOUCH("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                            2018, 10, 2, 8, 12, 10, 0);
+                    dbHelper.forceAddBookingDONTTOUCH("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
+                            2018, 10, 2, 10, 01, 11, 0);
                 }
             }
         }

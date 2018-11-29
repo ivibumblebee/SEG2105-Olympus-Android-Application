@@ -1185,7 +1185,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         + COLUMN_BOOKINGYEAR + " = ? AND "
                         + COLUMN_BOOKINGMONTH + " = ? AND "
                         + COLUMN_BOOKINGDATE + " = ? AND "
-                        + COLUMN_BOOKINGSTART + " = ?)",
+                        + COLUMN_BOOKINGSTART + " = ?",
                 new String[] {booking.getServiceprovider().getUsername(),
                         booking.getHomeowner().getUsername(),
                         String.valueOf(booking.getYear()),
@@ -1209,7 +1209,7 @@ public class DBHelper extends SQLiteOpenHelper {
             contentValues.put(COLUMN_AVERAGERATING, currentAverageRatings/(double)currentRaters);
             contentValues.put(COLUMN_RATERS, currentRaters);
 
-            writeDB.update(TABLE_BOOKINGS, contentValues,
+            writeDB.update(TABLE_SERVICEPROVIDERS, contentValues,
                     COLUMN_SERVICEPROVIDERNAME + " = ? AND "
                     + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
                     new String[] {booking.getServiceprovider().getUsername(),
@@ -1274,9 +1274,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<String[]> getAllRatingsAndComments(String serviceProviderName, String serviceName){
         return getAll("SELECT " + COLUMN_BOOKINGHOMEOWNER +", "
                     + COLUMN_RATING + ", " + COLUMN_COMMENT + " FROM " + TABLE_BOOKINGS
-                    + " WHERE " + COLUMN_BOOKINGSERVICEPROVIDER + " = " + serviceProviderName
-                    + " AND " + COLUMN_BOOKINGSERVICE + " = " + serviceName
-                    + " AND " + COLUMN_RATING + " > 0");
+                    + " WHERE " + COLUMN_BOOKINGSERVICEPROVIDER + " = '" + serviceProviderName
+                    + "' AND " + COLUMN_BOOKINGSERVICE + " = '" + serviceName
+                    + "' AND " + COLUMN_RATING + " > 0");
     }
 
     public String[] getSpecificRatingAndComment(String serviceProviderName, String serviceName,
@@ -1511,6 +1511,54 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * So I got really tired of trying to figure out how to rate and book at the same time.
+     * So Imma force it.
+     *
+     * @param serviceProvider
+     * @param homeOwner
+     * @param service
+     * @param year
+     * @param month
+     * @param day
+     * @param starth
+     * @param startmin
+     * @param endh
+     * @param endmin
+     */
+    void forceAddBookingDONTTOUCH(String serviceProvider, String homeOwner, String service,
+                         int year, int month, int day,
+                         int starth, int startmin, int endh, int endmin){
+        service = service.trim().toLowerCase();
+
+        Cursor cursor = writeDB.query(TABLE_SERVICEPROVIDERS, new String[]{COLUMN_SERVICEPROVIDERNAME},
+                COLUMN_SERVICEPROVIDERNAME + " = ? AND "
+                        + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
+                new String[] {serviceProvider, service},
+                null, null, null,  "1");
+        if (!cursor.moveToFirst()) {
+            cursor.close();
+            return;
+        }
+        cursor.close();
+
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_BOOKINGSTART, starth * 60 + startmin);
+        contentValues.put(COLUMN_BOOKINGEND, endh * 60 + endmin);
+        contentValues.put(COLUMN_BOOKINGDATE, day);
+        contentValues.put(COLUMN_BOOKINGMONTH, month);
+        contentValues.put(COLUMN_BOOKINGYEAR, year);
+        contentValues.put(COLUMN_BOOKINGSERVICEPROVIDER, serviceProvider);
+        contentValues.put(COLUMN_BOOKINGHOMEOWNER, homeOwner);
+        contentValues.put(COLUMN_BOOKINGSERVICE, service);
+        contentValues.put(COLUMN_BOOKINGSTATUS, Status.PENDING.toString());
+        contentValues.put(COLUMN_RATING, 0);
+
+        writeDB.insert(TABLE_BOOKINGS, null, contentValues);
+
+    }
+
+    /**
      * Gets all items in a table
      * @param rawQuery SELECT * query
      * @return list of array representing all items in raw query
@@ -1708,9 +1756,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 availabilityStart = cursor.getInt(0);
                 availabilityEnd = cursor.getInt(1);
 
-                if ((availabilityStart < bookingStart && availabilityEnd > bookingStart)||
-                        (availabilityStart < bookingEnd && availabilityEnd > bookingEnd) ||
-                        (availabilityStart > bookingStart && availabilityEnd < bookingEnd)) return false;
+                if ((availabilityStart <= bookingStart && availabilityEnd >= bookingStart)||
+                        (availabilityStart <= bookingEnd && availabilityEnd >= bookingEnd) ||
+                        (availabilityStart >= bookingStart && availabilityEnd <= bookingEnd)) return false;
 
                 cursor.moveToNext();
             }
