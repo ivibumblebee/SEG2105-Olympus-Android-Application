@@ -79,6 +79,8 @@
             android:background="@color/colorWhite"
             android:textSize="15sp"
             android:hint="Comment"
+            android:text=""
+            android:layout_marginLeft="10dp"
             android:textCursorDrawable="@color/colorWhite"/>
 
 

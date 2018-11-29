@@ -8,11 +8,13 @@
     android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
     android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
     android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-    android:paddingStart="30dp"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
+    android:paddingBottom="5dp"
     android:textColor="@android:color/black"
     android:background="@color/colorWhite"
     android:layout_marginBottom="10dp"
+    android:textSize="15sp"
+
 
     >
 

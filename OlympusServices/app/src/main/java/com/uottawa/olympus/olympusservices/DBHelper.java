@@ -1185,7 +1185,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         + COLUMN_BOOKINGYEAR + " = ? AND "
                         + COLUMN_BOOKINGMONTH + " = ? AND "
                         + COLUMN_BOOKINGDATE + " = ? AND "
-                        + COLUMN_BOOKINGSTART + " = ?)",
+                        + COLUMN_BOOKINGSTART + " = ?",
                 new String[] {booking.getServiceprovider().getUsername(),
                         booking.getHomeowner().getUsername(),
                         String.valueOf(booking.getYear()),
@@ -1274,9 +1274,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<String[]> getAllRatingsAndComments(String serviceProviderName, String serviceName){
         return getAll("SELECT " + COLUMN_BOOKINGHOMEOWNER +", "
                     + COLUMN_RATING + ", " + COLUMN_COMMENT + " FROM " + TABLE_BOOKINGS
-                    + " WHERE " + COLUMN_BOOKINGSERVICEPROVIDER + " = " + serviceProviderName
-                    + " AND " + COLUMN_BOOKINGSERVICE + " = " + serviceName
-                    + " AND " + COLUMN_RATING + " > 0");
+                    + " WHERE " + COLUMN_BOOKINGSERVICEPROVIDER + " = '" + serviceProviderName
+                    + "' AND " + COLUMN_BOOKINGSERVICE + " = '" + serviceName
+                    + "' AND " + COLUMN_RATING + " > 0");
     }
 
     public String[] getSpecificRatingAndComment(String serviceProviderName, String serviceName,
@@ -1739,7 +1739,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         (ServiceProvider) findUserByUsername(cursor.getString(0)) : serviceProvider);
                 HomeOwner homeowner = (homeOwner == null ?
                         (HomeOwner) findUserByUsername(cursor.getString(1)) : homeOwner);
-                Service service = findService(cursor.getString(3));
+                Service service = (Service)findService(cursor.getString(2));
                 Booking booking = new Booking(starth, startmin, endh, endmin, day, month, year,
                         serviceprovider, homeowner, service);
                 booking.setStatus(status);

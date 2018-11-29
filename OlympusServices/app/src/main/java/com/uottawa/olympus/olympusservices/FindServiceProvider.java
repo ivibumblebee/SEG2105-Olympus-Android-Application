@@ -3,9 +3,11 @@ package com.uottawa.olympus.olympusservices;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,8 +15,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
@@ -77,6 +81,18 @@ public class FindServiceProvider extends AppCompatActivity {
         intent.putExtra("username", username);
         startActivity(intent);
         finish();
+    }
+
+    public void Reset(View view){
+
+
+        //clears recycler view
+        String[][] empty = {};
+        mAdapter = new MyAdapter(empty, this);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
+
     }
     public void Search(View view){
         MaterialSpinner spinner = findViewById(R.id.ServicesInput);
@@ -320,6 +336,7 @@ public class FindServiceProvider extends AppCompatActivity {
             String[] serviceprovider = serviceProviders[position];
             holder.name.setText(serviceprovider[1]+" "+serviceprovider[2]);
             holder.rate.setText(""+serviceprovider[3]);
+            holder.username.setText(serviceprovider[0]);
 
 
 
@@ -336,18 +353,93 @@ public class FindServiceProvider extends AppCompatActivity {
 
             TextView name;
             TextView rate;
+            TextView username;
 
             public ProviderHolder(View row){
                 super(row);
                 name = row.findViewById(R.id.Name);
                 rate = row.findViewById(R.id.Rate);
+                username = row.findViewById(R.id.Username);
                 row.setOnClickListener(this);
             }
             @Override
             public void onClick(View view) {
-                TextView nameview = (TextView)view.findViewById(R.id.Name);
-                String name = nameview.getText().toString();
-                makeBooking(name);
+                TextView nameview = (TextView)view.findViewById(R.id.Username);
+                final String name = nameview.getText().toString();
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FindServiceProvider.this);
+
+
+                alertDialogBuilder.setView(R.layout.sp_info_item);
+
+
+                alertDialogBuilder.setPositiveButton("Make Booking",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                makeBooking(name);
+                            }
+                        });
+
+                alertDialogBuilder.setNegativeButton("Nevermind",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                ServiceProvider sp = (ServiceProvider)dbHelper.findUserByUsername(name);
+                TextView spname = alertDialog.findViewById(R.id.NameName);
+                spname.setText(sp.getFirstname()+" "+sp.getLastname());
+
+                TextView company = alertDialog.findViewById(R.id.CompanyName);
+                company.setText(sp.getCompanyname());
+
+                TextView address = alertDialog.findViewById(R.id.AddressName);
+                address.setText(sp.getAddress());
+
+                TextView phone = alertDialog.findViewById(R.id.PhoneNumberName);
+                phone.setText(sp.getPhonenumber());
+
+                TextView licensed = alertDialog.findViewById(R.id.LicensedName);
+                if(sp.isLicensed()){
+                    licensed.setText("Yes");
+                }
+                else{
+                    licensed.setText("No");
+                }
+                TextView description = alertDialog.findViewById(R.id.DescriptionName);
+                description.setText(sp.getDescription());
+
+                TextView rating = alertDialog.findViewById(R.id.AverageRatingName);
+                MaterialSpinner spinner = findViewById(R.id.ServicesInput);
+                rating.setText(""+dbHelper.getAverageRating(name, spinner.getText().toString()));
+
+                TextView ratingtext = alertDialog.findViewById(R.id.AverageRating);
+                ratingtext.setText("Rating for " +spinner.getText().toString());
+
+                //actual data
+                List<String[]> randc = dbHelper.getAllRatingsAndComments(name,spinner.getText().toString());
+                String[] ratings = new String[randc.size()];
+                for(int i=0; i<randc.size(); i++){
+                    ratings[i] = "Rating: "+randc.get(i)[1]+"\nComment: "+randc.get(i)[3];
+                }
+
+                /*mock data
+                String[] ratings ={"Rating: 5\nComment: Did great","Rating: 1\nComment: Worst plumber ever",
+                        "Rating: 1\nComment: Couldn't find my house", "Rating: 2\nComment: Too expensive, ok plumber"};
+                */
+
+
+                ArrayAdapter adapter = new ArrayAdapter<String>(FindServiceProvider.this, R.layout.simple_list_item_1_customized, ratings);
+
+                ListView listView = (ListView) alertDialog.findViewById(R.id.RatingList);
+                listView.setAdapter(adapter);
+
+
+
 
             }
 

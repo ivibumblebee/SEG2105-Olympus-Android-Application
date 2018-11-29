@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
     android:orientation="vertical"
+    android:layout_marginBottom="10dp"
     >
 
         <LinearLayout
@@ -138,7 +139,6 @@
                     <TextView
                         android:id="@+id/StartTime"
                         android:paddingLeft="10dp"
-                        android:paddingTop="6dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -149,7 +149,6 @@
                     <TextView
                         android:id="@+id/Timespace"
                         android:paddingLeft="10dp"
-                        android:paddingTop="6dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -161,7 +160,6 @@
                     <TextView
                         android:id="@+id/EndTime"
                         android:paddingLeft="10dp"
-                        android:paddingTop="6dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

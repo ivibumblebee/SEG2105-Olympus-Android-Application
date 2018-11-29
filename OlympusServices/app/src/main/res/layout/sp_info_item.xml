@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Service Provider:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:paddingRight="10dp"/>
+            <TextView
+                android:id="@+id/NameName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FirstName"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:id="@+id/Company"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Company:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:paddingRight="10dp"/>
+
+            <TextView
+                android:id="@+id/CompanyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Company"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/Address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:paddingRight="10dp"/>
+
+            <TextView
+                android:id="@+id/AddressName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/PhoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone Number:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:paddingRight="10dp"/>
+
+            <TextView
+                android:id="@+id/PhoneNumberName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PhoneNumber"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:id="@+id/Licensed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Licensed:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:paddingRight="10dp"/>
+
+
+            <TextView
+                android:id="@+id/LicensedName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Licensed"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/Description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:paddingRight="10dp"/>
+
+
+            <TextView
+                android:id="@+id/DescriptionName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/AverageRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Average Rating:"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:paddingRight="10dp"/>
+
+
+            <TextView
+                android:id="@+id/AverageRatingName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rating"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/RatingList"
+            android:paddingTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="200dp"
+            android:background="@drawable/customborder2"/>
+
+
+
+    </LinearLayout>
+    </ScrollView>
+
+
+
+</LinearLayout>

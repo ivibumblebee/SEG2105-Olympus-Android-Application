@@ -154,16 +154,36 @@
 
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/Reset"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:text="Reset"
+            android:theme="@style/AppTheme.Button"
+            android:onClick="Reset"
+            android:layout_marginRight="10dp"
+            />
 
-    <Button
-        android:id="@+id/Search"
-        android:layout_width="400dp"
-        android:layout_height="45dp"
-        android:text="Search"
-        android:theme="@style/AppTheme.Button"
-        android:onClick="Search"
-        android:layout_marginRight="10dp"
-        />
+
+        <Button
+            android:id="@+id/Search"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:text="Search"
+            android:theme="@style/AppTheme.Button"
+            android:onClick="Search"
+            android:layout_marginRight="10dp"
+            />
+
+
+    </LinearLayout>
+
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ServiceProviders"

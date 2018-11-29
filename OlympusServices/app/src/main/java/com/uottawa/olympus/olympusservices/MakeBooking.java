@@ -81,17 +81,21 @@ public class MakeBooking extends AppCompatActivity {
                 else{
                     if (starth<endh || (starth==endh && startmin<endmin)){
                         DBHelper dbHelper = new DBHelper(this);
-                        if(dbHelper.addBooking(serviceprovider, homeowner, service, year, month, day,
-                                starth, startmin, endh, endmin)){
-                            Toast.makeText(this, "Booking Made", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(),Welcome.class);
-                            intent.putExtra("username", homeowner);
-                            startActivity(intent);
-                            finish();
 
-                        }
-                        else{
-                            Toast.makeText(this, "Booking could not be made", Toast.LENGTH_SHORT).show();
+                        //check if sp is availible not just true
+                        if(true) {
+
+                            if (dbHelper.addBooking(serviceprovider, homeowner, service, year, month, day,
+                                    starth, startmin, endh, endmin)) {
+                                Toast.makeText(this, "Booking Made", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), Welcome.class);
+                                intent.putExtra("username", homeowner);
+                                startActivity(intent);
+                                finish();
+
+                            } else {
+                                Toast.makeText(this, "Booking could not be made", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
 
