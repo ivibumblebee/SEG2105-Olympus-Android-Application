@@ -1787,7 +1787,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         (ServiceProvider) findUserByUsername(cursor.getString(0)) : serviceProvider);
                 HomeOwner homeowner = (homeOwner == null ?
                         (HomeOwner) findUserByUsername(cursor.getString(1)) : homeOwner);
-                Service service = findService(cursor.getString(3));
+                Service service = (Service)findService(cursor.getString(2));
                 Booking booking = new Booking(starth, startmin, endh, endmin, day, month, year,
                         serviceprovider, homeowner, service);
                 booking.setStatus(status);

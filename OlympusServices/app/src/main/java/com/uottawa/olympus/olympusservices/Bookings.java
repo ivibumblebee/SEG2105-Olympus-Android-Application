@@ -12,10 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class Bookings extends AppCompatActivity {
 
@@ -37,14 +40,18 @@ public class Bookings extends AppCompatActivity {
         username = bundle.getString("username");
         dbhelper = new DBHelper(this);
 
-        //Booking[] bookings = (Booking[])dbhelper.findBookings(username).toArray();
+        List<Booking> booking = (List<Booking>)dbhelper.findBookings(username);
+        Booking[] bookings = new Booking[booking.size()];
+        bookings = booking.toArray(bookings);
 
-        Booking[] testbooking = {new Booking(5, 5, 6, 6, 2, 3, 2019, (ServiceProvider)dbhelper.findUserByUsername("testing"),
+        /* mock data
+        Booking[] bookings = {new Booking(5, 5, 6, 6, 2, 3, 2019, (ServiceProvider)dbhelper.findUserByUsername("testing"),
                 (HomeOwner)dbhelper.findUserByUsername("tester"), dbhelper.findService("service1"))};
+        */
         mRecyclerView = (RecyclerView) findViewById(R.id.Bookings);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MyAdapter(testbooking, this);
+        mAdapter = new MyAdapter(bookings, this);
         mRecyclerView.setAdapter(mAdapter);
 
     }
@@ -98,7 +105,7 @@ public class Bookings extends AppCompatActivity {
         @Override
         public void onBindViewHolder(BookingHolder holder, int position) {
             Booking booking = bookings[position];
-            holder.serviceprovider.setText(booking.getServiceprovider().getFirstname()+" "+booking.getServiceprovider().getLastname());
+            holder.serviceprovider.setText(booking.getServiceprovider().getFirstname()+" "+booking.getServiceprovider().getLastname()+", "+booking.getServiceprovider().getCompanyname());
             holder.homeowner.setText(booking.getHomeowner().getFirstname()+" "+booking.getHomeowner().getLastname());
             holder.service.setText(booking.getService().getName());
             String day;
@@ -173,6 +180,7 @@ public class Bookings extends AppCompatActivity {
                                                     year, (ServiceProvider)dbhelper.findUserByUsername(serviceprovider.getText().toString()),
                                                     (HomeOwner)dbhelper.findUserByUsername(homeowner.getText().toString()),
                                                     dbhelper.findService(service.getText().toString())))){
+
                                                 Toast.makeText(Bookings.this,"Booking is confirmed",Toast.LENGTH_LONG).show();
                                                 Bookings.this.recreate();
                                             }
@@ -213,20 +221,29 @@ public class Bookings extends AppCompatActivity {
                                     RadioGroup ratingselect = ((AlertDialog) arg0).findViewById(R.id.RatingSelect);
                                     int selectedId = ratingselect.getCheckedRadioButtonId();
                                     RadioButton ratingpicked;
-                                    if(selectedId!=-1){
+                                    EditText comment = ((AlertDialog) arg0).findViewById(R.id.Comment);
+                                    if(selectedId!=-1 && !comment.getText().toString().equals("")){
                                         ratingpicked = (RadioButton)((AlertDialog) arg0).findViewById(selectedId);
                                         double rating = Double.parseDouble(ratingpicked.getText().toString());
-                                        Booking booking = new Booking(starth, startmin, endh, endmin, day, month,
+                                        /*Booking booking = new Booking(starth, startmin, endh, endmin, day, month,
                                                 year, (ServiceProvider)dbhelper.findUserByUsername(serviceprovider.getText().toString()),
                                                 (HomeOwner)dbhelper.findUserByUsername(homeowner.getText().toString()),
-                                                dbhelper.findService(service.getText().toString()));;
-                                        if(!dbhelper.addRating(booking, rating)){
-                                            Toast.makeText(context, "Rating could not be added", Toast.LENGTH_SHORT).show();
+                                                dbhelper.findService(service.getText().toString()));
+                                                */
+                                        Booking booking = new Booking(starth, startmin, endh, endmin, day, month, year, new ServiceProvider(serviceprovider.getText().toString(),
+                                        "", "", "", "", "", "", true),
+                                                new HomeOwner(homeowner.getText().toString(), "", "", ""),
+                                                new Service(service.getText().toString(), 5));
+                                        if(!dbhelper.addRating(booking, rating, comment.getText().toString())){
+                                            Toast.makeText(Bookings.this, "Rating could not be added", Toast.LENGTH_SHORT).show();
                                         }
                                         else{
                                             Bookings.this.recreate();
                                         }
 
+                                    }
+                                    else{
+                                        Toast.makeText(Bookings.this, "Rating and comment must be filled in", Toast.LENGTH_SHORT).show();
                                     }
 
                                 }

@@ -33,4 +33,16 @@
         android:textColor="@color/colorBlack"
         android:textSize="15sp"
         android:gravity="end"/>
+
+
+    <TextView
+        android:id="@+id/Username"
+        android:text=""
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:textColor="@color/colorWhite"
+        android:textSize="0sp"
+        android:gravity="end"
+        />
+
 </LinearLayout>
