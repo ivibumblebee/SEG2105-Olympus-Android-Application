@@ -9,9 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -53,6 +55,27 @@ public class Bookings extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MyAdapter(bookings, this);
         mRecyclerView.setAdapter(mAdapter);
+
+        SwitchCompat toggle = findViewById(R.id.Switch);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    List<Booking> booking = (List<Booking>)dbhelper.findBookings(username);
+                    Booking[] bookings = new Booking[booking.size()];
+                    bookings = booking.toArray(bookings);
+                    mAdapter = new MyAdapter(bookings, Bookings.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    List<Booking> booking = (List<Booking>)dbhelper.findNonCancelledBookings(username);
+                    Booking[] bookings = new Booking[booking.size()];
+                    bookings = booking.toArray(bookings);
+                    mAdapter = new MyAdapter(bookings, Bookings.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        });
 
     }
 
