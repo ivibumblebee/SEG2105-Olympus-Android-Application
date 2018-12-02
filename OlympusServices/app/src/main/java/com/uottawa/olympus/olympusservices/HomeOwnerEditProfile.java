@@ -29,7 +29,7 @@ public class HomeOwnerEditProfile extends AppCompatActivity {
 
         firstname.setText(user.getFirstname());
         lastname.setText(user.getLastname());
-        password.setText(user.getPassword());
+        password.setText("");
 
     }
     /**
@@ -56,7 +56,7 @@ public class HomeOwnerEditProfile extends AppCompatActivity {
         TextView password = findViewById(R.id.PasswordInput);
 
         //Checks for the fields
-        if(password.getText().toString().length()>=5 && firstname.getText().toString().length()>0
+        if(firstname.getText().toString().length()>0
                 && lastname.getText().toString().length()>0
                 && password.getText().toString().matches("[a-zA-Z0-9]*")
                 && firstname.getText().toString().matches("[a-zA-Z]*")

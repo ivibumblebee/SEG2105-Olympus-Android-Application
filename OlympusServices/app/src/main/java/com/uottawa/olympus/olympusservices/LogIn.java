@@ -44,7 +44,8 @@ public class LogIn extends AppCompatActivity {
             if (dbHelper.findUserByUsername(username) != null) {
                 UserType user = dbHelper.findUserByUsername(username);
                 if (user.getUsername().equals(username) &&
-                        user.getPassword().equals(password)) {
+                        PasswordEncryption.slowEquals(user.getHash(),
+                                PasswordEncryption.encrypt(password, user.getSalt()))) {
                     if(user.getRole()=="Admin"){
                         Intent intent = new Intent(getApplicationContext(),AdminWelcome.class);
                         startActivity(intent);

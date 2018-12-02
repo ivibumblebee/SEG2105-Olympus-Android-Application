@@ -38,9 +38,9 @@ public class DBIntegrationTest {
         UserType dbUser = dbHelper.findUserByUsername("admin");
         assertEquals("Admin", dbUser.getClass().getSimpleName());
         assertEquals("admin", dbUser.getUsername());
-        assertEquals("admin", dbUser.getPassword());
         assertEquals("Admin", dbUser.getFirstname());
         assertEquals("Admin", dbUser.getLastname());
+        assertEquals(PasswordEncryption.encrypt("admin", dbUser.getSalt()), dbUser.getHash());
     }
 
     @Test
@@ -56,7 +56,8 @@ public class DBIntegrationTest {
         dbUser = dbHelper.findUserByUsername("mgarzon");
         assertEquals("HomeOwner", dbUser.getClass().getSimpleName());
         assertEquals("mgarzon", dbUser.getUsername());
-        assertEquals("soccer", dbUser.getPassword());
+        assertEquals(originalUser.getHash(), dbUser.getHash());
+        assertEquals(originalUser.getSalt(), dbUser.getSalt());
         assertEquals("Miguel", dbUser.getFirstname());
         assertEquals("Garzon", dbUser.getLastname());
 
@@ -69,7 +70,8 @@ public class DBIntegrationTest {
         dbUser = dbHelper.findUserByUsername("jbO4aBF4dC");
         assertEquals("ServiceProvider", dbUser.getClass().getSimpleName());
         assertEquals("jbO4aBF4dC", dbUser.getUsername());
-        assertEquals("seg2105", dbUser.getPassword());
+        assertEquals(originalUser.getHash(), dbUser.getHash());
+        assertEquals(originalUser.getSalt(), dbUser.getSalt());
         assertEquals("Juan", dbUser.getFirstname());
         assertEquals("Guzman", dbUser.getLastname());
 
@@ -171,7 +173,6 @@ public class DBIntegrationTest {
         dbUser = dbHelper.findUserByUsername("jbO4aBF4dC");
 
         assertEquals("jbO4aBF4dC", dbUser.getUsername());
-        assertEquals("soccer", dbUser.getPassword());
         assertEquals("Juan", dbUser.getFirstname());
         assertEquals("Guzman", dbUser.getLastname());
 
@@ -559,6 +560,11 @@ public class DBIntegrationTest {
 
         dbHelper.deleteAll();
 
+    }
+
+    @Test
+    public void printUsersTable(){
+        dbHelper.printTable("user");
     }
 
     // Ever gotten tired of adding things at the start of a test just to delete it all again?

@@ -27,7 +27,7 @@ import com.uottawa.olympus.olympusservices.Booking.Status;
 public class DBHelper extends SQLiteOpenHelper {
 
     //version of db used for update method
-    private static final int DB_VERSION = 6;
+    private static final int DB_VERSION = 7;
     //name of db in app data
     private static final String DB_NAME = "UsersDB.db";
 
@@ -265,7 +265,23 @@ public class DBHelper extends SQLiteOpenHelper {
                         + ")");
             case 5:
                 db.execSQL("ALTER TABLE " + TABLE_BOOKINGS + " ADD COLUMN " + COLUMN_COMMENT + " TEXT DEFAULT ''");
+            case 6:
+                Cursor cursor = db.query(TABLE_LOGIN, new String[]{COLUMN_USERNAME, COLUMN_PASSWORD}, null, null,
+                        null, null, null);
+                if (cursor.moveToFirst()){
+                    for (int i = 0; i<cursor.getCount(); i++){
+                       String salt = PasswordEncryption.generateSalt();
+                       String password = cursor.getString(1);
 
+                       values = new ContentValues();
+                       values.put(COLUMN_PASSWORD, PasswordEncryption.encrypt(password, salt));
+                       values.put(COLUMN_SALT, salt);
+                       db.update(TABLE_LOGIN, values,
+                               COLUMN_USERNAME + " = ?",
+                               new String[]{cursor.getString(0)});
+                       cursor.moveToNext();
+                    }
+                }
         }
     }
 
@@ -304,9 +320,10 @@ public class DBHelper extends SQLiteOpenHelper {
         //Put values of UserType into columns
         ContentValues values = new ContentValues();
         values.put(COLUMN_USERNAME, userType.getUsername());
-        values.put(COLUMN_PASSWORD, userType.getPassword());
+        values.put(COLUMN_PASSWORD, userType.getHash());
         values.put(COLUMN_FIRSTNAME, userType.getFirstname());
         values.put(COLUMN_LASTNAME, userType.getLastname());
+        values.put(COLUMN_SALT, userType.getSalt());
         values.put(COLUMN_USERTYPE, userType.getClass().getSimpleName());
 
         //special case for ServiceProvider
@@ -373,7 +390,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[]{username});
 
         if (cursor.moveToFirst()){
-            String password = cursor.getString(1);
+            String hash = cursor.getString(1);
             String firstname = cursor.getString(2);
             String lastname = cursor.getString(3);
             String address = cursor.getString(5);
@@ -381,17 +398,18 @@ public class DBHelper extends SQLiteOpenHelper {
             String companyname = cursor.getString(7);
             boolean licensed = Boolean.parseBoolean(cursor.getString(8));
             String description = cursor.getString(9);
+            String salt = cursor.getString(10);
             if (cursor.getString(4)
                     .equals("Admin")){
-                usertype = new Admin();
+                usertype = new Admin(hash, salt);
             } else if (cursor.getString(4)
                     .equals("ServiceProvider")){
-                ServiceProvider serviceProvider = new ServiceProvider(username, password, firstname, lastname, address, phonenumber, companyname, licensed, description);
+                ServiceProvider serviceProvider = new ServiceProvider(username, hash, salt, firstname, lastname, address, phonenumber, companyname, licensed, description);
                 getAllServicesProvidedByUser(serviceProvider);
                 getAvailabilities(serviceProvider);
                 usertype = serviceProvider;
             } else {
-                usertype = new HomeOwner(username, password, firstname, lastname);
+                usertype = new HomeOwner(username, hash, salt, firstname, lastname);
             }
         }
 
@@ -441,7 +459,13 @@ public class DBHelper extends SQLiteOpenHelper {
         if (username == null) return false;
 
         ContentValues values = new ContentValues();
-        if (password != null && !password.equals("")) values.put(COLUMN_PASSWORD, password);
+        if (password != null && !password.equals("")) {
+            String salt = PasswordEncryption.generateSalt();
+            values.put(COLUMN_SALT, salt);
+
+            String hash = PasswordEncryption.encrypt(password, salt);
+            values.put(COLUMN_PASSWORD, hash);
+        }
         if (firstname != null && !firstname.equals("")) values.put(COLUMN_FIRSTNAME, firstname);
         if (lastname != null && !lastname.equals(""))values.put(COLUMN_LASTNAME, lastname);
         if (address != null && !address.equals(""))values.put(COLUMN_ADDRESS, address);

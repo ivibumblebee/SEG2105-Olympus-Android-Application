@@ -14,13 +14,12 @@ public class AdminTest {
     public void testAdmin() {
         Admin admin = new Admin();
         String username = admin.getUsername();
-        String password = admin.getPassword();
         String firstname = admin.getFirstname();
         String lastname = admin.getLastname();
         String role = admin.getRole();
         assertEquals("Admin", role);
         assertEquals("admin", username);
-        assertEquals("admin", password);
+        assertEquals(PasswordEncryption.encrypt("admin", admin.getSalt()), admin.getHash());
         assertEquals("Admin", firstname);
         assertEquals("Admin", lastname);
     }

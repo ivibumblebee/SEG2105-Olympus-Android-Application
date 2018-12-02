@@ -37,14 +37,12 @@ public class ServiceProviderEditProfile extends AppCompatActivity {
 
         firstname.setText(user.getFirstname());
         lastname.setText(user.getLastname());
-        password.setText(user.getPassword());
+        password.setText("");
         companyname.setText(user.getCompanyname());
         address.setText(user.getAddress());
         phonenumber.setText(user.getPhonenumber());
         description.setText(user.getDescription());
         licensed.setChecked(user.isLicensed());
-
-
 
     }
 
@@ -76,7 +74,7 @@ public class ServiceProviderEditProfile extends AppCompatActivity {
         CheckBox licensed = findViewById(R.id.LicensedInput);
 
         //Checks for the fields
-        if(password.getText().toString().length()>=5 && firstname.getText().toString().length()>0
+        if(firstname.getText().toString().length()>0
             && lastname.getText().toString().length()>0 && companyname.getText().toString().length()>0
             && address.getText().toString().length()>0 && phonenumber.getText().toString().length()>0
             && password.getText().toString().matches("[a-zA-Z0-9]*")
@@ -87,6 +85,7 @@ public class ServiceProviderEditProfile extends AppCompatActivity {
             && description.getText().toString().matches("^[a-zA-Z0-9_ ]*$")
             && phonenumber.getText().toString().matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$")
             && address.getText().toString().replaceAll("\\s+","").length()>0) {
+
 
             if(dbHelper.updateUserInfo(username, password.getText().toString(), firstname.getText().toString(), lastname.getText().toString(),
                 address.getText().toString(), phonenumber.getText().toString(), companyname.getText().toString(), licensed.isChecked(), description.getText().toString())){

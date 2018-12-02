@@ -13,12 +13,14 @@ public abstract class UserType {
 
     //field for the username attached to the userType.
     String username;
-    //field for the password attached to the userType.
-    String password;
+    //field for the password hash attached to the userType.
+    String hash;
     //field for the firstname attached to the userType.
     String firstname;
     //field for the lastname attached to the userType.
     String lastname;
+    //field for the salt attached to the userType.
+    String salt;
 
 
     /**
@@ -32,9 +34,30 @@ public abstract class UserType {
      */
     UserType(String username, String password, String firstname, String lastname){
         this.username = username;
-        this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
+
+        this.salt = PasswordEncryption.generateSalt();
+        this.hash = PasswordEncryption.encrypt(password, salt);
+    }
+
+    /**
+     * Constructor filling out all the field values with given parameters
+     * entered by a new user for the app.
+     *
+     * @param username String object containing the username.
+     * @param hash String object containing the password hash.
+     * @param firstname String object containing the firstname.
+     * @param lastname String object containing the lastname.
+     * @param salt String object containing the salt.
+     */
+    UserType(String username, String hash, String salt, String firstname, String lastname){
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+
+        this.salt = salt;
+        this.hash = hash;
     }
 
     /**
@@ -54,12 +77,12 @@ public abstract class UserType {
     }
 
     /**
-     * Gets the password field of userType.
+     * Gets the hash field of userType.
      *
-     * @return String of the password.
+     * @return String of the hash.
      */
-    public String getPassword() {
-        return password;
+    public String getHash() {
+        return hash;
     }
 
     /**
@@ -78,6 +101,15 @@ public abstract class UserType {
      */
     public String getLastname() {
         return lastname;
+    }
+
+    /**
+     * Gets the salt field of userType.
+     *
+     * @return String of salt
+     */
+    public String getSalt() {
+        return salt;
     }
 
     /**
@@ -102,7 +134,8 @@ public abstract class UserType {
         //remember to call updateUser(String username, String password, String firstname, String lastname)
         //in activity whenever a setter is called. DBHelper requires a Context (Activity) to be initialized
         //so cannot be initialized in this class
-        this.password = password;
+        this.salt = PasswordEncryption.generateSalt();
+        this.hash = PasswordEncryption.encrypt(password, salt);
     }
 
     /**
@@ -130,8 +163,9 @@ public abstract class UserType {
      * @param other Usertype object that is compared to this userType.
      */
     public boolean equals(UserType other){
-        if(this.username.equals(other.username)&&this.password.equals(other.password)&&
-                this.firstname.equals(other.firstname)&&this.lastname.equals(other.lastname)){
+        if(this.username.equals(other.username)&&this.hash.equals(other.hash)&&
+                this.firstname.equals(other.firstname)&&this.lastname.equals(other.lastname)
+                &&this.salt.equals(other.salt)){
             return true;
         }
         return false;

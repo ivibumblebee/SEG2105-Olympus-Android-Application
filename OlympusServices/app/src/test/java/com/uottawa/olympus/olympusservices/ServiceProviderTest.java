@@ -17,8 +17,9 @@ public class ServiceProviderTest {
 
     @Test
     public void testServiceProvider() {
+        String salt = serviceprovider.getSalt();
         assertEquals( "John123", serviceprovider.getUsername());
-        assertEquals( "1234567890", serviceprovider.getPassword());
+        assertEquals( PasswordEncryption.encrypt("1234567890", salt), serviceprovider.getHash());
         assertEquals( "John", serviceprovider.getFirstname());
         assertEquals( "Doe", serviceprovider.getLastname());
         assertEquals( "ServiceProvider", serviceprovider.getRole());
@@ -27,7 +28,10 @@ public class ServiceProviderTest {
         serviceprovider.setFirstname("firstname");
         serviceprovider.setLastname("lastname");
         assertNotEquals("John123", serviceprovider.getUsername());
-        assertNotEquals("1234567890", serviceprovider.getPassword());
+        assertNotEquals("1234567890", serviceprovider.getHash());
+        assertNotEquals("password", serviceprovider.getHash());
+        assertNotEquals( PasswordEncryption.encrypt("1234567890", salt), serviceprovider.getHash());
+        assertNotEquals(PasswordEncryption.encrypt("password", salt), serviceprovider.getHash());
         assertNotEquals("John", serviceprovider.getFirstname());
         assertNotEquals("Doe", serviceprovider.getLastname());
     }

@@ -27,8 +27,8 @@ public class UserTypeTest {
         assertNotEquals( true, useradmin );
         assertNotEquals( true, serviceadmin );
         assertNotEquals( true, userservice );
-        user.setFirstname(serviceprovider.getFirstname());
-        user.setUsername(serviceprovider.getUsername());
+        user = new HomeOwner(serviceprovider.getUsername(), serviceprovider.getHash(), serviceprovider.getSalt(),
+                serviceprovider.getFirstname(), serviceprovider.getLastname());
         userservice = user.equals(serviceprovider);
         assertEquals( true, userservice );
     }

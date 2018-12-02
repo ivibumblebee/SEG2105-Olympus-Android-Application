@@ -17,6 +17,10 @@ public class Admin extends UserType {
         super("admin", "admin", "Admin", "Admin");
     }
 
+    Admin(String hash, String salt){
+        super("admin", hash, salt, "Admin", "Admin");
+    }
+
     /**
      * The getRole() method returns a string "Admin"
      * the app gets role of user type objects for access

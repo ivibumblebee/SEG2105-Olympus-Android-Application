@@ -49,6 +49,18 @@ public class ServiceProvider extends UserType {
         this(username, password, firstname, lastname, address, phonenumber, companyname, licensed, "");
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @param firstname
+     * @param lastname
+     * @param address
+     * @param phonenumber
+     * @param companyname
+     * @param licensed
+     * @param description
+     */
     ServiceProvider(String username, String password, String firstname, String lastname, String address,
                     String phonenumber, String companyname, boolean licensed, String description){
         super(username, password, firstname, lastname);
@@ -61,6 +73,33 @@ public class ServiceProvider extends UserType {
         this.description = description;
         this.rating = 0;
     }
+
+    /**
+     *
+     * @param username
+     * @param hash
+     * @param salt
+     * @param firstname
+     * @param lastname
+     * @param address
+     * @param phonenumber
+     * @param companyname
+     * @param licensed
+     * @param description
+     */
+    ServiceProvider(String username, String hash, String salt, String firstname, String lastname, String address,
+                    String phonenumber, String companyname, boolean licensed, String description){
+        super(username, hash, salt, firstname, lastname);
+        services = new ArrayList<>();
+        availabilities = new int[7][4];
+        this.address = address;
+        this.phonenumber = phonenumber;
+        this.companyname = companyname;
+        this.licensed = licensed;
+        this.description = description;
+        this.rating = 0;
+    }
+
 
     /**
      * gets the role of the UserType.
