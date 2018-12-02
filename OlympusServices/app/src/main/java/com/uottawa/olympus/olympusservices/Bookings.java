@@ -18,6 +18,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Bookings extends AppCompatActivity {
@@ -41,10 +43,12 @@ public class Bookings extends AppCompatActivity {
         dbhelper = new DBHelper(this);
 
         List<Booking> booking = (List<Booking>)dbhelper.findBookings(username);
+        Collections.reverse(booking);
         Booking[] bookings = new Booking[booking.size()];
         bookings = booking.toArray(bookings);
+        Booking[] mostRecentBookings = new Booking[bookings.length];
 
-        /* mock data
+        /* //mock data
         Booking[] bookings = {new Booking(5, 5, 6, 6, 2, 3, 2019, (ServiceProvider)dbhelper.findUserByUsername("testing"),
                 (HomeOwner)dbhelper.findUserByUsername("tester"), dbhelper.findService("service1"))};
         */

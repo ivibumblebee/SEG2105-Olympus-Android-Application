@@ -82,8 +82,6 @@ public class MakeBooking extends AppCompatActivity {
                     if (starth<endh || (starth==endh && startmin<endmin)){
                         DBHelper dbHelper = new DBHelper(this);
 
-                        //check if sp is availible not just true
-                        if(true) {
 
                             if (dbHelper.addBooking(serviceprovider, homeowner, service, year, month, day,
                                     starth, startmin, endh, endmin)) {
@@ -96,7 +94,6 @@ public class MakeBooking extends AppCompatActivity {
                             } else {
                                 Toast.makeText(this, "Booking could not be made", Toast.LENGTH_SHORT).show();
                             }
-                        }
 
 
                     }
