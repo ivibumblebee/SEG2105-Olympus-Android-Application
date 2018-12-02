@@ -9,9 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -57,6 +59,27 @@ public class Bookings extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MyAdapter(bookings, this);
         mRecyclerView.setAdapter(mAdapter);
+
+        SwitchCompat toggle = findViewById(R.id.Switch);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    List<Booking> booking = (List<Booking>)dbhelper.findBookings(username);
+                    Booking[] bookings = new Booking[booking.size()];
+                    bookings = booking.toArray(bookings);
+                    mAdapter = new MyAdapter(bookings, Bookings.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    List<Booking> booking = (List<Booking>)dbhelper.findNonCancelledBookings(username);
+                    Booking[] bookings = new Booking[booking.size()];
+                    bookings = booking.toArray(bookings);
+                    mAdapter = new MyAdapter(bookings, Bookings.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        });
 
     }
 
@@ -132,6 +155,8 @@ public class Bookings extends AppCompatActivity {
             holder.start.setText(formatTime(booking.getStarth(), booking.getStartmin()));
             holder.end.setText(formatTime(booking.getEndh(), booking.getEndmin()));
             holder.status.setText(booking.getStatus().toString());
+            holder.ho = booking.getHomeowner().getUsername();
+            holder.sp = booking.getServiceprovider().getUsername();
 
 
         }
@@ -151,6 +176,8 @@ public class Bookings extends AppCompatActivity {
             TextView start;
             TextView end;
             TextView status;
+            String ho;
+            String sp;
             int starth;
             int startmin;
             int endh;
@@ -169,6 +196,7 @@ public class Bookings extends AppCompatActivity {
                 end = row.findViewById(R.id.EndTime);
                 status = row.findViewById(R.id.StatusName);
 
+
                 row.setOnClickListener(this);
             }
             @Override
@@ -180,10 +208,18 @@ public class Bookings extends AppCompatActivity {
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface arg0, int arg1) {
-                                            if(dbhelper.confirmBooking(new Booking(starth, startmin, endh, endmin, day, month,
-                                                    year, (ServiceProvider)dbhelper.findUserByUsername(serviceprovider.getText().toString()),
-                                                    (HomeOwner)dbhelper.findUserByUsername(homeowner.getText().toString()),
-                                                    dbhelper.findService(service.getText().toString())))){
+                                            int[] times = parseTime(start.getText().toString(), end.getText().toString());
+                                            starth = times[0];
+                                            startmin = times[1];
+                                            endh = times[2];
+                                            endmin = times[3];
+                                            String[] dates = date.getText().toString().split("/");
+                                            month = Integer.parseInt(dates[0].replaceAll("\\s+",""));
+                                            day = Integer.parseInt(dates[1].replaceAll("\\s+",""));
+                                            year = Integer.parseInt(dates[2].replaceAll("\\s+",""));
+                                            if(dbhelper.confirmBooking(new Booking(starth, startmin, endh, endmin, day, month, year, (ServiceProvider)dbhelper.findUserByUsername(sp),
+                                                    (HomeOwner)dbhelper.findUserByUsername(ho),
+                                                    new Service(service.getText().toString(), 5)))){
 
                                                 Toast.makeText(Bookings.this,"Booking is confirmed",Toast.LENGTH_LONG).show();
                                                 Bookings.this.recreate();
@@ -199,10 +235,18 @@ public class Bookings extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if(dbhelper.cancelBooking(new Booking(starth, startmin, endh, endmin, day, month,
-                                    year, (ServiceProvider)dbhelper.findUserByUsername(serviceprovider.getText().toString()),
-                                    (HomeOwner)dbhelper.findUserByUsername(homeowner.getText().toString()),
-                                    dbhelper.findService(service.getText().toString())))){
+                            int[] times = parseTime(start.getText().toString(), end.getText().toString());
+                            starth = times[0];
+                            startmin = times[1];
+                            endh = times[2];
+                            endmin = times[3];
+                            String[] dates = date.getText().toString().split("/");
+                            month = Integer.parseInt(dates[0].replaceAll("\\s+",""));
+                            day = Integer.parseInt(dates[1].replaceAll("\\s+",""));
+                            year = Integer.parseInt(dates[2].replaceAll("\\s+",""));
+                            if(dbhelper.cancelBooking(new Booking(starth, startmin, endh, endmin, day, month, year, (ServiceProvider)dbhelper.findUserByUsername(sp),
+                                    (HomeOwner)dbhelper.findUserByUsername(ho),
+                                    new Service(service.getText().toString(), 5)))){
                                 Toast.makeText(Bookings.this,"Booking is cancelled",Toast.LENGTH_LONG).show();
                                 Bookings.this.recreate();
                             }
@@ -222,6 +266,15 @@ public class Bookings extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
+                                    int[] times = parseTime(start.getText().toString(), end.getText().toString());
+                                    starth = times[0];
+                                    startmin = times[1];
+                                    endh = times[2];
+                                    endmin = times[3];
+                                    String[] dates = date.getText().toString().split("/");
+                                    month = Integer.parseInt(dates[0].replaceAll("\\s+",""));
+                                    day = Integer.parseInt(dates[1].replaceAll("\\s+",""));
+                                    year = Integer.parseInt(dates[2].replaceAll("\\s+",""));
                                     RadioGroup ratingselect = ((AlertDialog) arg0).findViewById(R.id.RatingSelect);
                                     int selectedId = ratingselect.getCheckedRadioButtonId();
                                     RadioButton ratingpicked;
@@ -229,17 +282,12 @@ public class Bookings extends AppCompatActivity {
                                     if(selectedId!=-1 && !comment.getText().toString().equals("")){
                                         ratingpicked = (RadioButton)((AlertDialog) arg0).findViewById(selectedId);
                                         double rating = Double.parseDouble(ratingpicked.getText().toString());
-                                        /*Booking booking = new Booking(starth, startmin, endh, endmin, day, month,
-                                                year, (ServiceProvider)dbhelper.findUserByUsername(serviceprovider.getText().toString()),
-                                                (HomeOwner)dbhelper.findUserByUsername(homeowner.getText().toString()),
-                                                dbhelper.findService(service.getText().toString()));
-                                                */
-                                        Booking booking = new Booking(starth, startmin, endh, endmin, day, month, year, new ServiceProvider(serviceprovider.getText().toString(),
-                                        "", "", "", "", "", "", true),
-                                                new HomeOwner(homeowner.getText().toString(), "", "", ""),
+
+                                        Booking booking = new Booking(starth, startmin, endh, endmin, day, month, year, (ServiceProvider)dbhelper.findUserByUsername(sp),
+                                                (HomeOwner)dbhelper.findUserByUsername(ho),
                                                 new Service(service.getText().toString(), 5));
                                         if(!dbhelper.addRating(booking, rating, comment.getText().toString())){
-                                            Toast.makeText(Bookings.this, "Rating could not be added", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(Bookings.this, "Rating cannot be added before the appointment", Toast.LENGTH_SHORT).show();
                                         }
                                         else{
                                             Bookings.this.recreate();
@@ -257,10 +305,19 @@ public class Bookings extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    if(dbhelper.cancelBooking(new Booking(starth, startmin, endh, endmin, day, month,
-                                            year, (ServiceProvider)dbhelper.findUserByUsername(serviceprovider.getText().toString()),
-                                            (HomeOwner)dbhelper.findUserByUsername(homeowner.getText().toString()),
-                                            dbhelper.findService(service.getText().toString())))){
+
+                                    int[] times = parseTime(start.getText().toString(), end.getText().toString());
+                                    starth = times[0];
+                                    startmin = times[1];
+                                    endh = times[2];
+                                    endmin = times[3];
+                                    String[] dates = date.getText().toString().split("/");
+                                    month = Integer.parseInt(dates[0].replaceAll("\\s+",""));
+                                    day = Integer.parseInt(dates[1].replaceAll("\\s+",""));
+                                    year = Integer.parseInt(dates[2].replaceAll("\\s+",""));
+                                    if(dbhelper.cancelBooking(new Booking(starth, startmin, endh, endmin, day, month, year, (ServiceProvider)dbhelper.findUserByUsername(sp),
+                                            (HomeOwner)dbhelper.findUserByUsername(ho),
+                                            new Service(service.getText().toString(), 5)))){
                                         Toast.makeText(Bookings.this,"Booking is cancelled",Toast.LENGTH_LONG).show();
                                         Bookings.this.recreate();
                                     }
@@ -297,5 +354,25 @@ public class Bookings extends AppCompatActivity {
             time = time+minutes;
         }
         return time;
+    }
+
+
+    private int[] parseTime(String startTime, String endTime){
+        int[] times = new int[4];
+        if(startTime.equals("START")){
+            times[0]=0;
+            times[1]=0;
+        }else{
+            times[0] = Integer.parseInt(startTime.substring(0,2));
+            times[1] = Integer.parseInt(startTime.substring(3));
+        }
+        if(endTime.equals("END")){
+            times[2]=0;
+            times[3]=0;
+        }else{
+            times[2] = Integer.parseInt(endTime.substring(0,2));
+            times[3] = Integer.parseInt(endTime.substring(3));
+        }
+        return times;
     }
 }
