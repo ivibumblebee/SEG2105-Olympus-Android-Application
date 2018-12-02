@@ -564,7 +564,7 @@ public class DBIntegrationTest {
 
     @Test
     public void printUsersTable(){
-        dbHelper.printTable("user");
+        dbHelper.printTable("userInfo");
     }
 
     // Ever gotten tired of adding things at the start of a test just to delete it all again?
