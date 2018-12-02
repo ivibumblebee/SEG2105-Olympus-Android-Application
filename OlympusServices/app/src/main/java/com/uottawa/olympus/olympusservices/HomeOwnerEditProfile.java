@@ -56,7 +56,8 @@ public class HomeOwnerEditProfile extends AppCompatActivity {
         TextView password = findViewById(R.id.PasswordInput);
 
         //Checks for the fields
-        if(firstname.getText().toString().length()>0
+        if((password.getText().toString().length()>=5 || password.getText().toString().equals(""))
+                && firstname.getText().toString().length()>0
                 && lastname.getText().toString().length()>0
                 && password.getText().toString().matches("[a-zA-Z0-9]*")
                 && firstname.getText().toString().matches("[a-zA-Z]*")

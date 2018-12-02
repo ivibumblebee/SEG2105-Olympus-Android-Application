@@ -74,7 +74,8 @@ public class ServiceProviderEditProfile extends AppCompatActivity {
         CheckBox licensed = findViewById(R.id.LicensedInput);
 
         //Checks for the fields
-        if(firstname.getText().toString().length()>0
+        if((password.getText().toString().length()>=5 || password.getText().toString().equals(""))
+            && firstname.getText().toString().length()>0
             && lastname.getText().toString().length()>0 && companyname.getText().toString().length()>0
             && address.getText().toString().length()>0 && phonenumber.getText().toString().length()>0
             && password.getText().toString().matches("[a-zA-Z0-9]*")
