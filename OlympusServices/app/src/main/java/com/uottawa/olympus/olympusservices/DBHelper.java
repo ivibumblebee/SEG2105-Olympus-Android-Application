@@ -31,6 +31,9 @@ public class DBHelper extends SQLiteOpenHelper {
     //name of db in app data
     private static final String DB_NAME = "UsersDB.db";
 
+    //has the data been added?
+    private static boolean setUp = false;
+
     //SQLiteDatabase for reading
     private static SQLiteDatabase readDB;
 
@@ -41,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_LOGIN = "userInfo";
     //columns of TABLE_LOGIN
     private static final String COLUMN_USERNAME = "username";
-    private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_PASSWORD = "password"; //actually stores password hash
     private static final String COLUMN_FIRSTNAME = "firstName";
     private static final String COLUMN_LASTNAME = "lastName";
     private static final String COLUMN_USERTYPE = "userType";
@@ -113,12 +116,11 @@ public class DBHelper extends SQLiteOpenHelper {
         //since these methods take a while we will call them once and store the returned dbs
         readDB = this.getReadableDatabase();
         writeDB = this.getWritableDatabase();
-        //pre-add the admin user
-        addUser(new Admin());
-        addUser(new ServiceProvider("testing", "testing", "TestFirst", "TestLast",
-                                    "1234 Test Street, Testinaro, Timor-Teste", "6136136163",
-                                    "Test Company", false,
-                                    "Tested 10 years"));
+
+        if (!setUp){
+            setUp();
+            setUp = true;
+        }
     }
 
     @Override
@@ -1202,8 +1204,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_RATING, rating);
         contentValues.put(COLUMN_COMMENT, comment);
 
-
-        boolean updated =  writeDB.update(TABLE_BOOKINGS, contentValues,
+        Cursor cursor = writeDB.query(TABLE_BOOKINGS, new String[]{COLUMN_RATING},
                 COLUMN_BOOKINGSERVICEPROVIDER + " = ? AND "
                         + COLUMN_BOOKINGHOMEOWNER + " = ? AND "
                         + COLUMN_BOOKINGYEAR + " = ? AND "
@@ -1215,22 +1216,46 @@ public class DBHelper extends SQLiteOpenHelper {
                         String.valueOf(booking.getYear()),
                         String.valueOf(booking.getMonth()),
                         String.valueOf(booking.getDay()),
-                        String.valueOf(booking.getStarth()*60 + booking.getStartmin())}) > 0;
+                        String.valueOf(booking.getStarth()*60 + booking.getStartmin())},
+                null, null, null, null);
+        int previousrating = 0;
+
+        if (cursor.moveToFirst()){
+            previousrating = cursor.getInt(0);
+        }
+
+        boolean updated =  writeDB.update(TABLE_BOOKINGS, contentValues,
+                COLUMN_BOOKINGSERVICEPROVIDER + " = ? AND "
+                        + COLUMN_BOOKINGHOMEOWNER + " = ? AND "
+                        + COLUMN_BOOKINGYEAR + " = ? AND "
+                        + COLUMN_BOOKINGMONTH + " = ? AND "
+                        + COLUMN_BOOKINGDATE + " = ? AND "
+                        + COLUMN_BOOKINGSTART + " = ? AND "
+                        + COLUMN_BOOKINGSTART + " = ?",
+                new String[] {booking.getServiceprovider().getUsername(),
+                        booking.getHomeowner().getUsername(),
+                        String.valueOf(booking.getYear()),
+                        String.valueOf(booking.getMonth()),
+                        String.valueOf(booking.getDay()),
+                        String.valueOf(booking.getStarth()*60 + booking.getStartmin()),
+                        Status.CANCELLED.toString()}) > 0;
 
         if (updated) {
-            Cursor cursor = writeDB.query(TABLE_SERVICEPROVIDERS, new String[]{COLUMN_AVERAGERATING, COLUMN_RATERS},
+            cursor = writeDB.query(TABLE_SERVICEPROVIDERS, new String[]{COLUMN_AVERAGERATING, COLUMN_RATERS},
                     COLUMN_SERVICEPROVIDERNAME + " = ? AND "
                             + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
                     new String[] {booking.getServiceprovider().getUsername(), booking.getService().getName()},
                     null, null, null, null);
             cursor.moveToFirst();
 
-            int currentRaters = cursor.getInt(1) + 1;
-            double currentAverageRatings = cursor.getDouble(0) + rating;
+            int currentRaters = cursor.getInt(1);
+            double currentAverageRatings = cursor.getDouble(0)*currentRaters
+                    + rating - previousrating;
+            currentRaters +=  previousrating == 0? 1 : 0;
             cursor.close();
 
             contentValues = new ContentValues();
-            contentValues.put(COLUMN_AVERAGERATING, currentAverageRatings/(double)currentRaters);
+            contentValues.put(COLUMN_AVERAGERATING, currentAverageRatings);
             contentValues.put(COLUMN_RATERS, currentRaters);
 
             writeDB.update(TABLE_SERVICEPROVIDERS, contentValues,
@@ -1535,6 +1560,19 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * I got really tired of trying to figure out how to rate and book at the same time.
+     * So Imma force it V2
+     */
+    void forceAddBookingDONTTOUCH(Booking booking) {
+        forceAddBookingDONTTOUCH(booking.getServiceprovider().getUsername(),
+                booking.getHomeowner().getUsername(),
+                booking.getService().getName(),
+                booking.getYear(), booking.getMonth(), booking.getDay(),
+                booking.getStarth(), booking.getStartmin(),
+                booking.getEndh(), booking.getEndmin(),
+                booking.getStatus());
+    }
+    /**
      * So I got really tired of trying to figure out how to rate and book at the same time.
      * So Imma force it.
      *
@@ -1550,8 +1588,9 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param endmin
      */
     void forceAddBookingDONTTOUCH(String serviceProvider, String homeOwner, String service,
-                         int year, int month, int day,
-                         int starth, int startmin, int endh, int endmin){
+                                  int year, int month, int day,
+                                  int starth, int startmin, int endh, int endmin,
+                                  Status status){
         service = service.trim().toLowerCase();
 
         Cursor cursor = writeDB.query(TABLE_SERVICEPROVIDERS, new String[]{COLUMN_SERVICEPROVIDERNAME},
@@ -1575,10 +1614,156 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_BOOKINGSERVICEPROVIDER, serviceProvider);
         contentValues.put(COLUMN_BOOKINGHOMEOWNER, homeOwner);
         contentValues.put(COLUMN_BOOKINGSERVICE, service);
-        contentValues.put(COLUMN_BOOKINGSTATUS, Status.PENDING.toString());
+        contentValues.put(COLUMN_BOOKINGSTATUS, status.toString());
         contentValues.put(COLUMN_RATING, 0);
 
         writeDB.insert(TABLE_BOOKINGS, null, contentValues);
+
+    }
+
+
+    /**
+     * Method called to add default values to app.
+     * Adds three
+     */
+    private void setUp(){
+
+        //pre-add ten services
+        Service service = new Service("Dragon Tamer", 168.60);
+        Service service1 = new Service("Juggler", 14.35);
+        Service service2 = new Service("Bug Catcher", 6);
+        Service service3 = new Service("Firebreather", 72.3);
+        Service service4 = new Service("Spy", 900);
+        Service service5 = new Service("Thug", 123.45);
+        Service service6 = new Service("Baker", 25.60);
+        Service service7 = new Service("Maid", 13.20);
+        Service service8 = new Service("Butler", 496);
+        Service service9 = new Service("Gardener", 0);
+
+
+        addService(service);
+        addService(service1);
+        addService(service2);
+        addService(service3);
+        addService(service4);
+        addService(service5);
+        addService(service6);
+        addService(service7);
+        addService(service8);
+        addService(service9);
+
+
+        //pre-add an admin, three service providers, and three homeowners
+        ServiceProvider testing = new ServiceProvider(
+                "testing", "testing",
+                "TestFirst", "TestLast",
+                "1234 Test", "6136136163",
+                "Test Co", false,
+                "Tested 10 years");
+        ServiceProvider testing1 = new ServiceProvider(
+                "testing1", "testing",
+                "owo", "OwO",
+                "10 Weee", "8594738261",
+                "Independent", true,
+                "Hire me");
+        ServiceProvider testing2 = new ServiceProvider(
+                "testing2", "testing",
+                "Beep", "BOOP",
+                "33 Beep", "1833980091",
+                "Beepbeep", true,
+                "Beep beep lettuce");
+        HomeOwner tester = new HomeOwner("tester", "tester",
+                "Itest", "Testtest");
+        HomeOwner tester1 = new HomeOwner("tester1", "tester",
+                "Testest", "Testest");
+        HomeOwner tester2 = new HomeOwner("tester2", "tester",
+                "Robolectric", "Junit");
+
+        //add admin
+        addUser(new Admin());
+
+        //add first service provider
+        addUser(testing);
+        addServiceProvidedByUser("testing", "dragon tamer");
+        addServiceProvidedByUser("testing", "juggler");
+        addServiceProvidedByUser("testing", "bug catcher");
+        addServiceProvidedByUser("testing", "firebreather");
+        addServiceProvidedByUser("testing", "spy");
+        addServiceProvidedByUser("testing", "Baker");
+        addServiceProvidedByUser("testing", "Gardener");
+        for (int i = 0; i<6; i++){
+            testing.setAvailabilities(i, 0, 0, 23, 59);
+        }
+        updateAvailability(testing);
+
+        addUser(testing1);
+        addServiceProvidedByUser("testing1", "dragon tamer");
+        addServiceProvidedByUser("testing1", "juggler");
+        addServiceProvidedByUser("testing1", "firebreather");
+        addServiceProvidedByUser("testing1", "spy");
+        addServiceProvidedByUser("testing1", "thug");
+        for (int i = 0; i<4; i++){
+            testing1.setAvailabilities(i, 10-i, 0, 22-i, 0);
+        }
+        updateAvailability(testing1);
+
+        addUser(testing2);
+        addServiceProvidedByUser("testing2", "dragon tamer");
+        for (int i = 0; i<7; i = i+2){
+            testing2.setAvailabilities(i, i*2, 30, 5+(i*2), 59);
+        }
+        updateAvailability(testing2);
+
+        //add three homeowners
+        addUser(tester);
+        addUser(tester1);
+        addUser(tester2);
+
+        //add like ten bookings
+        Booking booking = new Booking(10, 0, 12, 15,
+                1, 10, 2018, testing, tester, service);
+        booking.setStatus(Status.CONFIRMED);
+        Booking booking1 = new Booking(13, 30, 14, 58,
+                1, 10, 2018, testing, tester1, service);
+        booking1.setStatus(Status.CANCELLED);
+        Booking booking2 = new Booking(10, 0, 12, 15,
+                2, 11, 2018, testing, tester, service);
+        booking2.setStatus(Status.CONFIRMED);
+        Booking booking3 = new Booking(10, 0, 12, 15,
+                3, 10, 2018, testing, tester, service);
+        booking3.setStatus(Status.PENDING);
+        Booking booking4 = new Booking(10, 0, 12, 15,
+                10, 11, 2018, testing, tester, service);
+        booking4.setStatus(Status.CONFIRMED);
+        Booking booking5 = new Booking(10, 0, 12, 15,
+                10, 10, 2018, testing2, tester, service);
+        booking5.setStatus(Status.CONFIRMED);
+        Booking booking6 = new Booking(10, 0, 12, 15,
+                1, 11, 2018, testing2, tester1, service);
+        booking6.setStatus(Status.CONFIRMED);
+        Booking booking7 = new Booking(10, 0, 12, 15,
+                3, 10, 2018, testing1, tester1, service);
+        booking7.setStatus(Status.CONFIRMED);
+        Booking booking8 = new Booking(10, 0, 12, 15,
+                4, 12, 2018, testing1, tester1, service);
+        Booking booking9 = new Booking(10, 0, 12, 15,
+                2, 12, 2018, testing1, tester1, service);
+
+        forceAddBookingDONTTOUCH(booking);
+        forceAddBookingDONTTOUCH(booking1);
+        forceAddBookingDONTTOUCH(booking2);
+        forceAddBookingDONTTOUCH(booking3);
+        forceAddBookingDONTTOUCH(booking4);
+        forceAddBookingDONTTOUCH(booking5);
+        forceAddBookingDONTTOUCH(booking6);
+        forceAddBookingDONTTOUCH(booking7);
+        forceAddBookingDONTTOUCH(booking8);
+        forceAddBookingDONTTOUCH(booking9);
+
+        addRating(booking, 5, "Amazing");
+        addRating(booking3, 1, "Never showed up");
+        addRating(booking5, 3, "Decent");
+        addRating(booking7, 4, "OK I guess");
 
     }
 
