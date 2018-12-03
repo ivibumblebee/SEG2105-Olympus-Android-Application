@@ -3,7 +3,8 @@ class UserType
   firstname;
   lastname;
   username;
-  password;
+  salt;
+  hash;
 }
 
 class HomeOwner
@@ -25,7 +26,7 @@ isA UserType;
 class Admin
 {
   isA UserType;
-  1 -- * Service creates;
+  1 -- * Service;
 }
 
 class Service
@@ -48,6 +49,7 @@ class Booking
     int year;
     status;
 int rating;
+comment;
 * -- 1 HomeOwner;
   * -- 1 ServiceProvider;
   * -- 1 Service;
@@ -73,6 +75,7 @@ class Admin
   position 490 236 109 41;
   position.association Admin__Service 66,41 0,52;
   position.association Admin__Service:create 109,28 0,60;
+  position.association Admin__Service:creates 109,16 0,28;
 }
 
 class Service
@@ -83,7 +86,7 @@ class Service
 
 class Booking
 {
-  position 99 433 178 211;
+  position 99 433 178 194;
   position.association Booking__HomeOwner 62,0 54,41;
   position.association Booking__ServiceProvider 178,50 0,94;
   position.association Booking__Service 178,120 0,68;
