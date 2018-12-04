@@ -89,9 +89,9 @@ public class FindServiceProvider extends AppCompatActivity {
         Button button2 = findViewById(R.id.End);
         Button button3 = findViewById(R.id.Date);
         RadioGroup ratingselect = findViewById(R.id.RatingSelect);
-        button.setText("START");
-        button2.setText("END");
-        button3.setText("DATE");
+        button.setText("Start");
+        button2.setText("End");
+        button3.setText("Date");
         ratingselect.clearCheck();
         //clears recycler view
         String[][] empty = {};
