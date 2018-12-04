@@ -191,10 +191,6 @@ public class DBIntegrationTest {
         assertEquals(allUsers.size(), 5);
 
         for (String[] user : allUsers){
-/*            for (String s : user){
-                System.out.print(s + " ");
-            }
-            System.out.println();*/
             UserType usertype = dbHelper.findUserByUsername(user[0]);
             assertEquals(usertype.getFirstname(), user[1]);
             assertEquals(usertype.getLastname(), user[2]);
@@ -562,10 +558,10 @@ public class DBIntegrationTest {
 
     }
 
-    @Test
-    public void printUsersTable(){
-        dbHelper.printTable("userInfo");
-    }
+//    @Test
+//    public void printUsersTable(){
+//        dbHelper.printTable("userInfo");
+//    }
 
     // Ever gotten tired of adding things at the start of a test just to delete it all again?
     // I have.
@@ -628,9 +624,9 @@ public class DBIntegrationTest {
                 if (testAfter.equals(TestAfter.BOOKING)){
                     //October 2 2018 is a Tuesday
                     dbHelper.forceAddBookingDONTTOUCH("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
-                            2018, 10, 2, 8, 12, 10, 0);
+                            2018, 10, 2, 8, 12, 10, 0, Status.PENDING);
                     dbHelper.forceAddBookingDONTTOUCH("jbO4aBF4dC", "7MuF1c59XP", "Hitman",
-                            2018, 10, 2, 10, 01, 11, 0);
+                            2018, 10, 2, 10, 01, 11, 0, Status.PENDING);
                 }
             }
         }

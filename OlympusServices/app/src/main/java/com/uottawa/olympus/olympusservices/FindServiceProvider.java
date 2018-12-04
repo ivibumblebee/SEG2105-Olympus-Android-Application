@@ -345,9 +345,6 @@ public class FindServiceProvider extends AppCompatActivity {
             holder.rate.setText(""+serviceprovider[3]);
             holder.username.setText(serviceprovider[0]);
 
-
-
-
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -431,7 +428,7 @@ public class FindServiceProvider extends AppCompatActivity {
                 List<String[]> randc = dbHelper.getAllRatingsAndComments(name,spinner.getText().toString());
                 String[] ratings = new String[randc.size()];
                 for(int i=0; i<randc.size(); i++){
-                    ratings[i] = "Rating: "+randc.get(i)[1]+"\nComment: "+randc.get(i)[3];
+                    ratings[i] = "Rating: "+randc.get(i)[1]+"\nComment: "+randc.get(i)[2];
                 }
 
                 /*mock data

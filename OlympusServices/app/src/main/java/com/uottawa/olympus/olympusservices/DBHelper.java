@@ -117,6 +117,8 @@ public class DBHelper extends SQLiteOpenHelper {
         readDB = this.getReadableDatabase();
         writeDB = this.getWritableDatabase();
 
+        addUser(new Admin());
+
         if (!setUp){
             setUp();
             setUp = true;
@@ -1231,7 +1233,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         + COLUMN_BOOKINGMONTH + " = ? AND "
                         + COLUMN_BOOKINGDATE + " = ? AND "
                         + COLUMN_BOOKINGSTART + " = ? AND "
-                        + COLUMN_BOOKINGSTART + " = ?",
+                        + COLUMN_BOOKINGSTART + " != ?",
                 new String[] {booking.getServiceprovider().getUsername(),
                         booking.getHomeowner().getUsername(),
                         String.valueOf(booking.getYear()),
@@ -1244,8 +1246,9 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor = writeDB.query(TABLE_SERVICEPROVIDERS, new String[]{COLUMN_AVERAGERATING, COLUMN_RATERS},
                     COLUMN_SERVICEPROVIDERNAME + " = ? AND "
                             + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
-                    new String[] {booking.getServiceprovider().getUsername(), booking.getService().getName()},
+                    new String[] {booking.getServiceprovider().getUsername(), booking.getService().getName().toLowerCase().trim()},
                     null, null, null, null);
+
             cursor.moveToFirst();
 
             int currentRaters = cursor.getInt(1);
@@ -1255,14 +1258,14 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.close();
 
             contentValues = new ContentValues();
-            contentValues.put(COLUMN_AVERAGERATING, currentAverageRatings);
+            contentValues.put(COLUMN_AVERAGERATING, currentAverageRatings/(double)currentRaters);
             contentValues.put(COLUMN_RATERS, currentRaters);
 
             writeDB.update(TABLE_SERVICEPROVIDERS, contentValues,
                     COLUMN_SERVICEPROVIDERNAME + " = ? AND "
                     + COLUMN_SERVICEPROVIDERSERVICE + " = ?",
                     new String[] {booking.getServiceprovider().getUsername(),
-                            booking.getService().getName()});
+                            booking.getService().getName().toLowerCase().trim()});
         }
         return updated;
 
@@ -1321,6 +1324,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @return
      */
     public List<String[]> getAllRatingsAndComments(String serviceProviderName, String serviceName){
+        serviceName = serviceName.toLowerCase().trim();
         return getAll("SELECT " + COLUMN_BOOKINGHOMEOWNER +", "
                     + COLUMN_RATING + ", " + COLUMN_COMMENT + " FROM " + TABLE_BOOKINGS
                     + " WHERE " + COLUMN_BOOKINGSERVICEPROVIDER + " = '" + serviceProviderName
@@ -1528,8 +1532,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     /**
-     * Prints all entries of table. One row is printed per line. Columns are
-     * separated by spaces.
+     * Prints all entries of table. One cell is printed per line with column name.
+     * Rows are separated by a blank line.
      *
      * @param tableName name of table to print
      */
@@ -1564,13 +1568,18 @@ public class DBHelper extends SQLiteOpenHelper {
      * So Imma force it V2
      */
     void forceAddBookingDONTTOUCH(Booking booking) {
-        forceAddBookingDONTTOUCH(booking.getServiceprovider().getUsername(),
-                booking.getHomeowner().getUsername(),
-                booking.getService().getName(),
+        if (isProviderAvailable(booking.getServiceprovider().getUsername(),
                 booking.getYear(), booking.getMonth(), booking.getDay(),
                 booking.getStarth(), booking.getStartmin(),
-                booking.getEndh(), booking.getEndmin(),
-                booking.getStatus());
+                booking.getEndh(), booking.getEndmin())) {
+            forceAddBookingDONTTOUCH(booking.getServiceprovider().getUsername(),
+                    booking.getHomeowner().getUsername(),
+                    booking.getService().getName(),
+                    booking.getYear(), booking.getMonth(), booking.getDay(),
+                    booking.getStarth(), booking.getStartmin(),
+                    booking.getEndh(), booking.getEndmin(),
+                    booking.getStatus());
+        }
     }
     /**
      * So I got really tired of trying to figure out how to rate and book at the same time.
@@ -1679,9 +1688,6 @@ public class DBHelper extends SQLiteOpenHelper {
         HomeOwner tester2 = new HomeOwner("tester2", "tester",
                 "Robolectric", "Junit");
 
-        //add admin
-        addUser(new Admin());
-
         //add first service provider
         addUser(testing);
         addServiceProvidedByUser("testing", "dragon tamer");
@@ -1703,14 +1709,14 @@ public class DBHelper extends SQLiteOpenHelper {
         addServiceProvidedByUser("testing1", "spy");
         addServiceProvidedByUser("testing1", "thug");
         for (int i = 0; i<4; i++){
-            testing1.setAvailabilities(i, 10-i, 0, 22-i, 0);
+            testing1.setAvailabilities(i, 0, 0, 23, 59);
         }
         updateAvailability(testing1);
 
         addUser(testing2);
         addServiceProvidedByUser("testing2", "dragon tamer");
-        for (int i = 0; i<7; i = i+2){
-            testing2.setAvailabilities(i, i*2, 30, 5+(i*2), 59);
+        for (int i = 3; i<7; i++){
+            testing2.setAvailabilities(i, 0, 0, 23, 59);
         }
         updateAvailability(testing2);
 
@@ -1736,18 +1742,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 10, 11, 2018, testing, tester, service);
         booking4.setStatus(Status.CONFIRMED);
         Booking booking5 = new Booking(10, 0, 12, 15,
-                10, 10, 2018, testing2, tester, service);
+                12, 10, 2018, testing2, tester, service);
         booking5.setStatus(Status.CONFIRMED);
         Booking booking6 = new Booking(10, 0, 12, 15,
                 1, 11, 2018, testing2, tester1, service);
         booking6.setStatus(Status.CONFIRMED);
         Booking booking7 = new Booking(10, 0, 12, 15,
-                3, 10, 2018, testing1, tester1, service);
+                2, 10, 2018, testing1, tester1, service);
         booking7.setStatus(Status.CONFIRMED);
         Booking booking8 = new Booking(10, 0, 12, 15,
                 4, 12, 2018, testing1, tester1, service);
         Booking booking9 = new Booking(10, 0, 12, 15,
-                2, 12, 2018, testing1, tester1, service);
+                3, 12, 2018, testing1, tester1, service);
 
         forceAddBookingDONTTOUCH(booking);
         forceAddBookingDONTTOUCH(booking1);
