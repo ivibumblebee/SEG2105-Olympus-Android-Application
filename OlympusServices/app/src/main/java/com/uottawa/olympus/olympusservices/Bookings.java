@@ -44,6 +44,7 @@ public class Bookings extends AppCompatActivity {
         username = bundle.getString("username");
         dbhelper = new DBHelper(this);
 
+        //get the list of bookings
         List<Booking> booking = (List<Booking>)dbhelper.findBookings(username);
         Collections.reverse(booking);
         Booking[] bookings = new Booking[booking.size()];
@@ -54,17 +55,21 @@ public class Bookings extends AppCompatActivity {
         Booking[] bookings = {new Booking(5, 5, 6, 6, 2, 3, 2019, (ServiceProvider)dbhelper.findUserByUsername("testing"),
                 (HomeOwner)dbhelper.findUserByUsername("tester"), dbhelper.findService("service1"))};
         */
+
+        //Make the recycler view show the bookings
         mRecyclerView = (RecyclerView) findViewById(R.id.Bookings);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MyAdapter(bookings, this);
         mRecyclerView.setAdapter(mAdapter);
 
+        //remove or add cancelled booking depending on the switch position
         SwitchCompat toggle = findViewById(R.id.Switch);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     List<Booking> booking = (List<Booking>)dbhelper.findBookings(username);
+                    Collections.reverse(booking);
                     Booking[] bookings = new Booking[booking.size()];
                     bookings = booking.toArray(bookings);
                     mAdapter = new MyAdapter(bookings, Bookings.this);
@@ -72,6 +77,7 @@ public class Bookings extends AppCompatActivity {
                     mAdapter.notifyDataSetChanged();
                 } else {
                     List<Booking> booking = (List<Booking>)dbhelper.findNonCancelledBookings(username);
+                    Collections.reverse(booking);
                     Booking[] bookings = new Booking[booking.size()];
                     bookings = booking.toArray(bookings);
                     mAdapter = new MyAdapter(bookings, Bookings.this);
@@ -90,6 +96,7 @@ public class Bookings extends AppCompatActivity {
      */
     @Override
     public void onBackPressed(){
+        //goes back to the appropriate screen depending on the type of user
         Intent intent;
         if(dbhelper.findUserByUsername(username).getRole().equals("ServiceProvider")){
             intent = new Intent(getApplicationContext(),ServiceProviderWelcome.class);
@@ -201,6 +208,8 @@ public class Bookings extends AppCompatActivity {
             }
             @Override
             public void onClick(View view) {
+                //show different dialogs depending on the type of user
+                //Service Provider can confirm or cancel while Home Owner can rate and comment, or cancel
                 if(dbhelper.findUserByUsername(username).getRole()=="ServiceProvider"){
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Bookings.this);
                     alertDialogBuilder.setMessage("Cancel or Confirm your booking");
@@ -259,7 +268,7 @@ public class Bookings extends AppCompatActivity {
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                 }
-                else{
+                else{ //if user is a Home Owner
                     final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Bookings.this);
                     alertDialogBuilder.setView(R.layout.rating_item);
                     alertDialogBuilder.setPositiveButton("Rate Booking",
@@ -275,9 +284,12 @@ public class Bookings extends AppCompatActivity {
                                     month = Integer.parseInt(dates[0].replaceAll("\\s+",""));
                                     day = Integer.parseInt(dates[1].replaceAll("\\s+",""));
                                     year = Integer.parseInt(dates[2].replaceAll("\\s+",""));
+
+                                    //rating bar
                                     RadioGroup ratingselect = ((AlertDialog) arg0).findViewById(R.id.RatingSelect);
                                     int selectedId = ratingselect.getCheckedRadioButtonId();
                                     RadioButton ratingpicked;
+                                    //comment field
                                     EditText comment = ((AlertDialog) arg0).findViewById(R.id.Comment);
                                     if(selectedId!=-1 && !comment.getText().toString().equals("")){
                                         ratingpicked = (RadioButton)((AlertDialog) arg0).findViewById(selectedId);
@@ -340,6 +352,13 @@ public class Bookings extends AppCompatActivity {
 
 
     }
+
+    /**
+     * formats the time into a string
+     * @param hours
+     * @param minutes
+     * @return
+     */
     private String formatTime(int hours, int minutes){
         String time = "";
         if(hours<10){
@@ -356,7 +375,12 @@ public class Bookings extends AppCompatActivity {
         return time;
     }
 
-
+    /**
+     * Parses a string into an array of ints representing times
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     private int[] parseTime(String startTime, String endTime){
         int[] times = new int[4];
         if(startTime.equals("START")){

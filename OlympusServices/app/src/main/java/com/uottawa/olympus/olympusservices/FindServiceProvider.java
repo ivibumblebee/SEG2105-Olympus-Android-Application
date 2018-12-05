@@ -54,6 +54,7 @@ public class FindServiceProvider extends AppCompatActivity {
         dbHelper = new DBHelper(this);
         MaterialSpinner spinner2 = findViewById(R.id.ServicesInput);
 
+        //populate the list of services
         List<String[]> serviceslist = dbHelper.getAllServices();
         String[] services = new String[(serviceslist.size())];
         Iterator iter = serviceslist.iterator();
@@ -74,7 +75,11 @@ public class FindServiceProvider extends AppCompatActivity {
          //
 
     }
-
+    /**
+     * Override so that previous screen refreshes when pressing the
+     * back button on this activity of the app.
+     *
+     */
     @Override
     public void onBackPressed(){
         Intent intent = new Intent(getApplicationContext(),Welcome.class);
@@ -83,8 +88,11 @@ public class FindServiceProvider extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Reset the filter fields
+     * @param view
+     */
     public void Reset(View view){
-
         Button button = findViewById(R.id.Start);
         Button button2 = findViewById(R.id.End);
         Button button3 = findViewById(R.id.Date);
@@ -116,9 +124,9 @@ public class FindServiceProvider extends AppCompatActivity {
         String date;
         double rating;
         List<String[]> providers;
+        //time and date picked
         if(!button.getText().toString().equals("Start") && !button2.getText().toString().equals("End")
                 && !button3.getText().toString().equals("Date")){
-            System.out.println(button.getText().toString()+":"+button2.getText().toString()+":"+button3.getText().toString());
             start = button.getText().toString();
             end = button2.getText().toString();
             date = button3.getText().toString();
@@ -137,16 +145,19 @@ public class FindServiceProvider extends AppCompatActivity {
             int endmin = Integer.parseInt(endtimes[1].replaceAll("\\s+",""));
 
             int[] times = {starth, startmin, endh, endmin};
+            //rating picked and time valid
             if(selectedId!=-1 && validateTime(times)){
                 ratingpicked = (RadioButton) findViewById(selectedId);
                 rating = Double.parseDouble(ratingpicked.getText().toString());
                 providers = dbHelper.getProvidersByTimeAndRating(service, rating, year, month, day,
                         starth, startmin, endh, endmin);
             }
+            //rating not picked and time valid
             else if(validateTime(times)){
                 providers = dbHelper.getProvidersByTime(service, year, month, day,
                         starth, startmin, endh, endmin);
             }
+            //rating picked
             else if(selectedId!=-1){
                 Toast.makeText(this, "Times are invalid, only searching by service and rating"+starth+";"+startmin+","+endh+";"+endmin, Toast.LENGTH_SHORT).show();
                 ratingpicked = (RadioButton) findViewById(selectedId);
@@ -154,12 +165,14 @@ public class FindServiceProvider extends AppCompatActivity {
                 providers = dbHelper.getProvidersAboveRating(service, rating);
 
             }
+            //no rating & time not valid
             else{
                 Toast.makeText(this, "Times are invalid, only searching by service", Toast.LENGTH_SHORT).show();
                 providers = dbHelper.getAllProvidersByService(service);
 
             }
         }
+        //time and date not picked
         else{
             if(selectedId!=-1){
                 ratingpicked = (RadioButton) findViewById(selectedId);
@@ -184,6 +197,10 @@ public class FindServiceProvider extends AppCompatActivity {
 
     }
 
+    /**
+     * Go to the MakeBooking activity with the booking info
+     * @param serviceprovider
+     */
     public void makeBooking(String serviceprovider){
         MaterialSpinner spinner = findViewById(R.id.ServicesInput);
         String service = spinner.getText().toString();
@@ -198,6 +215,10 @@ public class FindServiceProvider extends AppCompatActivity {
 
     }
 
+    /**
+     * Show the DatePicker dialog
+     * @param view
+     */
     public void onClickDate(View view){
 
         final Button button = (Button)view;
@@ -236,7 +257,10 @@ public class FindServiceProvider extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Show the TimePicker dialog
+     * @param view
+     */
     public void onClickTime(View view){
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
@@ -262,6 +286,12 @@ public class FindServiceProvider extends AppCompatActivity {
 
     }
 
+    /**
+     * Format time into a string
+     * @param hours
+     * @param minutes
+     * @return
+     */
     private String formatTime(int hours, int minutes){
         String time = "";
         if(hours<10){
@@ -278,6 +308,12 @@ public class FindServiceProvider extends AppCompatActivity {
         return time;
     }
 
+    /**
+     * Parse time into an array of ints
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     private int[] parseTime(String startTime, String endTime){
         int[] times = new int[4];
         if(startTime.equals("START")){
@@ -297,6 +333,11 @@ public class FindServiceProvider extends AppCompatActivity {
         return times;
     }
 
+    /**
+     * Validate times
+     * @param time
+     * @return
+     */
     private boolean validateTime(int[] time){
         if(time[0]==0&&time[1]==0&&time[2]==0&&time[3]==0){
             return true;
@@ -312,7 +353,7 @@ public class FindServiceProvider extends AppCompatActivity {
         }
     }
 
-
+    //adapter for the recycler view
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ProviderHolder> {
 
         private String[][] serviceProviders;
@@ -372,11 +413,8 @@ public class FindServiceProvider extends AppCompatActivity {
                 final String name = nameview.getText().toString();
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FindServiceProvider.this);
-
-
+                //show service provider info
                 alertDialogBuilder.setView(R.layout.sp_info_item);
-
-
                 alertDialogBuilder.setPositiveButton("Make Booking",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -394,6 +432,8 @@ public class FindServiceProvider extends AppCompatActivity {
 
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
+
+                //set the service provider info
                 ServiceProvider sp = (ServiceProvider)dbHelper.findUserByUsername(name);
                 TextView spname = alertDialog.findViewById(R.id.NameName);
                 spname.setText(sp.getFirstname()+" "+sp.getLastname());
@@ -438,7 +478,7 @@ public class FindServiceProvider extends AppCompatActivity {
 
 
                 ArrayAdapter adapter = new ArrayAdapter<String>(FindServiceProvider.this, R.layout.simple_list_item_1_customized, ratings);
-
+                //list of comments and ratings
                 ListView listView = (ListView) alertDialog.findViewById(R.id.RatingList);
                 listView.setAdapter(adapter);
 

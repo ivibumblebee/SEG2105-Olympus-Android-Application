@@ -39,7 +39,11 @@ public class MakeBooking extends AppCompatActivity {
         serv.setText("Service: \n"+service);
 
     }
-
+    /**
+     * Override so that previous screen refreshes when pressing the
+     * back button on this activity of the app.
+     *
+     */
     @Override
     public void onBackPressed(){
         Intent intent = new Intent(getApplicationContext(),Welcome.class);
@@ -56,6 +60,7 @@ public class MakeBooking extends AppCompatActivity {
         Button button2 = findViewById(R.id.End);
         Button button3 = findViewById(R.id.Date);
 
+        //check that fields are filled in
         if(!button.getText().toString().equals("Start") && !button2.getText().toString().equals("End")
                 && !button3.getText().toString().equals("Date")){
             String[] dates = button3.getText().toString().split("/");
@@ -63,6 +68,7 @@ public class MakeBooking extends AppCompatActivity {
             int day = Integer.parseInt(dates[1].replaceAll("\\s+",""));
             int year = Integer.parseInt(dates[2].replaceAll("\\s+",""));
 
+            //parse times
             String[] starttimes = button.getText().toString().split(":");
             int starth = Integer.parseInt(starttimes[0].replaceAll("\\s+",""));
             int startmin = Integer.parseInt(starttimes[1].replaceAll("\\s+",""));
@@ -71,6 +77,7 @@ public class MakeBooking extends AppCompatActivity {
             int endh = Integer.parseInt(endtimes[0].replaceAll("\\s+",""));
             int endmin = Integer.parseInt(endtimes[1].replaceAll("\\s+",""));
 
+            //check date is valid
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
@@ -79,6 +86,7 @@ public class MakeBooking extends AppCompatActivity {
                     Toast.makeText(this, "Date must be a future date", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    //check time is valid
                     if (starth<endh || (starth==endh && startmin<endmin)){
                         DBHelper dbHelper = new DBHelper(this);
 
@@ -116,7 +124,7 @@ public class MakeBooking extends AppCompatActivity {
 
         final Button button = (Button)view;
         final Calendar c = Calendar.getInstance();
-
+        //show the date picker
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
@@ -173,11 +181,17 @@ public class MakeBooking extends AppCompatActivity {
 
     }
 
+    /**
+     * formats the time into a string
+     * @param hours
+     * @param minutes
+     * @return
+     */
     private String formatTime(int hours, int minutes){
         String time = "";
         if(hours<10){
             time = time+"0"+hours+":";
-        }else{
+        } else{
             time = time+hours+":";
         }
         if (minutes<10){
@@ -189,6 +203,12 @@ public class MakeBooking extends AppCompatActivity {
         return time;
     }
 
+    /**
+     * Parses a string into an array of ints representing times
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     private int[] parseTime(String startTime, String endTime){
         int[] times = new int[4];
         if(startTime.equals("START")){
