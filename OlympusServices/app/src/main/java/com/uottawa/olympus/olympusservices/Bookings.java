@@ -302,7 +302,9 @@ public class Bookings extends AppCompatActivity {
                                             Toast.makeText(Bookings.this, "Rating cannot be added before the appointment", Toast.LENGTH_SHORT).show();
                                         }
                                         else{
+                                            Toast.makeText(Bookings.this, "Rating and comment added", Toast.LENGTH_SHORT).show();
                                             Bookings.this.recreate();
+
                                         }
 
                                     }
